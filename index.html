@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Atlas Fiscal Municipal Bolivia · IGF 2016–2025</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --grn:#1d5938;--grnlt:#2a8454;--grndark:#0d2818;
+  --bg:#f4efe4;--bg2:#ede6d5;--bg3:#e5dac8;--bgd:#d5c9b2;
+  --ink:#3a2a18;--ink2:#6b4e36;--mute:#8e7660;--faint:#b5a28e;
+  --wht:#fdfaf3;--sh:0 2px 10px rgba(58,42,24,.08);
+}
+body{background:var(--bg);font-family:'IBM Plex Sans',sans-serif;color:var(--ink);min-height:100vh}
+.topbar{background:linear-gradient(to bottom,var(--grndark),var(--grn),var(--grndark));padding:0 36px;display:flex;align-items:center;gap:20px;min-height:64px;box-shadow:0 3px 14px rgba(0,0,0,.3);position:relative;overflow:hidden}
+.topbar::after{content:'ATLAS';position:absolute;right:8px;top:50%;transform:translateY(-50%);font-family:'Playfair Display',serif;font-size:5rem;font-weight:900;color:rgba(255,255,255,.04);pointer-events:none}
+.tb-l{flex:1}
+.tb-l h1{font-family:'Playfair Display',serif;font-size:1.35rem;font-weight:900;color:#fff;line-height:1.15}
+.tb-l p{font-size:.65rem;color:rgba(255,255,255,.55);letter-spacing:1.4px;text-transform:uppercase;margin-top:3px}
+.tb-stats{display:flex;gap:0}
+.ts{text-align:center;color:#fff;padding:0 16px;border-left:1px solid rgba(255,255,255,.18)}
+.ts-v{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700;line-height:1}
+.ts-l{font-size:.58rem;letter-spacing:.8px;text-transform:uppercase;opacity:.5;margin-top:2px}
+.hero{background:var(--wht);border-bottom:1px solid var(--bg3);padding:22px 36px;display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+.hero-text{flex:1;min-width:240px}
+.hero-text h2{font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:700;color:var(--ink);margin-bottom:6px}
+.hero-text p{font-size:.78rem;color:var(--ink2);line-height:1.6;max-width:600px}
+.hero-actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.btn-mapa{background:linear-gradient(to bottom,var(--grndark),var(--grn),var(--grndark));color:#fff;text-decoration:none;border-radius:7px;padding:10px 20px;font-size:.78rem;font-weight:700;letter-spacing:.3px;display:flex;align-items:center;gap:8px;box-shadow:0 3px 10px rgba(29,89,56,.35);transition:opacity .15s;white-space:nowrap}
+.btn-mapa:hover{opacity:.88}
+.stat-chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{background:var(--bg2);border:1px solid var(--bgd);border-radius:20px;padding:4px 12px;font-size:.65rem;font-weight:600;color:var(--ink2);font-family:'IBM Plex Mono',monospace;white-space:nowrap}
+.search-wrap{padding:12px 36px;background:var(--bg2);border-bottom:1px solid var(--bgd);display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.search-lbl{font-size:.63rem;color:var(--mute);letter-spacing:.8px;text-transform:uppercase;font-weight:700;white-space:nowrap}
+.search-input{flex:1;max-width:380px;border:1px solid var(--bgd);border-radius:6px;padding:7px 12px;font-size:.8rem;font-family:'IBM Plex Sans',sans-serif;background:var(--wht);color:var(--ink);outline:none;transition:border-color .15s}
+.search-input:focus{border-color:var(--grn)}
+.search-input::placeholder{color:var(--faint)}
+#search-count{font-size:.63rem;color:var(--mute);font-family:'IBM Plex Mono',monospace}
+.main{max-width:1400px;margin:0 auto;padding:24px 36px 60px}
+.region-block{margin-bottom:28px;border-radius:10px;overflow:hidden;box-shadow:var(--sh)}
+.region-header{padding:9px 18px;display:flex;align-items:center;gap:14px}
+.rh-name{font-family:'Playfair Display',serif;font-size:.95rem;font-weight:900;color:#fff;letter-spacing:.5px}
+.rh-sub{font-size:.62rem;color:rgba(255,255,255,.55);letter-spacing:.8px;text-transform:uppercase}
+.dpto-block{background:var(--wht);border-bottom:1px solid var(--bg3)}
+.dpto-block:last-child{border-bottom:none}
+.dpto-btn{width:100%;background:var(--wht);border:none;cursor:pointer;padding:11px 18px;display:flex;align-items:center;gap:12px;font-family:'IBM Plex Sans',sans-serif;color:var(--ink);transition:background .15s;text-align:left}
+.dpto-btn:hover,.dpto-btn.open{background:var(--clrpale)}
+.dpto-title{font-size:.82rem;font-weight:700;color:var(--clr);flex:1;letter-spacing:.1px}
+.dpto-count{font-size:.63rem;font-family:'IBM Plex Mono',monospace;color:var(--mute);background:var(--bg2);border-radius:12px;padding:2px 8px}
+.dpto-arrow{font-size:.65rem;color:var(--clr);transition:transform .2s;flex-shrink:0}
+.dpto-arrow.open{transform:rotate(180deg)}
+.dpto-panel.hidden{display:none}
+.mun-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(185px,1fr));padding:8px 12px 12px;background:var(--bg)}
+.mun-link{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:5px;text-decoration:none;color:var(--ink);transition:background .12s;font-size:.75rem}
+.mun-link:hover{background:var(--wht)}
+.mun-link.hidden{display:none}
+.mun-code{font-family:'IBM Plex Mono',monospace;font-size:.62rem;color:var(--faint);flex-shrink:0;min-width:32px}
+.mun-name{color:var(--ink2);font-weight:500;line-height:1.3}
+footer{background:var(--ink);padding:20px 36px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.ft-brand{font-family:'Playfair Display',serif;color:#fff;font-size:.9rem;font-weight:700}
+.ft-src{font-size:.62rem;color:rgba(255,255,255,.45);letter-spacing:.3px}
+.ft-src strong{color:rgba(255,255,255,.7)}
+.ft-auth{font-size:.62rem;color:rgba(255,255,255,.4);letter-spacing:.4px}
+.ft-auth span{margin:0 5px;opacity:.5}
+@media(max-width:600px){
+  .topbar,.hero,.search-wrap,.main{padding-left:16px;padding-right:16px}
+  .tb-stats{display:none}
+  .mun-grid{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="tb-l">
+    <h1>Atlas Fiscal Municipal &middot; Bolivia</h1>
+    <p>Ingreso &middot; Gasto &middot; Financiamiento &middot; 2016&ndash;2025</p>
+  </div>
+  <div class="tb-stats">
+    <div class="ts"><div class="ts-v">335</div><div class="ts-l">Municipios</div></div>
+    <div class="ts"><div class="ts-v">10</div><div class="ts-l">Gestiones</div></div>
+    <div class="ts"><div class="ts-v">9</div><div class="ts-l">Departamentos</div></div>
+  </div>
+</div>
+
+<div class="hero">
+  <div class="hero-text">
+    <h2>Presupuesto municipal de Bolivia &mdash; serie completa 2016&ndash;2025</h2>
+    <p>Dashboards interactivos con datos del SIGEP para los 335 municipios del pa&iacute;s.
+    Analiza ingresos corrientes, inversi&oacute;n, recursos propios, estructura de gasto,
+    d&eacute;ficit fiscal y m&aacute;s. Usa el mapa para explorar visualmente o busca
+    tu municipio directamente.</p>
+  </div>
+  <div class="hero-actions">
+    <a href="mapa.html" class="btn-mapa">&#9783; Ver Mapa Interactivo</a>
+    <div class="stat-chips">
+      <span class="chip">SIGEP 2016&ndash;2025</span>
+      <span class="chip">IGF Municipal</span>
+      <span class="chip">Per C&aacute;pita</span>
+      <span class="chip">D&eacute;ficit Fiscal</span>
+    </div>
+  </div>
+</div>
+
+<div class="search-wrap">
+  <span class="search-lbl">Buscar municipio</span>
+  <input type="text" class="search-input" id="search"
+    placeholder="Ej: Cochabamba, Montero, Yacuiba..."
+    oninput="doSearch(this.value)">
+  <span id="search-count"></span>
+</div>
+
+<div class="main">
+<div class="region-block">
+<div class="region-header" style="background:linear-gradient(to bottom,#8f1514,#c71e1d,#8f1514)"><span class="rh-name">ALTIPLANO</span><span class="rh-sub">3 dptos &middot; 161 municipios</span></div>
+<div class="dpto-block"><button class="dpto-btn" onclick="toggle('la_paz')" style="--clr:#c71e1d;--clrlt:#e84948;--clrpale:#fdecea"><span class="dpto-title">La Paz</span><span class="dpto-count">87 municipios</span><span class="dpto-arrow" id="arr-la_paz">&#9660;</span></button><div class="dpto-panel hidden" id="panel-la_paz"><div class="mun-grid"><a href="municipios/1201_la_paz/IGF/MUN_1201_LaPaz_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1201</span><span class="mun-name">La Paz</span></a>
+<a href="municipios/1202_palca/IGF/MUN_1202_Palca_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1202</span><span class="mun-name">Palca</span></a>
+<a href="municipios/1203_mecapaca/IGF/MUN_1203_Mecapaca_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1203</span><span class="mun-name">Mecapaca</span></a>
+<a href="municipios/1204_achocalla_municipio_ecologico/IGF/MUN_1204_AchocallaMunicipioEcologico_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1204</span><span class="mun-name">Achocalla Municipio Ecológico</span></a>
+<a href="municipios/1205_el_alto_de_la_paz/IGF/MUN_1205_ElAltoDeLaPaz_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1205</span><span class="mun-name">El Alto De La Paz</span></a>
+<a href="municipios/1206_viacha/IGF/MUN_1206_Viacha_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1206</span><span class="mun-name">Viacha</span></a>
+<a href="municipios/1207_guaqui/IGF/MUN_1207_Guaqui_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1207</span><span class="mun-name">Guaqui</span></a>
+<a href="municipios/1208_tiahuanacu/IGF/MUN_1208_Tiahuanacu_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1208</span><span class="mun-name">Tiahuanacu</span></a>
+<a href="municipios/1209_desaguadero/IGF/MUN_1209_Desaguadero_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1209</span><span class="mun-name">Desaguadero</span></a>
+<a href="municipios/1210_caranavi/IGF/MUN_1210_Caranavi_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1210</span><span class="mun-name">Caranavi</span></a>
+<a href="municipios/1211_sica_sica_villa_aroma/IGF/MUN_1211_SicaSicaVillaAroma_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1211</span><span class="mun-name">Sica Sica (Villa Aroma)</span></a>
+<a href="municipios/1212_umala/IGF/MUN_1212_Umala_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1212</span><span class="mun-name">Umala</span></a>
+<a href="municipios/1213_ayo_ayo/IGF/MUN_1213_AyoAyo_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1213</span><span class="mun-name">Ayo Ayo</span></a>
+<a href="municipios/1214_calamarca/IGF/MUN_1214_Calamarca_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1214</span><span class="mun-name">Calamarca</span></a>
+<a href="municipios/1215_patacamaya/IGF/MUN_1215_Patacamaya_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1215</span><span class="mun-name">Patacamaya</span></a>
+<a href="municipios/1216_colquencha/IGF/MUN_1216_Colquencha_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1216</span><span class="mun-name">Colquencha</span></a>
+<a href="municipios/1217_collana/IGF/MUN_1217_Collana_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1217</span><span class="mun-name">Collana</span></a>
+<a href="municipios/1218_inquisivi/IGF/MUN_1218_Inquisivi_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1218</span><span class="mun-name">Inquisivi</span></a>
+<a href="municipios/1219_quime/IGF/MUN_1219_Quime_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1219</span><span class="mun-name">Quime</span></a>
+<a href="municipios/1220_cajuata/IGF/MUN_1220_Cajuata_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1220</span><span class="mun-name">Cajuata</span></a>
+<a href="municipios/1221_colquiri/IGF/MUN_1221_Colquiri_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1221</span><span class="mun-name">Colquiri</span></a>
+<a href="municipios/1222_ichoca/IGF/MUN_1222_Ichoca_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1222</span><span class="mun-name">Ichoca</span></a>
+<a href="municipios/1223_villa_libertad_licoma/IGF/MUN_1223_VillaLibertadLicoma_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1223</span><span class="mun-name">Villa Libertad Licoma</span></a>
+<a href="municipios/1224_achacachi/IGF/MUN_1224_Achacachi_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1224</span><span class="mun-name">Achacachi</span></a>
+<a href="municipios/1225_ancoraimes/IGF/MUN_1225_Ancoraimes_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1225</span><span class="mun-name">Ancoraimes</span></a>
+<a href="municipios/1226_sorata/IGF/MUN_1226_Sorata_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1226</span><span class="mun-name">Sorata</span></a>
+<a href="municipios/1227_guanay/IGF/MUN_1227_Guanay_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1227</span><span class="mun-name">Guanay</span></a>
+<a href="municipios/1228_tacacoma/IGF/MUN_1228_Tacacoma_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1228</span><span class="mun-name">Tacacoma</span></a>
+<a href="municipios/1229_tipuani/IGF/MUN_1229_Tipuani_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1229</span><span class="mun-name">Tipuani</span></a>
+<a href="municipios/1230_quiabaya/IGF/MUN_1230_Quiabaya_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1230</span><span class="mun-name">Quiabaya</span></a>
+<a href="municipios/1231_combaya/IGF/MUN_1231_Combaya_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1231</span><span class="mun-name">Combaya</span></a>
+<a href="municipios/1232_copacabana/IGF/MUN_1232_Copacabana_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1232</span><span class="mun-name">Copacabana</span></a>
+<a href="municipios/1233_san_pedro_de_tiquina/IGF/MUN_1233_SanPedroDeTiquina_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1233</span><span class="mun-name">San Pedro De Tiquina</span></a>
+<a href="municipios/1234_tito_yupanqui/IGF/MUN_1234_TitoYupanqui_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1234</span><span class="mun-name">Tito Yupanqui</span></a>
+<a href="municipios/1235_chuma/IGF/MUN_1235_Chuma_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1235</span><span class="mun-name">Chuma</span></a>
+<a href="municipios/1236_ayata/IGF/MUN_1236_Ayata_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1236</span><span class="mun-name">Ayata</span></a>
+<a href="municipios/1237_aucapata/IGF/MUN_1237_Aucapata_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1237</span><span class="mun-name">Aucapata</span></a>
+<a href="municipios/1238_corocoro/IGF/MUN_1238_Corocoro_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1238</span><span class="mun-name">Corocoro</span></a>
+<a href="municipios/1239_caquiaviri/IGF/MUN_1239_Caquiaviri_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1239</span><span class="mun-name">Caquiaviri</span></a>
+<a href="municipios/1240_calacoto/IGF/MUN_1240_Calacoto_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1240</span><span class="mun-name">Calacoto</span></a>
+<a href="municipios/1241_comanche/IGF/MUN_1241_Comanche_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1241</span><span class="mun-name">Comanche</span></a>
+<a href="municipios/1242_charana/IGF/MUN_1242_Charana_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1242</span><span class="mun-name">Charaña</span></a>
+<a href="municipios/1243_waldo_ballivian/IGF/MUN_1243_WaldoBallivian_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1243</span><span class="mun-name">Waldo Ballivián</span></a>
+<a href="municipios/1244_nazacara_de_pacajes/IGF/MUN_1244_NazacaraDePacajes_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1244</span><span class="mun-name">Nazacara De Pacajes</span></a>
+<a href="municipios/1245_santiago_de_callapa/IGF/MUN_1245_SantiagoDeCallapa_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1245</span><span class="mun-name">Santiago De Callapa</span></a>
+<a href="municipios/1246_puerto_acosta/IGF/MUN_1246_PuertoAcosta_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1246</span><span class="mun-name">Puerto Acosta</span></a>
+<a href="municipios/1247_mocomoco/IGF/MUN_1247_Mocomoco_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1247</span><span class="mun-name">Mocomoco</span></a>
+<a href="municipios/1248_carabuco/IGF/MUN_1248_Carabuco_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1248</span><span class="mun-name">Carabuco</span></a>
+<a href="municipios/1249_apolo/IGF/MUN_1249_Apolo_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1249</span><span class="mun-name">Apolo</span></a>
+<a href="municipios/1250_pelechuco/IGF/MUN_1250_Pelechuco_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1250</span><span class="mun-name">Pelechuco</span></a>
+<a href="municipios/1251_luribay/IGF/MUN_1251_Luribay_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1251</span><span class="mun-name">Luribay</span></a>
+<a href="municipios/1252_sapahaqui/IGF/MUN_1252_Sapahaqui_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1252</span><span class="mun-name">Sapahaqui</span></a>
+<a href="municipios/1253_yaco/IGF/MUN_1253_Yaco_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1253</span><span class="mun-name">Yaco</span></a>
+<a href="municipios/1254_malla/IGF/MUN_1254_Malla_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1254</span><span class="mun-name">Malla</span></a>
+<a href="municipios/1255_cairoma/IGF/MUN_1255_Cairoma_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1255</span><span class="mun-name">Cairoma</span></a>
+<a href="municipios/1256_chulumani_villa_de_la_libertad/IGF/MUN_1256_ChulumaniVillaDeLaLibertad_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1256</span><span class="mun-name">Chulumani (Villa De La Libertad)</span></a>
+<a href="municipios/1257_irupana_villa_de_lanza/IGF/MUN_1257_IrupanaVillaDeLanza_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1257</span><span class="mun-name">Irupana (Villa De Lanza)</span></a>
+<a href="municipios/1258_yanacachi/IGF/MUN_1258_Yanacachi_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1258</span><span class="mun-name">Yanacachi</span></a>
+<a href="municipios/1259_palos_blancos/IGF/MUN_1259_PalosBlancos_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1259</span><span class="mun-name">Palos Blancos</span></a>
+<a href="municipios/1260_la_asunta/IGF/MUN_1260_LaAsunta_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1260</span><span class="mun-name">La Asunta</span></a>
+<a href="municipios/1261_pucarani/IGF/MUN_1261_Pucarani_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1261</span><span class="mun-name">Pucarani</span></a>
+<a href="municipios/1262_laja/IGF/MUN_1262_Laja_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1262</span><span class="mun-name">Laja</span></a>
+<a href="municipios/1263_batallas/IGF/MUN_1263_Batallas_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1263</span><span class="mun-name">Batallas</span></a>
+<a href="municipios/1264_puerto_perez/IGF/MUN_1264_PuertoPerez_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1264</span><span class="mun-name">Puerto Pérez</span></a>
+<a href="municipios/1265_coroico/IGF/MUN_1265_Coroico_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1265</span><span class="mun-name">Coroico</span></a>
+<a href="municipios/1266_coripata/IGF/MUN_1266_Coripata_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1266</span><span class="mun-name">Coripata</span></a>
+<a href="municipios/1267_ixiamas/IGF/MUN_1267_Ixiamas_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1267</span><span class="mun-name">Ixiamas</span></a>
+<a href="municipios/1268_san_buenaventura/IGF/MUN_1268_SanBuenaventura_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1268</span><span class="mun-name">San Buenaventura</span></a>
+<a href="municipios/1269_general_juan_jose_perez_charazani/IGF/MUN_1269_GeneralJuanJosePerezCharazani_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1269</span><span class="mun-name">General Juan José Pérez (Charazani)</span></a>
+<a href="municipios/1270_curva/IGF/MUN_1270_Curva_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1270</span><span class="mun-name">Curva</span></a>
+<a href="municipios/1271_san_pedro_de_curahuara/IGF/MUN_1271_SanPedroDeCurahuara_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1271</span><span class="mun-name">San Pedro De Curahuara</span></a>
+<a href="municipios/1272_papel_pampa/IGF/MUN_1272_PapelPampa_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1272</span><span class="mun-name">Papel Pampa</span></a>
+<a href="municipios/1273_chacarilla/IGF/MUN_1273_Chacarilla_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1273</span><span class="mun-name">Chacarilla</span></a>
+<a href="municipios/1274_santiago_de_machaca/IGF/MUN_1274_SantiagoDeMachaca_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1274</span><span class="mun-name">Santiago De Machaca</span></a>
+<a href="municipios/1275_catacora/IGF/MUN_1275_Catacora_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1275</span><span class="mun-name">Catacora</span></a>
+<a href="municipios/1276_mapiri/IGF/MUN_1276_Mapiri_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1276</span><span class="mun-name">Mapiri</span></a>
+<a href="municipios/1277_teoponte/IGF/MUN_1277_Teoponte_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1277</span><span class="mun-name">Teoponte</span></a>
+<a href="municipios/1278_san_andres_de_machaca/IGF/MUN_1278_SanAndresDeMachaca_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1278</span><span class="mun-name">San Andrés De Machaca</span></a>
+<a href="municipios/1279_jesus_de_machaca/IGF/MUN_1279_JesusDeMachaca_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1279</span><span class="mun-name">Jesús De Machaca</span></a>
+<a href="municipios/1280_multimunicipal/IGF/MUN_1280_Multimunicipal_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1280</span><span class="mun-name">Multimunicipal</span></a>
+<a href="municipios/1281_huarina/IGF/MUN_1281_Huarina_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1281</span><span class="mun-name">Huarina</span></a>
+<a href="municipios/1282_santiago_de_huata/IGF/MUN_1282_SantiagoDeHuata_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1282</span><span class="mun-name">Santiago De Huata</span></a>
+<a href="municipios/1283_escoma/IGF/MUN_1283_Escoma_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1283</span><span class="mun-name">Escoma</span></a>
+<a href="municipios/1284_humanata/IGF/MUN_1284_Humanata_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1284</span><span class="mun-name">Humanata</span></a>
+<a href="municipios/1285_alto_beni/IGF/MUN_1285_AltoBeni_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1285</span><span class="mun-name">Alto Beni</span></a>
+<a href="municipios/1286_huatajata/IGF/MUN_1286_Huatajata_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1286</span><span class="mun-name">Huatajata</span></a>
+<a href="municipios/1287_chua_cocani/IGF/MUN_1287_ChuaCocani_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1287</span><span class="mun-name">Chua Cocani</span></a>
+</div></div></div>
+<div class="dpto-block"><button class="dpto-btn" onclick="toggle('oruro')" style="--clr:#c71e1d;--clrlt:#e84948;--clrpale:#fdecea"><span class="dpto-title">Oruro</span><span class="dpto-count">33 municipios</span><span class="dpto-arrow" id="arr-oruro">&#9660;</span></button><div class="dpto-panel hidden" id="panel-oruro"><div class="mun-grid"><a href="municipios/1401_oruro/IGF/MUN_1401_Oruro_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1401</span><span class="mun-name">Oruro</span></a>
+<a href="municipios/1402_caracollo/IGF/MUN_1402_Caracollo_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1402</span><span class="mun-name">Caracollo</span></a>
+<a href="municipios/1403_el_choro/IGF/MUN_1403_ElChoro_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1403</span><span class="mun-name">El Choro</span></a>
+<a href="municipios/1404_challapata/IGF/MUN_1404_Challapata_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1404</span><span class="mun-name">Challapata</span></a>
+<a href="municipios/1405_santuario_de_quillacas/IGF/MUN_1405_SantuarioDeQuillacas_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1405</span><span class="mun-name">Santuario De Quillacas</span></a>
+<a href="municipios/1406_huanuni/IGF/MUN_1406_Huanuni_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1406</span><span class="mun-name">Huanuni</span></a>
+<a href="municipios/1407_machacamarca/IGF/MUN_1407_Machacamarca_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1407</span><span class="mun-name">Machacamarca</span></a>
+<a href="municipios/1408_poopo_villa_poopo/IGF/MUN_1408_PoopoVillaPoopo_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1408</span><span class="mun-name">Poopó (Villa Poopó)</span></a>
+<a href="municipios/1409_pazna/IGF/MUN_1409_Pazna_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1409</span><span class="mun-name">Pazña</span></a>
+<a href="municipios/1410_antequera/IGF/MUN_1410_Antequera_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1410</span><span class="mun-name">Antequera</span></a>
+<a href="municipios/1411_eucaliptus/IGF/MUN_1411_Eucaliptus_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1411</span><span class="mun-name">Eucaliptus</span></a>
+<a href="municipios/1412_santiago_de_huari/IGF/MUN_1412_SantiagoDeHuari_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1412</span><span class="mun-name">Santiago De Huari</span></a>
+<a href="municipios/1413_totora/IGF/MUN_1413_Totora_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1413</span><span class="mun-name">Totora</span></a>
+<a href="municipios/1414_corque/IGF/MUN_1414_Corque_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1414</span><span class="mun-name">Corque</span></a>
+<a href="municipios/1415_choquecota/IGF/MUN_1415_Choquecota_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1415</span><span class="mun-name">Choquecota</span></a>
+<a href="municipios/1416_curahuara_de_carangas/IGF/MUN_1416_CurahuaraDeCarangas_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1416</span><span class="mun-name">Curahuara De Carangas</span></a>
+<a href="municipios/1417_turco/IGF/MUN_1417_Turco_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1417</span><span class="mun-name">Turco</span></a>
+<a href="municipios/1418_huachacalla/IGF/MUN_1418_Huachacalla_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1418</span><span class="mun-name">Huachacalla</span></a>
+<a href="municipios/1419_escara/IGF/MUN_1419_Escara_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1419</span><span class="mun-name">Escara</span></a>
+<a href="municipios/1420_cruz_de_machacamarca/IGF/MUN_1420_CruzDeMachacamarca_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1420</span><span class="mun-name">Cruz De Machacamarca</span></a>
+<a href="municipios/1421_yunguyo_de_litoral/IGF/MUN_1421_YunguyoDeLitoral_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1421</span><span class="mun-name">Yunguyo De Litoral</span></a>
+<a href="municipios/1422_esmeralda/IGF/MUN_1422_Esmeralda_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1422</span><span class="mun-name">Esmeralda</span></a>
+<a href="municipios/1423_toledo/IGF/MUN_1423_Toledo_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1423</span><span class="mun-name">Toledo</span></a>
+<a href="municipios/1424_andamarca_stgo_de_andamarca/IGF/MUN_1424_AndamarcaStgoDeAndamarca_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1424</span><span class="mun-name">Andamarca (Stgo. De Andamarca)</span></a>
+<a href="municipios/1425_belen_de_andamarca/IGF/MUN_1425_BelenDeAndamarca_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1425</span><span class="mun-name">Belen De Andamarca</span></a>
+<a href="municipios/1427_pampa_aullagas/IGF/MUN_1427_PampaAullagas_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1427</span><span class="mun-name">Pampa Aullagas</span></a>
+<a href="municipios/1428_la_rivera/IGF/MUN_1428_LaRivera_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1428</span><span class="mun-name">La Rivera</span></a>
+<a href="municipios/1429_todos_santos/IGF/MUN_1429_TodosSantos_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1429</span><span class="mun-name">Todos Santos</span></a>
+<a href="municipios/1430_carangas/IGF/MUN_1430_Carangas_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1430</span><span class="mun-name">Carangas</span></a>
+<a href="municipios/1431_sabaya/IGF/MUN_1431_Sabaya_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1431</span><span class="mun-name">Sabaya</span></a>
+<a href="municipios/1432_coipasa/IGF/MUN_1432_Coipasa_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1432</span><span class="mun-name">Coipasa</span></a>
+<a href="municipios/1434_huayllamarca_stgo_de_huayllamarca/IGF/MUN_1434_HuayllamarcaStgoDeHuayllamarca_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1434</span><span class="mun-name">Huayllamarca (Stgo. De Huayllamarca)</span></a>
+<a href="municipios/1435_soracachi/IGF/MUN_1435_Soracachi_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1435</span><span class="mun-name">Soracachi</span></a>
+</div></div></div>
+<div class="dpto-block"><button class="dpto-btn" onclick="toggle('potosi')" style="--clr:#c71e1d;--clrlt:#e84948;--clrpale:#fdecea"><span class="dpto-title">Potosi</span><span class="dpto-count">41 municipios</span><span class="dpto-arrow" id="arr-potosi">&#9660;</span></button><div class="dpto-panel hidden" id="panel-potosi"><div class="mun-grid"><a href="municipios/1501_potosi/IGF/MUN_1501_Potosi_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1501</span><span class="mun-name">Potosí</span></a>
+<a href="municipios/1502_tinguipaya/IGF/MUN_1502_Tinguipaya_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1502</span><span class="mun-name">Tinguipaya</span></a>
+<a href="municipios/1503_yocalla/IGF/MUN_1503_Yocalla_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1503</span><span class="mun-name">Yocalla</span></a>
+<a href="municipios/1504_urmiri/IGF/MUN_1504_Urmiri_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1504</span><span class="mun-name">Urmiri</span></a>
+<a href="municipios/1505_uncia/IGF/MUN_1505_Uncia_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1505</span><span class="mun-name">Uncía</span></a>
+<a href="municipios/1506_chayanta/IGF/MUN_1506_Chayanta_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1506</span><span class="mun-name">Chayanta</span></a>
+<a href="municipios/1507_llallagua/IGF/MUN_1507_Llallagua_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1507</span><span class="mun-name">Llallagua</span></a>
+<a href="municipios/1508_betanzos/IGF/MUN_1508_Betanzos_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1508</span><span class="mun-name">Betanzos</span></a>
+<a href="municipios/1509_chaqui/IGF/MUN_1509_Chaqui_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1509</span><span class="mun-name">Chaqui</span></a>
+<a href="municipios/1510_tacobamba/IGF/MUN_1510_Tacobamba_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1510</span><span class="mun-name">Tacobamba</span></a>
+<a href="municipios/1511_colquechaca/IGF/MUN_1511_Colquechaca_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1511</span><span class="mun-name">Colquechaca</span></a>
+<a href="municipios/1512_ravelo/IGF/MUN_1512_Ravelo_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1512</span><span class="mun-name">Ravelo</span></a>
+<a href="municipios/1513_pocoata/IGF/MUN_1513_Pocoata_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1513</span><span class="mun-name">Pocoata</span></a>
+<a href="municipios/1514_ocuri/IGF/MUN_1514_Ocuri_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1514</span><span class="mun-name">Ocurí</span></a>
+<a href="municipios/1515_san_pedro/IGF/MUN_1515_SanPedro_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1515</span><span class="mun-name">San Pedro</span></a>
+<a href="municipios/1516_toro_toro/IGF/MUN_1516_ToroToro_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1516</span><span class="mun-name">Toro Toro</span></a>
+<a href="municipios/1517_cotagaita/IGF/MUN_1517_Cotagaita_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1517</span><span class="mun-name">Cotagaita</span></a>
+<a href="municipios/1518_vitichi/IGF/MUN_1518_Vitichi_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1518</span><span class="mun-name">Vitichi</span></a>
+<a href="municipios/1519_tupiza/IGF/MUN_1519_Tupiza_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1519</span><span class="mun-name">Tupiza</span></a>
+<a href="municipios/1520_atocha/IGF/MUN_1520_Atocha_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1520</span><span class="mun-name">Atocha</span></a>
+<a href="municipios/1521_colcha_k_villa_martin/IGF/MUN_1521_ColchaKVillaMartin_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1521</span><span class="mun-name">Colcha"K" (Villa Martín)</span></a>
+<a href="municipios/1522_san_pedro_de_quemes/IGF/MUN_1522_SanPedroDeQuemes_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1522</span><span class="mun-name">San Pedro De Quemes</span></a>
+<a href="municipios/1523_san_pablo_de_lipez/IGF/MUN_1523_SanPabloDeLipez_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1523</span><span class="mun-name">San Pablo De Lípez</span></a>
+<a href="municipios/1524_mojinete/IGF/MUN_1524_Mojinete_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1524</span><span class="mun-name">Mojinete</span></a>
+<a href="municipios/1525_san_antonio_de_esmoruco/IGF/MUN_1525_SanAntonioDeEsmoruco_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1525</span><span class="mun-name">San Antonio De Esmoruco</span></a>
+<a href="municipios/1526_sacaca_villa_de_sacaca/IGF/MUN_1526_SacacaVillaDeSacaca_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1526</span><span class="mun-name">Sacaca (Villa De Sacaca)</span></a>
+<a href="municipios/1527_caripuyo/IGF/MUN_1527_Caripuyo_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1527</span><span class="mun-name">Caripuyo</span></a>
+<a href="municipios/1528_puna_villa_talavera/IGF/MUN_1528_PunaVillaTalavera_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1528</span><span class="mun-name">Puna (Villa Talavera)</span></a>
+<a href="municipios/1529_caiza_d/IGF/MUN_1529_CaizaD_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1529</span><span class="mun-name">Caiza "D"</span></a>
+<a href="municipios/1530_uyuni/IGF/MUN_1530_Uyuni_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1530</span><span class="mun-name">Uyuni</span></a>
+<a href="municipios/1531_tomave/IGF/MUN_1531_Tomave_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1531</span><span class="mun-name">Tomave</span></a>
+<a href="municipios/1532_porco/IGF/MUN_1532_Porco_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1532</span><span class="mun-name">Porco</span></a>
+<a href="municipios/1533_arampampa/IGF/MUN_1533_Arampampa_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1533</span><span class="mun-name">Arampampa</span></a>
+<a href="municipios/1534_acasio/IGF/MUN_1534_Acasio_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1534</span><span class="mun-name">Acasio</span></a>
+<a href="municipios/1535_llica/IGF/MUN_1535_Llica_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1535</span><span class="mun-name">Llica</span></a>
+<a href="municipios/1536_tahua/IGF/MUN_1536_Tahua_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1536</span><span class="mun-name">Tahua</span></a>
+<a href="municipios/1537_villazon/IGF/MUN_1537_Villazon_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1537</span><span class="mun-name">Villazón</span></a>
+<a href="municipios/1538_san_agustin/IGF/MUN_1538_SanAgustin_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1538</span><span class="mun-name">San Agustín</span></a>
+<a href="municipios/1539_ckochas/IGF/MUN_1539_Ckochas_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1539</span><span class="mun-name">Ckochas</span></a>
+<a href="municipios/1540_chuquiuta_ayllu_jucumani/IGF/MUN_1540_ChuquiutaAylluJucumani_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1540</span><span class="mun-name">Chuquiuta "Ayllu Jucumani"</span></a>
+<a href="municipios/1541_san_pedro_de_macha/IGF/MUN_1541_SanPedroDeMacha_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1541</span><span class="mun-name">San Pedro De Macha</span></a>
+</div></div></div>
+</div>
+<div class="region-block">
+<div class="region-header" style="background:linear-gradient(to bottom,#6b4010,#c4821c,#6b4010)"><span class="rh-name">VALLES</span><span class="rh-sub">3 dptos &middot; 86 municipios</span></div>
+<div class="dpto-block"><button class="dpto-btn" onclick="toggle('chuquisaca')" style="--clr:#9e7500;--clrlt:#c4a020;--clrpale:#fdf1cc"><span class="dpto-title">Chuquisaca</span><span class="dpto-count">28 municipios</span><span class="dpto-arrow" id="arr-chuquisaca">&#9660;</span></button><div class="dpto-panel hidden" id="panel-chuquisaca"><div class="mun-grid"><a href="municipios/1101_sucre/IGF/MUN_1101_Sucre_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1101</span><span class="mun-name">Sucre</span></a>
+<a href="municipios/1102_yotala/IGF/MUN_1102_Yotala_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1102</span><span class="mun-name">Yotala</span></a>
+<a href="municipios/1103_poroma/IGF/MUN_1103_Poroma_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1103</span><span class="mun-name">Poroma</span></a>
+<a href="municipios/1104_villa_azurduy/IGF/MUN_1104_VillaAzurduy_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1104</span><span class="mun-name">Villa Azurduy</span></a>
+<a href="municipios/1105_tarvita_villa_orias/IGF/MUN_1105_TarvitaVillaOrias_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1105</span><span class="mun-name">Tarvita (Villa Orias)</span></a>
+<a href="municipios/1106_villa_zudanez_tacopaya/IGF/MUN_1106_VillaZudanezTacopaya_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1106</span><span class="mun-name">Villa Zudañez (Tacopaya)</span></a>
+<a href="municipios/1107_presto/IGF/MUN_1107_Presto_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1107</span><span class="mun-name">Presto</span></a>
+<a href="municipios/1108_villa_mojocoya/IGF/MUN_1108_VillaMojocoya_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1108</span><span class="mun-name">Villa Mojocoya</span></a>
+<a href="municipios/1109_icla/IGF/MUN_1109_Icla_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1109</span><span class="mun-name">Icla</span></a>
+<a href="municipios/1110_padilla/IGF/MUN_1110_Padilla_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1110</span><span class="mun-name">Padilla</span></a>
+<a href="municipios/1111_tomina/IGF/MUN_1111_Tomina_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1111</span><span class="mun-name">Tomina</span></a>
+<a href="municipios/1112_sopachuy/IGF/MUN_1112_Sopachuy_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1112</span><span class="mun-name">Sopachuy</span></a>
+<a href="municipios/1113_villa_alcala/IGF/MUN_1113_VillaAlcala_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1113</span><span class="mun-name">Villa Alcalá</span></a>
+<a href="municipios/1114_el_villar/IGF/MUN_1114_ElVillar_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1114</span><span class="mun-name">El Villar</span></a>
+<a href="municipios/1115_monteagudo/IGF/MUN_1115_Monteagudo_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1115</span><span class="mun-name">Monteagudo</span></a>
+<a href="municipios/1116_san_pablo_de_huacareta/IGF/MUN_1116_SanPabloDeHuacareta_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1116</span><span class="mun-name">San Pablo De Huacareta</span></a>
+<a href="municipios/1117_tarabuco/IGF/MUN_1117_Tarabuco_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1117</span><span class="mun-name">Tarabuco</span></a>
+<a href="municipios/1118_yampaparaez/IGF/MUN_1118_Yampaparaez_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1118</span><span class="mun-name">Yampaparáez</span></a>
+<a href="municipios/1119_camargo/IGF/MUN_1119_Camargo_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1119</span><span class="mun-name">Camargo</span></a>
+<a href="municipios/1120_san_lucas/IGF/MUN_1120_SanLucas_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1120</span><span class="mun-name">San Lucas</span></a>
+<a href="municipios/1121_incahuasi/IGF/MUN_1121_Incahuasi_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1121</span><span class="mun-name">Incahuasi</span></a>
+<a href="municipios/1122_villa_serrano/IGF/MUN_1122_VillaSerrano_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1122</span><span class="mun-name">Villa Serrano</span></a>
+<a href="municipios/1123_camataqui_villa_abecia/IGF/MUN_1123_CamataquiVillaAbecia_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1123</span><span class="mun-name">Camataqui (Villa Abecia)</span></a>
+<a href="municipios/1124_culpina/IGF/MUN_1124_Culpina_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1124</span><span class="mun-name">Culpina</span></a>
+<a href="municipios/1125_las_carreras/IGF/MUN_1125_LasCarreras_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1125</span><span class="mun-name">Las Carreras</span></a>
+<a href="municipios/1126_villa_vaca_guzman/IGF/MUN_1126_VillaVacaGuzman_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1126</span><span class="mun-name">Villa Vaca Guzmán</span></a>
+<a href="municipios/1128_machareti/IGF/MUN_1128_Machareti_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1128</span><span class="mun-name">Machareti</span></a>
+<a href="municipios/1129_villa_charcas/IGF/MUN_1129_VillaCharcas_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1129</span><span class="mun-name">Villa Charcas</span></a>
+</div></div></div>
+<div class="dpto-block"><button class="dpto-btn" onclick="toggle('cochabamba')" style="--clr:#9e7500;--clrlt:#c4a020;--clrpale:#fdf1cc"><span class="dpto-title">Cochabamba</span><span class="dpto-count">47 municipios</span><span class="dpto-arrow" id="arr-cochabamba">&#9660;</span></button><div class="dpto-panel hidden" id="panel-cochabamba"><div class="mun-grid"><a href="municipios/1301_cochabamba/IGF/MUN_1301_Cochabamba_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1301</span><span class="mun-name">Cochabamba</span></a>
+<a href="municipios/1302_quillacollo/IGF/MUN_1302_Quillacollo_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1302</span><span class="mun-name">Quillacollo</span></a>
+<a href="municipios/1303_sipe_sipe/IGF/MUN_1303_SipeSipe_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1303</span><span class="mun-name">Sipe Sipe</span></a>
+<a href="municipios/1304_tiquipaya/IGF/MUN_1304_Tiquipaya_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1304</span><span class="mun-name">Tiquipaya</span></a>
+<a href="municipios/1305_vinto/IGF/MUN_1305_Vinto_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1305</span><span class="mun-name">Vinto</span></a>
+<a href="municipios/1306_colcapirhua/IGF/MUN_1306_Colcapirhua_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1306</span><span class="mun-name">Colcapirhua</span></a>
+<a href="municipios/1307_aiquile/IGF/MUN_1307_Aiquile_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1307</span><span class="mun-name">Aiquile</span></a>
+<a href="municipios/1308_pasorapa/IGF/MUN_1308_Pasorapa_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1308</span><span class="mun-name">Pasorapa</span></a>
+<a href="municipios/1309_omereque/IGF/MUN_1309_Omereque_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1309</span><span class="mun-name">Omereque</span></a>
+<a href="municipios/1310_independencia/IGF/MUN_1310_Independencia_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1310</span><span class="mun-name">Independencia</span></a>
+<a href="municipios/1311_morochata/IGF/MUN_1311_Morochata_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1311</span><span class="mun-name">Morochata</span></a>
+<a href="municipios/1312_sacaba/IGF/MUN_1312_Sacaba_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1312</span><span class="mun-name">Sacaba</span></a>
+<a href="municipios/1313_colomi/IGF/MUN_1313_Colomi_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1313</span><span class="mun-name">Colomi</span></a>
+<a href="municipios/1314_villa_tunari/IGF/MUN_1314_VillaTunari_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1314</span><span class="mun-name">Villa Tunari</span></a>
+<a href="municipios/1315_punata/IGF/MUN_1315_Punata_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1315</span><span class="mun-name">Punata</span></a>
+<a href="municipios/1316_villa_rivero/IGF/MUN_1316_VillaRivero_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1316</span><span class="mun-name">Villa Rivero</span></a>
+<a href="municipios/1317_san_benito_villa_jose_quintin_mendoza/IGF/MUN_1317_SanBenitoVillaJoseQuintinMendoza_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1317</span><span class="mun-name">San Benito (Villa José Quintin Mendoza)</span></a>
+<a href="municipios/1318_tacachi/IGF/MUN_1318_Tacachi_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1318</span><span class="mun-name">Tacachi</span></a>
+<a href="municipios/1319_villa_gualberto_villarroel/IGF/MUN_1319_VillaGualbertoVillarroel_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1319</span><span class="mun-name">Villa Gualberto Villarroel</span></a>
+<a href="municipios/1320_tarata/IGF/MUN_1320_Tarata_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1320</span><span class="mun-name">Tarata</span></a>
+<a href="municipios/1321_anzaldo/IGF/MUN_1321_Anzaldo_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1321</span><span class="mun-name">Anzaldo</span></a>
+<a href="municipios/1322_arbieto/IGF/MUN_1322_Arbieto_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1322</span><span class="mun-name">Arbieto</span></a>
+<a href="municipios/1323_sacabamba/IGF/MUN_1323_Sacabamba_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1323</span><span class="mun-name">Sacabamba</span></a>
+<a href="municipios/1324_cliza/IGF/MUN_1324_Cliza_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1324</span><span class="mun-name">Cliza</span></a>
+<a href="municipios/1325_toco/IGF/MUN_1325_Toco_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1325</span><span class="mun-name">Toco</span></a>
+<a href="municipios/1326_tolata/IGF/MUN_1326_Tolata_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1326</span><span class="mun-name">Tolata</span></a>
+<a href="municipios/1327_capinota/IGF/MUN_1327_Capinota_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1327</span><span class="mun-name">Capinota</span></a>
+<a href="municipios/1328_santivanez/IGF/MUN_1328_Santivanez_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1328</span><span class="mun-name">Santivañez</span></a>
+<a href="municipios/1329_sicaya/IGF/MUN_1329_Sicaya_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1329</span><span class="mun-name">Sicaya</span></a>
+<a href="municipios/1330_tapacari/IGF/MUN_1330_Tapacari_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1330</span><span class="mun-name">Tapacari</span></a>
+<a href="municipios/1331_totora/IGF/MUN_1331_Totora_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1331</span><span class="mun-name">Totora</span></a>
+<a href="municipios/1332_pojo/IGF/MUN_1332_Pojo_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1332</span><span class="mun-name">Pojo</span></a>
+<a href="municipios/1333_pocona/IGF/MUN_1333_Pocona_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1333</span><span class="mun-name">Pocona</span></a>
+<a href="municipios/1334_chimore/IGF/MUN_1334_Chimore_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1334</span><span class="mun-name">Chimoré</span></a>
+<a href="municipios/1335_puerto_villarroel/IGF/MUN_1335_PuertoVillarroel_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1335</span><span class="mun-name">Puerto Villarroel</span></a>
+<a href="municipios/1336_arani/IGF/MUN_1336_Arani_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1336</span><span class="mun-name">Arani</span></a>
+<a href="municipios/1337_vacas/IGF/MUN_1337_Vacas_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1337</span><span class="mun-name">Vacas</span></a>
+<a href="municipios/1338_arque/IGF/MUN_1338_Arque_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1338</span><span class="mun-name">Arque</span></a>
+<a href="municipios/1339_tacopaya/IGF/MUN_1339_Tacopaya_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1339</span><span class="mun-name">Tacopaya</span></a>
+<a href="municipios/1340_bolivar/IGF/MUN_1340_Bolivar_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1340</span><span class="mun-name">Bolivar</span></a>
+<a href="municipios/1341_tiraque/IGF/MUN_1341_Tiraque_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1341</span><span class="mun-name">Tiraque</span></a>
+<a href="municipios/1342_mizque/IGF/MUN_1342_Mizque_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1342</span><span class="mun-name">Mizque</span></a>
+<a href="municipios/1343_vila_vila/IGF/MUN_1343_VilaVila_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1343</span><span class="mun-name">Vila Vila</span></a>
+<a href="municipios/1344_alalay/IGF/MUN_1344_Alalay_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1344</span><span class="mun-name">Alalay</span></a>
+<a href="municipios/1345_entre_rios/IGF/MUN_1345_EntreRios_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1345</span><span class="mun-name">Entre Rios</span></a>
+<a href="municipios/1346_cocapata/IGF/MUN_1346_Cocapata_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1346</span><span class="mun-name">Cocapata</span></a>
+<a href="municipios/1347_shinaota/IGF/MUN_1347_Shinaota_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1347</span><span class="mun-name">Shinaota</span></a>
+</div></div></div>
+<div class="dpto-block"><button class="dpto-btn" onclick="toggle('tarija')" style="--clr:#9e7500;--clrlt:#c4a020;--clrpale:#fdf1cc"><span class="dpto-title">Tarija</span><span class="dpto-count">11 municipios</span><span class="dpto-arrow" id="arr-tarija">&#9660;</span></button><div class="dpto-panel hidden" id="panel-tarija"><div class="mun-grid"><a href="municipios/1601_tarija/IGF/MUN_1601_Tarija_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1601</span><span class="mun-name">Tarija</span></a>
+<a href="municipios/1602_padcaya/IGF/MUN_1602_Padcaya_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1602</span><span class="mun-name">Padcaya</span></a>
+<a href="municipios/1603_bermejo/IGF/MUN_1603_Bermejo_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1603</span><span class="mun-name">Bermejo</span></a>
+<a href="municipios/1604_yacuiba/IGF/MUN_1604_Yacuiba_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1604</span><span class="mun-name">Yacuiba</span></a>
+<a href="municipios/1605_carapari/IGF/MUN_1605_Carapari_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1605</span><span class="mun-name">Caraparí</span></a>
+<a href="municipios/1606_villamontes/IGF/MUN_1606_Villamontes_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1606</span><span class="mun-name">Villamontes</span></a>
+<a href="municipios/1607_uriondo_concepcion/IGF/MUN_1607_UriondoConcepcion_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1607</span><span class="mun-name">Uriondo (Concepción)</span></a>
+<a href="municipios/1608_yunchara/IGF/MUN_1608_Yunchara_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1608</span><span class="mun-name">Yunchara</span></a>
+<a href="municipios/1609_san_lorenzo/IGF/MUN_1609_SanLorenzo_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1609</span><span class="mun-name">San Lorenzo</span></a>
+<a href="municipios/1610_el_puente/IGF/MUN_1610_ElPuente_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1610</span><span class="mun-name">El Puente</span></a>
+<a href="municipios/1611_entre_rios/IGF/MUN_1611_EntreRios_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1611</span><span class="mun-name">Entre Ríos</span></a>
+</div></div></div>
+</div>
+<div class="region-block">
+<div class="region-header" style="background:linear-gradient(to bottom,#0d2818,#1d5938,#0d2818)"><span class="rh-name">ORIENTE</span><span class="rh-sub">3 dptos &middot; 88 municipios</span></div>
+<div class="dpto-block"><button class="dpto-btn" onclick="toggle('santa_cruz')" style="--clr:#1d5938;--clrlt:#2a8454;--clrpale:#e2f3ea"><span class="dpto-title">Santa Cruz</span><span class="dpto-count">54 municipios</span><span class="dpto-arrow" id="arr-santa_cruz">&#9660;</span></button><div class="dpto-panel hidden" id="panel-santa_cruz"><div class="mun-grid"><a href="municipios/1701_santa_cruz_de_la_sierra/IGF/MUN_1701_SantaCruzDeLaSierra_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1701</span><span class="mun-name">Santa Cruz De La Sierra</span></a>
+<a href="municipios/1702_cotoca/IGF/MUN_1702_Cotoca_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1702</span><span class="mun-name">Cotoca</span></a>
+<a href="municipios/1703_porongo_ayacucho/IGF/MUN_1703_PorongoAyacucho_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1703</span><span class="mun-name">Porongo  (Ayacucho)</span></a>
+<a href="municipios/1704_la_guardia/IGF/MUN_1704_LaGuardia_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1704</span><span class="mun-name">La Guardia</span></a>
+<a href="municipios/1705_el_torno/IGF/MUN_1705_ElTorno_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1705</span><span class="mun-name">El Torno</span></a>
+<a href="municipios/1706_warnes/IGF/MUN_1706_Warnes_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1706</span><span class="mun-name">Warnes</span></a>
+<a href="municipios/1707_san_ignacio_san_ignacio_de_velasco/IGF/MUN_1707_SanIgnacioSanIgnacioDeVelasco_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1707</span><span class="mun-name">San Ignacio (San Ignacio De Velasco)</span></a>
+<a href="municipios/1708_san_miguel_san_miguel_de_velasco/IGF/MUN_1708_SanMiguelSanMiguelDeVelasco_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1708</span><span class="mun-name">San Miguel (San Miguel De Velasco)</span></a>
+<a href="municipios/1709_san_rafael/IGF/MUN_1709_SanRafael_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1709</span><span class="mun-name">San Rafael</span></a>
+<a href="municipios/1710_buena_vista/IGF/MUN_1710_BuenaVista_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1710</span><span class="mun-name">Buena Vista</span></a>
+<a href="municipios/1711_san_carlos/IGF/MUN_1711_SanCarlos_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1711</span><span class="mun-name">San Carlos</span></a>
+<a href="municipios/1712_yapacani/IGF/MUN_1712_Yapacani_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1712</span><span class="mun-name">Yapacaní</span></a>
+<a href="municipios/1713_san_jose/IGF/MUN_1713_SanJose_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1713</span><span class="mun-name">San José</span></a>
+<a href="municipios/1714_pailon/IGF/MUN_1714_Pailon_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1714</span><span class="mun-name">Pailón</span></a>
+<a href="municipios/1715_robore/IGF/MUN_1715_Robore_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1715</span><span class="mun-name">Robore</span></a>
+<a href="municipios/1716_portachuelo/IGF/MUN_1716_Portachuelo_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1716</span><span class="mun-name">Portachuelo</span></a>
+<a href="municipios/1717_santa_rosa_del_sara/IGF/MUN_1717_SantaRosaDelSara_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1717</span><span class="mun-name">Santa Rosa Del Sara</span></a>
+<a href="municipios/1718_lagunillas/IGF/MUN_1718_Lagunillas_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1718</span><span class="mun-name">Lagunillas</span></a>
+<a href="municipios/1720_cabezas/IGF/MUN_1720_Cabezas_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1720</span><span class="mun-name">Cabezas</span></a>
+<a href="municipios/1721_cuevo/IGF/MUN_1721_Cuevo_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1721</span><span class="mun-name">Cuevo</span></a>
+<a href="municipios/1723_camiri/IGF/MUN_1723_Camiri_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1723</span><span class="mun-name">Camiri</span></a>
+<a href="municipios/1724_boyuibe/IGF/MUN_1724_Boyuibe_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1724</span><span class="mun-name">Boyuibe</span></a>
+<a href="municipios/1725_vallegrande/IGF/MUN_1725_Vallegrande_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1725</span><span class="mun-name">Vallegrande</span></a>
+<a href="municipios/1726_trigal/IGF/MUN_1726_Trigal_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1726</span><span class="mun-name">Trigal</span></a>
+<a href="municipios/1727_moro_moro/IGF/MUN_1727_MoroMoro_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1727</span><span class="mun-name">Moro Moro</span></a>
+<a href="municipios/1728_postrer_valle/IGF/MUN_1728_PostrerValle_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1728</span><span class="mun-name">Postrer Valle</span></a>
+<a href="municipios/1729_pucara/IGF/MUN_1729_Pucara_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1729</span><span class="mun-name">Pucara</span></a>
+<a href="municipios/1730_samaipata/IGF/MUN_1730_Samaipata_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1730</span><span class="mun-name">Samaipata</span></a>
+<a href="municipios/1731_pampa_grande/IGF/MUN_1731_PampaGrande_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1731</span><span class="mun-name">Pampa Grande</span></a>
+<a href="municipios/1732_mairana/IGF/MUN_1732_Mairana_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1732</span><span class="mun-name">Mairana</span></a>
+<a href="municipios/1733_quirusillas/IGF/MUN_1733_Quirusillas_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1733</span><span class="mun-name">Quirusillas</span></a>
+<a href="municipios/1734_montero/IGF/MUN_1734_Montero_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1734</span><span class="mun-name">Montero</span></a>
+<a href="municipios/1735_general_agustin_saavedra/IGF/MUN_1735_GeneralAgustinSaavedra_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1735</span><span class="mun-name">General Agustín Saavedra</span></a>
+<a href="municipios/1736_mineros/IGF/MUN_1736_Mineros_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1736</span><span class="mun-name">Mineros</span></a>
+<a href="municipios/1737_concepcion/IGF/MUN_1737_Concepcion_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1737</span><span class="mun-name">Concepción</span></a>
+<a href="municipios/1738_san_javier/IGF/MUN_1738_SanJavier_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1738</span><span class="mun-name">San Javier</span></a>
+<a href="municipios/1739_san_julian/IGF/MUN_1739_SanJulian_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1739</span><span class="mun-name">San Julian</span></a>
+<a href="municipios/1740_san_matias/IGF/MUN_1740_SanMatias_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1740</span><span class="mun-name">San Matías</span></a>
+<a href="municipios/1741_comarapa/IGF/MUN_1741_Comarapa_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1741</span><span class="mun-name">Comarapa</span></a>
+<a href="municipios/1742_saipina/IGF/MUN_1742_Saipina_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1742</span><span class="mun-name">Saipina</span></a>
+<a href="municipios/1743_puerto_suarez/IGF/MUN_1743_PuertoSuarez_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1743</span><span class="mun-name">Puerto Suarez</span></a>
+<a href="municipios/1744_puerto_quijarro/IGF/MUN_1744_PuertoQuijarro_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1744</span><span class="mun-name">Puerto Quijarro</span></a>
+<a href="municipios/1745_ascencion_de_guarayos/IGF/MUN_1745_AscencionDeGuarayos_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1745</span><span class="mun-name">Ascención De Guarayos</span></a>
+<a href="municipios/1746_urubicha/IGF/MUN_1746_Urubicha_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1746</span><span class="mun-name">Urubicha</span></a>
+<a href="municipios/1747_el_puente/IGF/MUN_1747_ElPuente_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1747</span><span class="mun-name">El Puente</span></a>
+<a href="municipios/1748_okinawa_i/IGF/MUN_1748_OkinawaI_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1748</span><span class="mun-name">Okinawa I</span></a>
+<a href="municipios/1749_san_antonio_de_lomerio/IGF/MUN_1749_SanAntonioDeLomerio_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1749</span><span class="mun-name">San Antonio De Lomerio</span></a>
+<a href="municipios/1750_san_ramon/IGF/MUN_1750_SanRamon_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1750</span><span class="mun-name">San Ramón</span></a>
+<a href="municipios/1751_el_carmen_rivero_torrez/IGF/MUN_1751_ElCarmenRiveroTorrez_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1751</span><span class="mun-name">El Carmen Rivero Tórrez</span></a>
+<a href="municipios/1752_san_juan/IGF/MUN_1752_SanJuan_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1752</span><span class="mun-name">San Juan</span></a>
+<a href="municipios/1753_fernandez_alonso/IGF/MUN_1753_FernandezAlonso_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1753</span><span class="mun-name">Fernández Alonso</span></a>
+<a href="municipios/1754_san_pedro/IGF/MUN_1754_SanPedro_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1754</span><span class="mun-name">San Pedro</span></a>
+<a href="municipios/1755_cuatro_canadas/IGF/MUN_1755_CuatroCanadas_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1755</span><span class="mun-name">Cuatro Cañadas</span></a>
+<a href="municipios/1756_colpa_belgica/IGF/MUN_1756_ColpaBelgica_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1756</span><span class="mun-name">Colpa Bélgica</span></a>
+</div></div></div>
+<div class="dpto-block"><button class="dpto-btn" onclick="toggle('beni')" style="--clr:#1d5938;--clrlt:#2a8454;--clrpale:#e2f3ea"><span class="dpto-title">Beni</span><span class="dpto-count">19 municipios</span><span class="dpto-arrow" id="arr-beni">&#9660;</span></button><div class="dpto-panel hidden" id="panel-beni"><div class="mun-grid"><a href="municipios/1801_trinidad/IGF/MUN_1801_Trinidad_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1801</span><span class="mun-name">Trinidad</span></a>
+<a href="municipios/1802_san_javier/IGF/MUN_1802_SanJavier_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1802</span><span class="mun-name">San Javier</span></a>
+<a href="municipios/1803_riberalta/IGF/MUN_1803_Riberalta_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1803</span><span class="mun-name">Riberalta</span></a>
+<a href="municipios/1805_puerto_guayaramerin/IGF/MUN_1805_PuertoGuayaramerin_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1805</span><span class="mun-name">Puerto Guayaramerín</span></a>
+<a href="municipios/1806_reyes/IGF/MUN_1806_Reyes_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1806</span><span class="mun-name">Reyes</span></a>
+<a href="municipios/1807_puerto_rurrenabaque/IGF/MUN_1807_PuertoRurrenabaque_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1807</span><span class="mun-name">Puerto Rurrenabaque</span></a>
+<a href="municipios/1808_san_borja/IGF/MUN_1808_SanBorja_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1808</span><span class="mun-name">San Borja</span></a>
+<a href="municipios/1809_santa_rosa/IGF/MUN_1809_SantaRosa_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1809</span><span class="mun-name">Santa Rosa</span></a>
+<a href="municipios/1810_santa_ana/IGF/MUN_1810_SantaAna_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1810</span><span class="mun-name">Santa Ana</span></a>
+<a href="municipios/1811_san_ignacio/IGF/MUN_1811_SanIgnacio_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1811</span><span class="mun-name">San Ignacio</span></a>
+<a href="municipios/1812_loreto/IGF/MUN_1812_Loreto_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1812</span><span class="mun-name">Loreto</span></a>
+<a href="municipios/1813_san_andres/IGF/MUN_1813_SanAndres_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1813</span><span class="mun-name">San Andrés</span></a>
+<a href="municipios/1814_san_joaquin/IGF/MUN_1814_SanJoaquin_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1814</span><span class="mun-name">San Joaquín</span></a>
+<a href="municipios/1815_san_ramon/IGF/MUN_1815_SanRamon_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1815</span><span class="mun-name">San Ramón</span></a>
+<a href="municipios/1816_puerto_siles/IGF/MUN_1816_PuertoSiles_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1816</span><span class="mun-name">Puerto Siles</span></a>
+<a href="municipios/1817_magdalena/IGF/MUN_1817_Magdalena_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1817</span><span class="mun-name">Magdalena</span></a>
+<a href="municipios/1818_baures/IGF/MUN_1818_Baures_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1818</span><span class="mun-name">Baures</span></a>
+<a href="municipios/1819_huacaraje/IGF/MUN_1819_Huacaraje_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1819</span><span class="mun-name">Huacaraje</span></a>
+<a href="municipios/1820_exaltacion/IGF/MUN_1820_Exaltacion_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1820</span><span class="mun-name">Exaltación</span></a>
+</div></div></div>
+<div class="dpto-block"><button class="dpto-btn" onclick="toggle('pando')" style="--clr:#1d5938;--clrlt:#2a8454;--clrpale:#e2f3ea"><span class="dpto-title">Pando</span><span class="dpto-count">15 municipios</span><span class="dpto-arrow" id="arr-pando">&#9660;</span></button><div class="dpto-panel hidden" id="panel-pando"><div class="mun-grid"><a href="municipios/1901_cobija/IGF/MUN_1901_Cobija_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1901</span><span class="mun-name">Cobija</span></a>
+<a href="municipios/1902_porvenir/IGF/MUN_1902_Porvenir_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1902</span><span class="mun-name">Porvenir</span></a>
+<a href="municipios/1903_bolpebra/IGF/MUN_1903_Bolpebra_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1903</span><span class="mun-name">Bolpebra</span></a>
+<a href="municipios/1904_bella_flor/IGF/MUN_1904_BellaFlor_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1904</span><span class="mun-name">Bella Flor</span></a>
+<a href="municipios/1905_puerto_rico/IGF/MUN_1905_PuertoRico_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1905</span><span class="mun-name">Puerto Rico</span></a>
+<a href="municipios/1906_san_pedro/IGF/MUN_1906_SanPedro_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1906</span><span class="mun-name">San Pedro</span></a>
+<a href="municipios/1907_filadelfia/IGF/MUN_1907_Filadelfia_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1907</span><span class="mun-name">Filadelfia</span></a>
+<a href="municipios/1908_puerto_gonzalo_moreno/IGF/MUN_1908_PuertoGonzaloMoreno_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1908</span><span class="mun-name">Puerto Gonzalo Moreno</span></a>
+<a href="municipios/1909_san_lorenzo/IGF/MUN_1909_SanLorenzo_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1909</span><span class="mun-name">San Lorenzo</span></a>
+<a href="municipios/1910_sena/IGF/MUN_1910_Sena_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1910</span><span class="mun-name">Sena</span></a>
+<a href="municipios/1911_santa_rosa_del_abuna/IGF/MUN_1911_SantaRosaDelAbuna_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1911</span><span class="mun-name">Santa Rosa Del Abuná</span></a>
+<a href="municipios/1912_ingavi_humaita/IGF/MUN_1912_IngaviHumaita_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1912</span><span class="mun-name">Ingavi (Humaita)</span></a>
+<a href="municipios/1913_nueva_esperanza/IGF/MUN_1913_NuevaEsperanza_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1913</span><span class="mun-name">Nueva Esperanza</span></a>
+<a href="municipios/1914_villa_nueva_loma_alta/IGF/MUN_1914_VillaNuevaLomaAlta_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1914</span><span class="mun-name">Villa Nueva (Loma Alta)</span></a>
+<a href="municipios/1915_santos_mercado/IGF/MUN_1915_SantosMercado_Dashboard.html" class="mun-link" target="_blank"><span class="mun-code">1915</span><span class="mun-name">Santos Mercado</span></a>
+</div></div></div>
+</div>
+</div>
+
+<footer>
+  <div class="ft-brand">Atlas Fiscal Municipal &middot; Bolivia</div>
+  <div class="ft-src"><strong>Fuente:</strong> SIGEP &middot; Ministerio de Econom&iacute;a y Finanzas P&uacute;blicas (2016&ndash;2025)</div>
+  <div class="ft-auth">POPULI<span>&middot;</span>CCTD<span>&middot;</span>UPSA<span>&middot;</span>Carlos Augusto Aranda Herrera</div>
+</footer>
+
+<script>
+function toggle(id) {
+  var panel = document.getElementById('panel-' + id);
+  var arrow = document.getElementById('arr-' + id);
+  var btn = arrow.closest('.dpto-btn');
+  var hidden = panel.classList.contains('hidden');
+  panel.classList.toggle('hidden', !hidden);
+  arrow.classList.toggle('open', hidden);
+  btn.classList.toggle('open', hidden);
+}
+
+function doSearch(q) {
+  q = q.trim().toLowerCase();
+  var links = document.querySelectorAll('.mun-link');
+  var panels = document.querySelectorAll('.dpto-panel');
+  var arrows = document.querySelectorAll('.dpto-arrow');
+  var btns = document.querySelectorAll('.dpto-btn');
+  var found = 0;
+  if (!q) {
+    links.forEach(function(l){ l.classList.remove('hidden'); });
+    panels.forEach(function(p){ p.classList.add('hidden'); });
+    arrows.forEach(function(a){ a.classList.remove('open'); });
+    btns.forEach(function(b){ b.classList.remove('open'); });
+    document.getElementById('search-count').textContent = '';
+    return;
+  }
+  var openPanels = new Set();
+  links.forEach(function(l) {
+    var name = l.querySelector('.mun-name').textContent.toLowerCase();
+    var code = l.querySelector('.mun-code').textContent;
+    var match = name.includes(q) || code.includes(q);
+    l.classList.toggle('hidden', !match);
+    if (match) {
+      found++;
+      var panel = l.closest('.dpto-panel');
+      if (panel) openPanels.add(panel.id);
+    }
+  });
+  panels.forEach(function(p) {
+    var open = openPanels.has(p.id);
+    p.classList.toggle('hidden', !open);
+    var id = p.id.replace('panel-', '');
+    var arrow = document.getElementById('arr-' + id);
+    var btn = arrow ? arrow.closest('.dpto-btn') : null;
+    if (arrow) arrow.classList.toggle('open', open);
+    if (btn) btn.classList.toggle('open', open);
+  });
+  document.getElementById('search-count').textContent =
+    found + ' resultado' + (found !== 1 ? 's' : '');
+}
+
+</script>
+</body>
+</html>

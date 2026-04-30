@@ -1,0 +1,23 @@
+# Carpetas de trabajo interno (no van al sitio público)
+municipios/_herramientas/
+municipios/_plantillas/
+municipios/_datos/
+municipios/_ocr_cache/
+gobernaciones/_herramientas/
+gobernaciones/_plantillas/
+gobernaciones/_datos/
+gobernaciones/_ocr_cache/
+
+# Archivos de datos y trabajo
+*.xlsx
+*.py
+*.json
+*.csv
+*.geojson
+*.topojson
+*.txt
+__pycache__/
+*.pyc
+
+# Instrucciones internas
+CLAUDE.md
