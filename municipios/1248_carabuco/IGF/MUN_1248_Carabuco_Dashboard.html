@@ -23,15 +23,16 @@
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 body{background:var(--bg);font-family:'IBM Plex Sans',sans-serif;color:var(--ink);min-height:100vh;font-size:14px}
 /* TOPBAR */
-.topbar{background:linear-gradient(to bottom,#8f1514,#c71e1d,#8f1514);padding:0 36px;display:flex;align-items:stretch;min-height:64px;position:relative;overflow:hidden}
-.topbar::after{content:'CCH';position:absolute;right:-4px;top:50%;transform:translateY(-50%);font-family:'Playfair Display',serif;font-size:4.5rem;font-weight:900;color:rgba(255,255,255,.05);pointer-events:none;letter-spacing:-2px}
-.tb-l{display:flex;flex-direction:column;justify-content:center;flex:1}
+.topbar{background:linear-gradient(160deg,#2a0404 0%,#5a0a0a 35%,#c71e1d 65%,#8f1514 100%);padding:0 36px;display:flex;align-items:stretch;min-height:64px;position:relative;overflow:hidden}
+.topbar::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(90deg,rgba(255,255,255,.018) 0px,rgba(255,255,255,.018) 1px,transparent 1px,transparent 60px);pointer-events:none}
+.topbar::after{content:'GAMCCH';position:absolute;right:-4px;top:50%;transform:translateY(-50%);font-family:'Playfair Display',serif;font-size:4.2rem;font-weight:900;color:rgba(255,255,255,.06);pointer-events:none;letter-spacing:-1px;white-space:nowrap}
+.tb-l{display:flex;flex-direction:column;justify-content:center;flex:1;min-width:0}
 .tb-l h1{font-family:'Playfair Display',serif;font-size:1.25rem;font-weight:900;color:#fff;letter-spacing:-.3px;line-height:1.15}
-.tb-l p{font-size:.68rem;color:rgba(255,255,255,.58);letter-spacing:1.3px;text-transform:uppercase;margin-top:3px}
-.tb-r{display:flex;align-items:center}
-.ts{text-align:center;color:#fff;padding:0 16px;border-left:1px solid rgba(255,255,255,.18)}
-.ts-v{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700;line-height:1}
-.ts-l{font-size:.6rem;letter-spacing:.8px;text-transform:uppercase;opacity:.55;margin-top:2px}
+.tb-l p{font-size:.68rem;color:rgba(255,255,255,.58);letter-spacing:1.3px;text-transform:uppercase;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tb-r{display:flex;align-items:center;gap:0;flex-shrink:0}
+.ts{text-align:center;color:#fff;padding:0 14px;border-left:1px solid rgba(255,255,255,.18)}
+.ts-v{font-family:'Playfair Display',serif;font-size:1.25rem;font-weight:700;line-height:1;background:linear-gradient(180deg,#fff 0%,rgba(255,255,255,.75) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.ts-l{font-size:.58rem;letter-spacing:.8px;text-transform:uppercase;opacity:.45;margin-top:2px}
 /* NAV */
 .nav{background:var(--ink);display:flex;padding:0 36px;overflow-x:auto;gap:0;border-bottom:1px solid rgba(255,255,255,.06)}
 .nt{background:none;border:none;color:rgba(255,255,255,.42);font-family:'IBM Plex Sans',sans-serif;font-size:.73rem;font-weight:500;padding:12px 15px;cursor:pointer;white-space:nowrap;border-bottom:3px solid transparent;transition:all .2s;letter-spacing:.1px}
@@ -139,6 +140,17 @@ body{background:var(--bg);font-family:'IBM Plex Sans',sans-serif;color:var(--ink
 .spark-fill{width:100%;border-radius:2px 2px 0 0;transition:height .3s}
 .spark-yr{font-size:.5rem;color:var(--mute);font-family:'IBM Plex Mono',monospace}
 @media(max-width:900px){.g2,.g3,.g4,.g24,.g13{grid-template-columns:1fr}.main{padding:14px 14px 40px}.topbar,.nav,.ybar{padding-left:14px;padding-right:14px}}
+@media(max-width:700px){
+  .topbar{flex-wrap:wrap;padding:10px 14px;min-height:unset;gap:8px}
+  .tb-l{width:100%;flex:unset}
+  .tb-l h1{font-size:1rem}
+  .tb-l p{font-size:.6rem}
+  .tb-r{width:100%;justify-content:flex-start;overflow-x:auto;gap:0;padding-bottom:2px}
+  .ts{padding:0 10px}.ts:first-child{border-left:none}
+  .ts-kpi-hide{display:none}
+  .tb-search{display:none}
+  .dark-toggle{font-size:.65rem;padding:4px 8px;white-space:nowrap}
+}
 
 html.dark-mode body{background:#1a1410;color:#f0e8d8}
 html.dark-mode{--bg:#1a1410;--bg2:#221c14;--bg3:#2c2318;--bgd:#3a2e20;--ink:#f0e8d8;--ink2:#c8b89a;--mute:#6b5240;--faint:#6a5a48;--wht:#201810;--sh:0 2px 10px rgba(0,0,0,.4);--shh:0 6px 22px rgba(0,0,0,.6);--Rpale:#2e0a09;--grnpale:#0a1f14;--blupale:#091828;--goldpale:#1e1600;--telpale:#091a1a;--purpale:#150a22}
@@ -148,7 +160,7 @@ html.dark-mode .ybar{background:#221c14;border-color:#3a2e20}
 html.dark-mode .yb{background:#2a1f12;border-color:#3a2e20;color:#c8b89a}
 html.dark-mode .yb.active{background:var(--grn);border-color:var(--grn);color:#fff}
 html.dark-mode .nav{background:#150e08}
-html.dark-mode .topbar{background:linear-gradient(to bottom,#2d0404,#8f1514,#2d0404)}
+html.dark-mode .topbar{background:linear-gradient(160deg,#120202 0%,#2d0404 35%,#5a0808 65%,#2d0404 100%)}
 html.dark-mode .footer{background:#150e08}
 html.dark-mode .sh h2{color:#f0e8d8}
 html.dark-mode .ct{color:#f0e8d8}
@@ -231,14 +243,14 @@ html.dark-mode .chart-dl{background:#201810;border-color:#3a2e20;color:#9a8570}
     <p>Gobierno Autónomo Municipal De Carabuco &nbsp;·&nbsp; GENERAL ELIODORO CAMACHO &nbsp;·&nbsp; Bolivianos corrientes &nbsp;·&nbsp; SIGEP 2016–2025 &nbsp;·&nbsp; 10 gestiones</p>
   </div>
   <div class="tb-r">
-    <div class="ts"><div class="ts-v">10</div><div class="ts-l">Gestiones</div></div>
-    <div class="ts"><div class="ts-v" id="ts1">—</div><div class="ts-l">Prom. IC</div></div>
-    <div class="ts"><div class="ts-v" id="ts2">—</div><div class="ts-l">Copart+IDH 2025</div></div>
-    <div class="ts"><div class="ts-v" id="ts3">—</div><div class="ts-l">Autofinanciam. 2025</div></div>
-      <div class="tb-search"><input type="text" id="searchBox" placeholder="Buscar dato..." oninput="doSearch(this.value)" onkeydown="if(event.key==='Escape')clearSearch()"></div>
-  <button class="dark-toggle" onclick="toggleAnnPanel()" id="annBtn" style="margin-left:6px">Anotar</button>
-  <button class="dark-toggle" onclick="toggleDark()" id="darkBtn" style="margin-left:12px">☽ Oscuro</button>
-</div>
+    <div class="ts ts-kpi-hide"><div class="ts-v">10</div><div class="ts-l">Gestiones</div></div>
+    <div class="ts ts-kpi-hide"><div class="ts-v" id="ts1">—</div><div class="ts-l">Prom. IC</div></div>
+    <div class="ts ts-kpi-hide"><div class="ts-v" id="ts2">—</div><div class="ts-l">Copart+IDH 2025</div></div>
+    <div class="ts ts-kpi-hide"><div class="ts-v" id="ts3">—</div><div class="ts-l">Autofinanciam. 2025</div></div>
+    <div class="tb-search"><input type="text" id="searchBox" placeholder="Buscar dato..." oninput="doSearch(this.value)" onkeydown="if(event.key==='Escape')clearSearch()"></div>
+    <button class="dark-toggle" onclick="toggleAnnPanel()" id="annBtn" style="margin-left:6px;flex-shrink:0">Anotar</button>
+    <button class="dark-toggle" onclick="toggleDark()" id="darkBtn" style="margin-left:8px;flex-shrink:0">☽</button>
+  </div>
 </div>
 
 <!-- NAV TABS -->
