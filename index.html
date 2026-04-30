@@ -80,6 +80,16 @@ body{background:var(--bg);font-family:'IBM Plex Sans',sans-serif;color:var(--ink
 .btn-mapa:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(13,40,24,.5)}
 .btn-mapa:active{transform:translateY(0)}
 .btn-mapa-ico{font-size:1.2rem;opacity:.85}
+.btn-censo{
+  background:linear-gradient(160deg,#0d1a2e 0%,#1a3a6e 50%,#0d1a2e 100%);
+  color:#fff;text-decoration:none;border-radius:10px;
+  padding:14px 28px;font-size:.82rem;font-weight:700;letter-spacing:.4px;
+  display:flex;align-items:center;gap:10px;
+  box-shadow:0 6px 20px rgba(13,26,58,.45);
+  transition:transform .15s,box-shadow .15s;white-space:nowrap;
+}
+.btn-censo:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(13,26,58,.55)}
+.btn-censo:active{transform:translateY(0)}
 .hero-chips{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
 .chip{
   background:var(--grnpale);border:1px solid rgba(29,89,56,.18);
@@ -244,13 +254,18 @@ footer{
   <div class="hero-cta">
     <a href="mapa.html" class="btn-mapa">
       <span class="btn-mapa-ico">&#9783;</span>
-      Ver Mapa Interactivo
+      Mapa Fiscal IGF
+    </a>
+    <a href="Mapa_Censo_2024_Bolivia.html" class="btn-censo">
+      <span class="btn-mapa-ico">&#127968;</span>
+      Atlas Socioecon&oacute;mico CPV 2024
     </a>
     <div class="hero-chips">
       <span class="chip">SIGEP 2016&ndash;2025</span>
       <span class="chip">Per C&aacute;pita</span>
       <span class="chip">D&eacute;ficit Fiscal</span>
       <span class="chip">335 Dashboards</span>
+      <span class="chip" style="background:#e8eff8;border-color:rgba(26,58,110,.2);color:#1a3a6e">CPV 2024 &middot; 40 indicadores</span>
     </div>
   </div>
 </section>
