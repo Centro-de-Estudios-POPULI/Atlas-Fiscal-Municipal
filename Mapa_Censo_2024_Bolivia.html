@@ -78,10 +78,24 @@ body.dark #desc-bar{border-bottom-color:#3a2d00}
 #map-area{flex:1;display:flex;flex-direction:column;min-width:0}
 #map-panel-row{display:flex;flex:1;min-height:0}
 #map-wrap{flex:1;position:relative;min-width:0;background:var(--bg2)}
-#map-svg{width:100%;height:100%;display:block}
-path.mun{stroke:rgba(255,255,255,.18);stroke-width:.4px;cursor:pointer;transition:opacity .15s}
+#map-svg{width:100%;height:100%;display:block;touch-action:none;cursor:grab}
+#map-svg:active{cursor:grabbing}
+path.mun{stroke:rgba(255,255,255,.18);stroke-width:.4px;cursor:pointer;
+  vector-effect:non-scaling-stroke;transition:opacity .15s}
 path.mun:hover{stroke:#fff;stroke-width:1.2px;opacity:.85}
 path.mun.selected{stroke:#fff;stroke-width:1.6px}
+
+/* Controles de zoom */
+#zoom-ctrl{position:absolute;top:10px;right:10px;display:flex;flex-direction:column;
+  gap:4px;z-index:50;background:var(--card);border:1px solid var(--border);
+  border-radius:7px;padding:3px;box-shadow:var(--sh)}
+#zoom-ctrl button{width:30px;height:30px;border:none;background:transparent;
+  color:var(--ink);cursor:pointer;border-radius:5px;font-size:1.05rem;
+  font-family:inherit;line-height:1;display:flex;align-items:center;justify-content:center;
+  font-weight:600;padding:0;transition:background .12s}
+#zoom-ctrl button:hover{background:var(--bg2)}
+#zoom-ctrl button:active{background:var(--bluepale)}
+#zoom-ctrl #zoom-reset{font-size:.95rem}
 
 /* LEGEND */
 #legend-bar{padding:7px 14px;border-top:1px solid var(--border);background:var(--card);
@@ -254,6 +268,11 @@ body.dark .sect-title{color:#6aabee}
     <div id="map-panel-row">
       <div id="map-wrap">
         <svg id="map-svg"></svg>
+        <div id="zoom-ctrl">
+          <button id="zoom-in"    type="button" aria-label="Acercar"  title="Acercar">+</button>
+          <button id="zoom-out"   type="button" aria-label="Alejar"   title="Alejar">−</button>
+          <button id="zoom-reset" type="button" aria-label="Restablecer" title="Restablecer vista">⟲</button>
+        </div>
       </div>
       <div id="info-panel" class="hidden">
         <div id="info-head">
@@ -376,8 +395,9 @@ function resize() {
   proj = d3.geoMercator().fitSize([W, H], topojson.feature(TOPO, TOPO.objects.data));
   path = d3.geoPath().projection(proj);
   g.selectAll('path.mun').attr('d', path);
+  // Reset del zoom: la proyección cambió, mantener transform engaña al usuario
+  svg.call(zoom.transform, d3.zoomIdentity);
 }
-new ResizeObserver(resize).observe(wrap);
 
 g.selectAll('path.mun')
  .data(features).enter().append('path')
@@ -388,7 +408,22 @@ g.selectAll('path.mun')
  .on('mouseleave', onLeave)
  .on('click',      onClick);
 
+// ── Zoom interno (pan + pinch + wheel) ────────────────────────────────────
+const zoom = d3.zoom()
+  .scaleExtent([1, 12])
+  .on('zoom', (event) => {
+    g.attr('transform', event.transform);
+  });
+svg.call(zoom);
+// Doble click NO debe hacer zoom (queremos que abra info panel del municipio)
+svg.on('dblclick.zoom', null);
+
+document.getElementById('zoom-in').onclick    = () => svg.transition().duration(220).call(zoom.scaleBy, 1.6);
+document.getElementById('zoom-out').onclick   = () => svg.transition().duration(220).call(zoom.scaleBy, 1/1.6);
+document.getElementById('zoom-reset').onclick = () => svg.transition().duration(300).call(zoom.transform, d3.zoomIdentity);
+
 resize();
+new ResizeObserver(resize).observe(wrap);
 
 // ── Color scale ───────────────────────────────────────────────────────────
 let curInd = null, colorScale = null, valMap = {}, sorted = [];
