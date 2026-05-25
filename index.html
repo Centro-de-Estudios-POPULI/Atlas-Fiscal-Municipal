@@ -4,9 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Atlas Fiscal Municipal · Bolivia 2016–2025</title>
-<meta name="description" content="Dashboards interactivos de presupuesto municipal para los 335 municipios de Bolivia. Datos SIGEP 2016–2025: ingresos, gasto, inversión, déficit fiscal y más.">
+<meta name="description" content="Dashboards interactivos de presupuesto para los 335 municipios y 8 GAIOCs de Bolivia. Datos SIGEP 2016–2025: ingresos, gasto, inversión, déficit fiscal y más.">
 <meta property="og:title" content="Atlas Fiscal Municipal · Bolivia 2016–2025">
-<meta property="og:description" content="335 municipios · Ingresos, Gasto y Financiamiento · Serie 2016–2025 · SIGEP">
+<meta property="og:description" content="335 municipios · 8 GAIOCs · Ingresos, Gasto y Financiamiento · Serie 2016–2025 · SIGEP">
 <meta property="og:type" content="website">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -247,6 +247,7 @@ footer{
   </div>
   <div class="tb-stats">
     <div class="ts"><div class="ts-v">335</div><div class="ts-l">Municipios</div></div>
+    <div class="ts"><div class="ts-v">8</div><div class="ts-l">GAIOCs</div></div>
     <div class="ts"><div class="ts-v">10</div><div class="ts-l">Gestiones</div></div>
     <div class="ts"><div class="ts-v">9</div><div class="ts-l">Departamentos</div></div>
   </div>
@@ -257,9 +258,10 @@ footer{
   <div class="hero-text">
     <div class="hero-eyebrow">Observatorio de Presupuesto Fiscal</div>
     <h2>Finanzas municipales de Bolivia<br>en una sola plataforma</h2>
-    <p>Explora el presupuesto ejecutado de los 335 municipios del pa&iacute;s con datos
-    oficiales del SIGEP 2016&ndash;2025. Analiza ingresos corrientes, inversi&oacute;n p&uacute;blica,
-    recursos propios, estructura del gasto y resultado fiscal con gr&aacute;ficos interactivos.</p>
+    <p>Explora el presupuesto ejecutado de los 335 municipios y 8 Gobiernos Aut&oacute;nomos Ind&iacute;gena
+    Originario Campesinos (GAIOCs) del pa&iacute;s con datos oficiales del SIGEP 2016&ndash;2025.
+    Analiza ingresos corrientes, inversi&oacute;n p&uacute;blica, recursos propios, estructura del gasto
+    y resultado fiscal con gr&aacute;ficos interactivos.</p>
   </div>
   <div class="hero-cta">
     <a href="mapa.html" class="btn-mapa">
@@ -278,7 +280,7 @@ footer{
       <span class="chip">SIGEP 2016&ndash;2025</span>
       <span class="chip">Per C&aacute;pita</span>
       <span class="chip">D&eacute;ficit Fiscal</span>
-      <span class="chip">335 Dashboards</span>
+      <span class="chip">343 Dashboards</span>
       <span class="chip" style="background:#e8eff8;border-color:rgba(26,58,110,.2);color:#1a3a6e">CPV 2024 &middot; 40 indicadores</span>
       <span class="chip" style="background:#e0f0fb;border-color:rgba(26,110,168,.2);color:#1a6ea8">Manzana &middot; 340 municipios</span>
     </div>
@@ -292,7 +294,7 @@ footer{
     placeholder="Buscar municipio o provincia&hellip;"
     oninput="doSearch(this.value)" autocomplete="off" spellcheck="false">
   <button class="search-clear" id="search-clear" onclick="clearSearch()" title="Limpiar">&#10005;</button>
-  <span class="search-meta" id="search-meta">335 municipios &middot; 9 departamentos</span>
+  <span class="search-meta" id="search-meta">343 entidades &middot; 9 departamentos &middot; 8 GAIOCs</span>
 </div>
 
 <!-- MAIN -->
@@ -641,6 +643,15 @@ footer{
 <a href="municipios/1914_villa_nueva_loma_alta/IGF/MUN_1914_VillaNuevaLomaAlta_Dashboard.html" class="mun-link" target="_blank" data-search="villa nueva (loma alta) general federico roman 1914"><span class="mun-code">1914</span><span class="mun-info"><span class="mun-name">Villa Nueva (Loma Alta)</span><span class="mun-prov">General Federico Roman</span></span></a>
 <a href="municipios/1915_santos_mercado/IGF/MUN_1915_SantosMercado_Dashboard.html" class="mun-link" target="_blank" data-search="santos mercado general federico roman 1915"><span class="mun-code">1915</span><span class="mun-info"><span class="mun-name">Santos Mercado</span><span class="mun-prov">General Federico Roman</span></span></a>
 </div></div></section>
+<section class="dpto-card" id="sec-gaioc"><button class="dpto-hdr" onclick="toggle('gaioc')" aria-expanded="false"><span class="dh-left"><span class="dh-num">GAIOC</span><span class="dh-name">Gobiernos Aut&oacute;nomos Ind&iacute;gena Originario Campesinos</span></span><span class="dh-right"><span class="dh-count">8 entidades</span><span class="dh-arrow" id="arr-gaioc"></span></span></button><div class="dpto-body hidden" id="panel-gaioc"><div class="mun-grid"><a href="municipios/3101_huacaya/IGF/MUN_3101_Huacaya_Dashboard.html" class="mun-link" target="_blank" data-search="huacaya gaioc tioc guarani chaqueno chuquisaca luis calvo 3101"><span class="mun-code">3101</span><span class="mun-info"><span class="mun-name">TIOC Guaran&iacute; Chaque&ntilde;o de Huacaya</span><span class="mun-prov">Chuquisaca &middot; Luis Calvo</span></span></a>
+<a href="municipios/3301_raqaypampa/IGF/MUN_3301_Raqaypampa_Dashboard.html" class="mun-link" target="_blank" data-search="raqaypampa gaioc cochabamba mizque 3301"><span class="mun-code">3301</span><span class="mun-info"><span class="mun-name">GAIOC Raqaypampa</span><span class="mun-prov">Cochabamba &middot; Mizque</span></span></a>
+<a href="municipios/3401_chipaya/IGF/MUN_3401_Chipaya_Dashboard.html" class="mun-link" target="_blank" data-search="chipaya uru gaioc oruro atahuallpa 3401"><span class="mun-code">3401</span><span class="mun-info"><span class="mun-name">GAIOC Naci&oacute;n Originaria Uru Chipaya</span><span class="mun-prov">Oruro &middot; Atahuallpa</span></span></a>
+<a href="municipios/3402_salinas_de_garci_mendoza/IGF/MUN_3402_SalinasDeGarciMendoza_Dashboard.html" class="mun-link" target="_blank" data-search="salinas garci mendoza gaioc oruro ladislao cabrera 3402"><span class="mun-code">3402</span><span class="mun-info"><span class="mun-name">GAIOC de Salinas</span><span class="mun-prov">Oruro &middot; Ladislao Cabrera</span></span></a>
+<a href="municipios/3501_jatun_ayllu_yura/IGF/MUN_3501_JatunAylluYura_Dashboard.html" class="mun-link" target="_blank" data-search="jatun ayllu yura gaioc potosi tomas frias 3501"><span class="mun-code">3501</span><span class="mun-info"><span class="mun-name">GAIOC Jat&uacute;n Ayllu Yura</span><span class="mun-prov">Potos&iacute; &middot; Tom&aacute;s Fr&iacute;as</span></span></a>
+<a href="municipios/3701_charagua_iyambae/IGF/MUN_3701_CharaguaIyambae_Dashboard.html" class="mun-link" target="_blank" data-search="charagua iyambae gaioc santa cruz cordillera 3701"><span class="mun-code">3701</span><span class="mun-info"><span class="mun-name">GAIOC Charagua Iyambae</span><span class="mun-prov">Santa Cruz &middot; Cordillera</span></span></a>
+<a href="municipios/3702_gutierrez/IGF/MUN_3702_Gutierrez_Dashboard.html" class="mun-link" target="_blank" data-search="gutierrez guarani kereimba iyaambae gaioc santa cruz cordillera 3702"><span class="mun-code">3702</span><span class="mun-info"><span class="mun-name">Guaran&iacute; Kereimba Iyaambae</span><span class="mun-prov">Santa Cruz &middot; Cordillera</span></span></a>
+<a href="municipios/3801_tim/IGF/MUN_3801_Tim_Dashboard.html" class="mun-link" target="_blank" data-search="tim territorio indigena multietnico gaioc beni 3801"><span class="mun-code">3801</span><span class="mun-info"><span class="mun-name">GIA Territorio Ind&iacute;gena Multi&eacute;tnico</span><span class="mun-prov">Beni &middot; Multiprovincial</span></span></a>
+</div></div></section>
 </main>
 
 <!-- FAB MÓVIL -->
@@ -689,7 +700,7 @@ function doSearch(raw){
       hdr.setAttribute('aria-expanded','false');
       body.classList.add('hidden');
     });
-    meta.textContent = '335 municipios · 9 departamentos';
+    meta.textContent = '343 entidades · 9 departamentos · 8 GAIOCs';
     return;
   }
 
