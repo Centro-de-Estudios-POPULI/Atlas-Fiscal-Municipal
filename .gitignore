@@ -28,3 +28,9 @@ CLAUDE.md
 !.dev.vars.example
 .env*
 !.env.example
+
+# Assets del Atlas Socioeconómico Municipal (SÍ se publican al sitio)
+!catalogo.json
+!data.json
+!municipios.topojson
+!sudamerica.topojson
