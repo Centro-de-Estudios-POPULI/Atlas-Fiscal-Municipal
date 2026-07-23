@@ -220,7 +220,7 @@ const fmt=(v,u)=>{if(v==null||isNaN(v))return"s/d";
   return(+v).toFixed(1).replace(".",",")+(u==="h/100m"?"":" "+u);};
 const sgn=d=>(d>=0?"▲":"▼")+" "+fmt(Math.abs(d),"").trim();
 const dpr=Math.min(window.devicePixelRatio||1,2);
-const fitC=(cv,w,h)=>{cv.width=w*dpr;cv.height=h*dpr;return cv.getContext("2d");};
+const fitC=(cv,w,h,rf)=>{cv.width=w*dpr;cv.height=h*dpr;return cv.getContext("2d",rf?{willReadFrequently:true}:undefined);};
 
 Promise.all([fetch("municipios.topojson").then(r=>r.json()),fetch("sudamerica.topojson").then(r=>r.json()),
   fetch("catalogo.json").then(r=>r.json()),fetch("data.json").then(r=>r.json())]).then(([topo,wtopo,cat,DATA])=>{
@@ -286,8 +286,8 @@ Promise.all([fetch("municipios.topojson").then(r=>r.json()),fetch("sudamerica.to
     if(sel){octx.beginPath();g(sel);octx.lineWidth=1.4/zt.k;octx.strokeStyle="#e0912a";octx.stroke();}}
   function render(){zr=zt;wrap.style.transform="none";drawBase();drawPick();drawOver();}
   function cssZoom(){const s=zt.k/zr.k;wrap.style.transformOrigin="0 0";wrap.style.transform="translate("+(zt.x-s*zr.x)+"px,"+(zt.y-s*zr.y)+"px) scale("+s+")";}
-  function layout(){W=wrap.clientWidth;H=wrap.clientHeight;fitC(base,W,H);fitC(over,W,H);fitC(pick,W,H);
-    bctx=base.getContext("2d");octx=over.getContext("2d");pctx=pick.getContext("2d");
+  function layout(){W=wrap.clientWidth;H=wrap.clientHeight;fitC(base,W,H);fitC(over,W,H);fitC(pick,W,H,true);
+    bctx=base.getContext("2d");octx=over.getContext("2d");pctx=pick.getContext("2d",{willReadFrequently:true});
     const mob=innerWidth<=820;L=mob?6:12+328+18;R=W-(mob?6:12+328+18);T=mob?6:62+8;B=H-(mob?6:84);proj=d3.geoMercator().fitExtent([[L,T],[R,B]],geo);
     idx.clear();F.forEach((f,i)=>idx.set(i+1,f));render();}
 
@@ -305,7 +305,14 @@ Promise.all([fetch("municipios.topojson").then(r=>r.json()),fetch("sudamerica.to
     d3.select(catchEl).transition().duration(500).call(zoom.transform,t);}
 
   const pop=document.getElementById("pop");
-  const pixel=e=>{const r=pick.getBoundingClientRect();return pctx.getImageData(Math.round((e.clientX-r.left)*dpr),Math.round((e.clientY-r.top)*dpr),1,1).data;};
+  const pixel=e=>{const r=wrap.getBoundingClientRect();return pctx.getImageData(Math.round((e.clientX-r.left)*dpr),Math.round((e.clientY-r.top)*dpr),1,1).data;};
+  // picking robusto: muestrea un bloque y devuelve el municipio válido más cercano al toque (tolera bordes antialiaseados y municipios chicos)
+  function featAt(e){const r=wrap.getBoundingClientRect(),x=Math.round((e.clientX-r.left)*dpr),y=Math.round((e.clientY-r.top)*dpr);
+    const rad=Math.round(7*dpr),x0=Math.max(0,x-rad),y0=Math.max(0,y-rad),x1=Math.min(pick.width-1,x+rad),y1=Math.min(pick.height-1,y+rad);
+    const bw=x1-x0+1,bh=y1-y0+1;if(bw<1||bh<1)return null;
+    const img=pctx.getImageData(x0,y0,bw,bh).data,cx=x-x0,cy=y-y0;let best=null,bd=1e18;
+    for(let j=0;j<bh;j++)for(let i=0;i<bw;i++){const o=(j*bw+i)<<2;if(img[o+3]===0)continue;const f=idx.get((img[o]<<16)+(img[o+1]<<8)+img[o+2]);if(!f)continue;const d=(i-cx)*(i-cx)+(j-cy)*(j-cy);if(d<bd){bd=d;best=f;}}
+    return best;}
   catchEl.addEventListener("mousemove",e=>{if(innerWidth<=820){pop.style.opacity=0;return;}const px=pixel(e),f=idx.get((px[0]<<16)+(px[1]<<8)+px[2])||null;
     if(f!==hov){hov=f;drawOver();}
     if(f){const d=DATA[f.properties.sigep],sc=scale(cur);
@@ -318,7 +325,7 @@ Promise.all([fetch("municipios.topojson").then(r=>r.json()),fetch("sudamerica.to
   catchEl.addEventListener("mouseleave",()=>{hov=null;drawOver();pop.style.opacity=0;});
   let _tapXY=null;
   catchEl.addEventListener("pointerdown",e=>{_tapXY=[e.clientX,e.clientY];});
-  catchEl.addEventListener("pointerup",e=>{if(!_tapXY)return;const mv=Math.hypot(e.clientX-_tapXY[0],e.clientY-_tapXY[1]);_tapXY=null;if(mv>8)return;const px=pixel(e),f=idx.get((px[0]<<16)+(px[1]<<8)+px[2]);if(f){sel=f;drawOver();renderMun(f.properties.sigep);}else renderNational();});
+  catchEl.addEventListener("pointerup",e=>{if(!_tapXY)return;const mv=Math.hypot(e.clientX-_tapXY[0],e.clientY-_tapXY[1]);_tapXY=null;if(mv>8)return;const f=featAt(e);if(f){sel=f;drawOver();renderMun(f.properties.sigep);}else renderNational();});
 
   function termo(){const sc=scale(cur);
     document.getElementById("tm-t").innerHTML=cur.label+` <small>${cur.unit}</small>`;
