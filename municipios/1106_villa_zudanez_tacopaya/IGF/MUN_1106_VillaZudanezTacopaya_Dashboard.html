@@ -7,7 +7,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 :root{
   --f:'Inter',system-ui,-apple-system,'Segoe UI',sans-serif;--fd:'Fraunces',Georgia,'Times New Roman',serif;--mono:ui-monospace,'Cascadia Code',Consolas,monospace;
   --topbar:#5c1618;--arena:#e9d8a6;
@@ -26,12 +26,13 @@
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 body{background:var(--bg);font-family:var(--f);color:var(--ink);min-height:100vh;font-size:14px}
 /* TOPBAR */
-.topbar{background:linear-gradient(160deg,#3d0e10 0%,#5c1618 45%,#6e1c1e 70%,#4a1214 100%);padding:0 36px;display:flex;align-items:stretch;min-height:64px;position:relative;overflow:hidden}
+.topbar{background:linear-gradient(160deg,#410e10 0%,#661619 46%,#821d20 78%,#410e10 100%);padding:0 36px;display:flex;align-items:stretch;min-height:76px;position:relative;overflow:hidden}
 .topbar::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(90deg,rgba(255,255,255,.018) 0px,rgba(255,255,255,.018) 1px,transparent 1px,transparent 60px);pointer-events:none}
-.topbar::after{content:'GAMZUD';position:absolute;right:-4px;top:50%;transform:translateY(-50%);font-family:var(--fd);font-size:4.2rem;font-weight:900;color:rgba(255,255,255,.06);pointer-events:none;letter-spacing:-1px;white-space:nowrap}
+.topbar::after{content:'GAMZUD';position:absolute;right:-4px;top:50%;transform:translateY(-50%);font-family:var(--f);font-size:4rem;font-weight:800;color:rgba(255,255,255,.05);pointer-events:none;letter-spacing:-1px;white-space:nowrap}
 .tb-l{display:flex;flex-direction:column;justify-content:center;flex:1;min-width:0}
-.tb-l h1{font-family:var(--fd);font-size:1.25rem;font-weight:900;color:#fff;letter-spacing:-.3px;line-height:1.15}
-.tb-l p{font-size:.68rem;color:rgba(255,255,255,.58);letter-spacing:1.3px;text-transform:uppercase;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tb-eyebrow{font-size:.6rem;letter-spacing:.16em;text-transform:uppercase;color:var(--arena);font-weight:600;margin-bottom:4px;opacity:.95;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tb-l h1{font-family:var(--f);font-size:1.02rem;font-weight:800;color:#fff;letter-spacing:.03em;line-height:1.12;text-transform:uppercase}
+.tb-l p{font-size:.72rem;color:rgba(255,255,255,.82);letter-spacing:.01em;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .tb-r{display:flex;align-items:center;gap:0;flex-shrink:0}
 .ts{text-align:center;color:#fff;padding:0 14px;border-left:1px solid rgba(255,255,255,.18)}
 .ts-v{font-family:var(--f);font-size:1.25rem;font-weight:700;line-height:1;font-variant-numeric:tabular-nums;letter-spacing:-.01em;background:linear-gradient(180deg,#fff 0%,rgba(255,255,255,.75) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
@@ -144,10 +145,12 @@ body{background:var(--bg);font-family:var(--f);color:var(--ink);min-height:100vh
 .spark-yr{font-size:.5rem;color:var(--mute);font-family:var(--mono)}
 @media(max-width:900px){.g2,.g3,.g4,.g24,.g13{grid-template-columns:1fr}.main{padding:14px 14px 40px}.topbar,.nav,.ybar{padding-left:14px;padding-right:14px}}
 @media(max-width:700px){
-  .topbar{flex-wrap:wrap;padding:10px 14px;min-height:unset;gap:8px}
+  .topbar{flex-wrap:wrap;padding:10px 14px;min-height:unset;gap:6px}
   .tb-l{width:100%;flex:unset}
-  .tb-l h1{font-size:1rem}
-  .tb-l p{font-size:.6rem}
+  .tb-eyebrow{white-space:normal;font-size:.55rem;letter-spacing:.1em;margin-bottom:3px}
+  .tb-l h1{font-size:.82rem;white-space:normal;line-height:1.2}
+  .tb-l p{font-size:.62rem;white-space:normal;line-height:1.35}
+  .topbar::after{display:none}
   .tb-r{width:100%;justify-content:flex-start;overflow-x:auto;gap:0;padding-bottom:2px}
   .ts{padding:0 10px}.ts:first-child{border-left:none}
   .ts-kpi-hide{display:none}
@@ -163,7 +166,7 @@ html.dark-mode .ybar{background:#221c14;border-color:#3a2e20}
 html.dark-mode .yb{background:#2a1f12;border-color:#3a2e20;color:#c8b89a}
 html.dark-mode .yb.active{background:var(--acc);border-color:var(--acc);color:#fff}
 html.dark-mode .nav{background:#150e08}
-html.dark-mode .topbar{background:linear-gradient(160deg,#230507 0%,#3d0e10 45%,#4a1214 70%,#2c090b 100%)}
+html.dark-mode .topbar{background:linear-gradient(160deg,#28090a 0%,#440f11 46%,#5a1416 78%,#28090a 100%)}
 html.dark-mode .footer{background:#150e08}
 html.dark-mode .sh h2{color:#f0e8d8}
 html.dark-mode .ct{color:#f0e8d8}
@@ -236,8 +239,9 @@ html.dark-mode .chart-dl{background:#201810;border-color:#3a2e20;color:#9a8570}
 .cn{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:50%;font-size:.58rem;font-weight:700;font-family:var(--mono);flex-shrink:0;vertical-align:middle;margin:0 3px 0 0}
 .cn-r{background:var(--R);color:#fff}.cn-o{background:var(--gold);color:#fff}.cn-b{background:var(--blu);color:#fff}.cn-g{background:var(--grn);color:#fff}
 
-/* Identidad Atlas Fiscal: hairline departamental */
-.topbar{box-shadow:inset 0 -3px 0 var(--acc)}
+/* Separación limpia masthead → nav (sombra suave, sin línea) */
+.topbar{box-shadow:0 3px 9px rgba(0,0,0,.18)}
+html.dark-mode .topbar{box-shadow:0 3px 10px rgba(0,0,0,.4)}
 </style>
 </head>
 <body>
@@ -245,6 +249,7 @@ html.dark-mode .chart-dl{background:#201810;border-color:#3a2e20;color:#9a8570}
 <!-- TOPBAR -->
 <div class="topbar">
   <div class="tb-l">
+    <div class="tb-eyebrow">Observatorio de Finanzas Públicas y Desarrollo Territorial</div>
     <h1>Cuenta Ingreso · Gasto · Financiamiento (IGF)</h1>
     <p>Zudáñez &nbsp;·&nbsp; Jaime Zudáñez &nbsp;·&nbsp; Bolivianos corrientes &nbsp;·&nbsp; SIGEP 2016–2025 &nbsp;·&nbsp; 10 gestiones</p>
   </div>
@@ -872,6 +877,10 @@ const lbs=()=>selY==='all'?[...YY]:[parseInt(selY)];
 
 // ── chart defaults ──
 const C={R:'#c71e1d',Rp:'rgba(199,30,29,.10)',g:'#0a9396',gp:'rgba(10,147,150,.12)',b:'#005f73',bp:'rgba(0,95,115,.12)',o:'#ee9b00',op:'rgba(238,155,0,.13)',t:'#00323d',tp:'rgba(0,50,61,.12)',p:'#df5d25',pp:'rgba(223,93,37,.12)',m:'#8b8073',mp:'rgba(139,128,115,.13)',gl:'#94d2bd',ol:'#f0b53e',bl:'#5cc3c9',tl:'#0a9396'};const ACC='#9b2226',ACC_DK='#70181b';function accScale(t){t=t<0?0:t>1?1:t;var r=parseInt(ACC.slice(1,3),16),g=parseInt(ACC.slice(3,5),16),b=parseInt(ACC.slice(5,7),16);function m(x){return Math.round(255+(x-255)*t)}return 'rgb('+m(r)+','+m(g)+','+m(b)+')';}
+/* Rampa POPULI INVERTIDA para apilados: base ROJA → tope AZUL OSCURO */
+const STACK_RAMP=['#9b2226','#c71e1d','#df5d25','#e57d22','#ee9b00','#e9d8a6','#94d2bd','#0a9396','#005f73','#001219'];
+function rampColors(n){if(n<=1)return[STACK_RAMP[0]];var L=STACK_RAMP.length,a=[];for(var i=0;i<n;i++)a.push(STACK_RAMP[Math.round(i*(L-1)/(n-1))]);return a;}
+function stackByWeight(items,stk){var w=items.map(function(it){return{label:it.label,data:it.vals,t:it.vals.reduce(function(a,b){return a+(+b||0);},0)};}).filter(function(x){return x.t>0.0001;});w.sort(function(a,b){return b.t-a.t;});var c=rampColors(w.length);return w.map(function(it,i){return{label:it.label,data:it.data,backgroundColor:c[i],stack:stk||'s'};});}
 Chart.defaults.font.family="var(--f)";
 Chart.defaults.color='#5c5249';
 Chart.defaults.devicePixelRatio = Math.max(window.devicePixelRatio||1, 2);
@@ -1309,19 +1318,22 @@ function rResumen(){
     {l:'Fuentes Fin.',     fn:y=>g('fuentes_fin',y),                      col:RAMP[9]},
   ];
 
-  // Stack — mismos 9 segmentos
+  // Stack — ORDENADO POR PESO (mayor abajo → menor arriba) + rampa POPULI invertida (rojo→azul)
+  const resItems=SEG.map(s=>({label:s.l, vals:YY.map(y=>s.fn(y)/M)}));
+  const _resSorted=resItems.map(it=>({label:it.label, vals:it.vals, t:it.vals.reduce((a,b)=>a+(+b||0),0)})).filter(x=>x.t>0.0001).sort((a,b)=>b.t-a.t);
+  const _resCols=rampColors(_resSorted.length);
+  const colByLabel={}; _resSorted.forEach((it,i)=>{colByLabel[it.label]=_resCols[i];});
   barChart('c-res-stack', YY,
-    SEG.map(s=>({label:s.l, data:YY.map(y=>s.fn(y)/M), backgroundColor:s.col, stack:'s'})),
+    _resSorted.map(it=>({label:it.label, data:it.vals, backgroundColor:colByLabel[it.label], stack:'s'})),
   true);
 
-  // Pie — mismo año seleccionado, mismos 9 segmentos, mismo orden
+  // Pie — colores CONSISTENTES con el apilado, ordenado por peso del año
   const py=selY==='all'?2025:parseInt(selY);
   const itotPy=ingTotal(py);
   document.getElementById('pie-tit').textContent=`Composición total de ingresos ${py}`;
   document.getElementById('pie-sub').textContent=`IC + Rec.Capital + Fuentes Fin. · Bs ${fm(itotPy)} M · clic para excluir`;
-  const pieSegs=SEG.map(s=>({l:s.l, v:s.fn(py)})).filter(x=>x.v>0);
-  // colors must follow same order as SEG (filtered)
-  const pieCols=SEG.filter(s=>s.fn(py)>0).map(s=>s.col);
+  const pieSegs=SEG.map(s=>({l:s.l, v:s.fn(py)})).filter(x=>x.v>0).sort((a,b)=>b.v-a.v);
+  const pieCols=pieSegs.map(x=>colByLabel[x.l]||'rgba(150,150,150,.7)');
   mk('c-res-pie',null); // destroy previous before custom call
   // build pie manually to pass custom colors
   const centrePiePlugin={
@@ -1637,8 +1649,13 @@ function rSectores(){
   ]);
 
   // Gráficos apilados principales
-  barChart('c-sec-stack',YY,SECS.map(s=>({label:s.lbl,data:YY.map(y=>(SF[s.key]?.[y]||0)/M),backgroundColor:s.col,stack:'s'})),true);
-  mk('c-sec-pct',{type:'bar',data:{labels:YY,datasets:SECS.map(s=>({label:s.lbl,data:YY.map(y=>{const t=secTot(y);return t?+pc((SF[s.key]?.[y]||0),t):0;}),backgroundColor:s.col,stack:'c'}))},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{font:{size:9},boxWidth:9,padding:5}},tooltip:{...TTP,callbacks:{label:ctx=>` ${ctx.dataset.label}: ${fp(ctx.raw)}%`}}},scales:{x:{stacked:true,...GR()},y:{stacked:true,min:0,max:100,ticks:{callback:v=>v+'%',font:{size:10}}}}}});
+  // Sectores: orden por peso (absoluto) + rampa invertida, mapa de color compartido con la versión %
+  const secItems=SECS.map(s=>({label:s.lbl, vals:YY.map(y=>(SF[s.key]?.[y]||0)/M)}));
+  const _secSorted=secItems.map(it=>({label:it.label,vals:it.vals,t:it.vals.reduce((a,b)=>a+(+b||0),0)})).filter(x=>x.t>0.0001).sort((a,b)=>b.t-a.t);
+  const _secCols=rampColors(_secSorted.length);
+  const secColByLabel={}; _secSorted.forEach((it,i)=>{secColByLabel[it.label]=_secCols[i];});
+  barChart('c-sec-stack',YY,_secSorted.map(it=>({label:it.label,data:it.vals,backgroundColor:secColByLabel[it.label],stack:'s'})),true);
+  mk('c-sec-pct',{type:'bar',data:{labels:YY,datasets:_secSorted.map(it=>{const _s=SECS.find(x=>x.lbl===it.label);return{label:it.label,data:YY.map(y=>{const t=secTot(y);return t?+pc((SF[_s.key]?.[y]||0),t):0;}),backgroundColor:secColByLabel[it.label],stack:'c'};})},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{font:{size:9},boxWidth:9,padding:5}},tooltip:{...TTP,callbacks:{label:ctx=>` ${ctx.dataset.label}: ${fp(ctx.raw)}%`}}},scales:{x:{stacked:true,...GR()},y:{stacked:true,min:0,max:100,ticks:{callback:v=>v+'%',font:{size:10}}}}}});
 
   // Gráficos individuales por sector — top 2 subfunciones + Otros
   const _hexRgba=(h,a)=>{const r=parseInt(h.slice(1,3),16),g=parseInt(h.slice(3,5),16),b=parseInt(h.slice(5,7),16);return`rgba(${r},${g},${b},${a})`;};
@@ -1849,9 +1866,15 @@ function rObjetos(){
     +(pctInv?'Activos Reales (inversión) representa el <strong>'+pctInv+'%</strong>. ':'')
     +(pctTrf?'Transferencias alcanzan el <strong>'+pctTrf+'%</strong>. ':'')
     +(trendPct!==null?'Entre 2016 y 2025 el gasto '+(trendPct>=0?'creció un <strong>'+trendPct+'%</strong>':'cayó un <strong>'+Math.abs(trendPct)+'%</strong>')+' ('+fmM(total2016)+' → '+fmM(total2025)+').':'');
-  mk('c-obj-stack',{type:'bar',data:{labels:YY,datasets:OBJ.grupos.map((gg,i)=>({label:sentCase(trunc(gg.d,28)),data:YY.map(y2=>ofV(gg,y2)),backgroundColor:OCOLS[i%OCOLS.length],stack:'s'}))},options:{responsive:true,maintainAspectRatio:false,_showStackTotals:true,plugins:{legend:{position:'bottom',labels:{font:{size:9},boxWidth:9,padding:5}},tooltip:TTP},scales:{x:{stacked:true,...GR()},y:{stacked:true,...YT()}},layout:{padding:{top:18}}}});
-  mk('c-obj-pct',{type:'bar',data:{labels:YY,datasets:OBJ.grupos.map((gg,i)=>({label:sentCase(trunc(gg.d,28)),data:YY.map(y2=>{const tot=OBJ.grupos.reduce((a,g2)=>a+ofV(g2,y2),0);return tot>0?+(ofV(gg,y2)/tot*100).toFixed(1):0;}),backgroundColor:OCOLS[i%OCOLS.length],stack:'s'}))},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{font:{size:9},boxWidth:9,padding:5}},tooltip:{...TTP,callbacks:{label:ctx=>` ${ctx.dataset.label}: ${fp(ctx.raw)}%`}}},scales:{x:{stacked:true,...GR()},y:{stacked:true,min:0,max:100,ticks:{callback:v=>v+'%',font:{size:10}}}}}});
-  buildGrid('grid-obj-detail',OBJ.grupos,OBJ.partidas,SCOLS_OBJ,'c-obj-sub-');
+  // Orden por peso (mayor abajo) + rampa invertida; color por grupo reutilizado en los mini-gráficos
+  const objAll=OBJ.grupos.map(gg=>({gg:gg,t:ofSum(gg)})).filter(x=>x.t>0.0001).sort((a,b)=>b.t-a.t);
+  const objCols=rampColors(objAll.length);
+  const objColorByCode={}; objAll.forEach((x,i)=>{objColorByCode[x.gg.c]=objCols[i];});
+  const objColOf=gg=>objColorByCode[gg.c]||'#8b8073';
+  const objShades=OBJ.grupos.map(gg=>{const c=objColOf(gg);return[_pRgba(c,.85),_pRgba(c,.5),_pRgba(c,.22)];});
+  mk('c-obj-stack',{type:'bar',data:{labels:YY,datasets:objAll.map(x=>({label:sentCase(trunc(x.gg.d,28)),data:YY.map(y2=>ofV(x.gg,y2)),backgroundColor:_pRgba(objColOf(x.gg),.9),stack:'s'}))},options:{responsive:true,maintainAspectRatio:false,_showStackTotals:true,plugins:{legend:{position:'bottom',labels:{font:{size:9},boxWidth:9,padding:5}},tooltip:TTP},scales:{x:{stacked:true,...GR()},y:{stacked:true,...YT()}},layout:{padding:{top:18}}}});
+  mk('c-obj-pct',{type:'bar',data:{labels:YY,datasets:objAll.map(x=>({label:sentCase(trunc(x.gg.d,28)),data:YY.map(y2=>{const tot=OBJ.grupos.reduce((a,g2)=>a+ofV(g2,y2),0);return tot>0?+(ofV(x.gg,y2)/tot*100).toFixed(1):0;}),backgroundColor:_pRgba(objColOf(x.gg),.9),stack:'s'}))},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{font:{size:9},boxWidth:9,padding:5}},tooltip:{...TTP,callbacks:{label:ctx=>` ${ctx.dataset.label}: ${fp(ctx.raw)}%`}}},scales:{x:{stacked:true,...GR()},y:{stacked:true,min:0,max:100,ticks:{callback:v=>v+'%',font:{size:10}}}}}});
+  buildGrid('grid-obj-detail',OBJ.grupos,OBJ.partidas,objShades,'c-obj-sub-');
   const objRows=[...OBJ.grupos].sort((a,b)=>ofV(b,2025)-ofV(a,2025));
   const objTot=y2=>OBJ.grupos.reduce((a,gg)=>a+ofV(gg,y2),0);
   document.getElementById('t-obj-tabla').innerHTML=
