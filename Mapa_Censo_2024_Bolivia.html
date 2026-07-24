@@ -189,8 +189,8 @@ body.dark .ind.on .mini{opacity:1;filter:none}
   .termo{left:8px;right:8px;transform:none;width:auto;bottom:8px;padding:.45rem .7rem;transition:opacity .2s}
   body.sheet-open .termo{opacity:0;pointer-events:none}
   .tm-t{font-size:.66rem}.tm-t small{font-size:.52rem}.tm-st{display:none}.tm-side{font-size:.58rem}
-  .zc{right:8px;bottom:12px;transition:bottom .28s cubic-bezier(.22,.61,.36,1)}
-  body.sheet-open .zc{bottom:calc(var(--peek) + 16px)}
+  .zc{right:8px;top:210px;bottom:auto;transition:none;background:var(--card-solid);z-index:12}
+  body.sheet-open .zc{top:210px;bottom:auto}
   /* ── ficha municipal = bottom-sheet deslizable (peek / full) ── */
   /* altura = 74vh (JS la fija en px exactos) para que el detent "full" quepa ENTERO en pantalla:
      antes medía 88vh y bajaba 26vh -> la cola de la lista quedaba fuera de la pantalla y se cortaba */
