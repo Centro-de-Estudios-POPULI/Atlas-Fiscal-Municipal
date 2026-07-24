@@ -34,3 +34,7 @@ CLAUDE.md
 !data.json
 !municipios.topojson
 !sudamerica.topojson
+
+# Assets del Atlas Fiscal Municipal (SÍ se publican al sitio)
+!fiscal_catalogo.json
+!fiscal_data.json
