@@ -562,7 +562,9 @@ Promise.all([fetch("municipios.topojson").then(r=>r.json()),fetch("sudamerica.to
 
   // ── SERIE 2016–2025 del indicador en pantalla, contra el promedio nacional ──
   // sig=null -> resumen nacional: la serie nacional pasa a ser la línea principal.
-  const SR_W=260,SR_H=150,SR_T=20,SR_B=21,SR_R=2;
+  // SR_L = banda izquierda reservada a los rótulos del eje y (para que las barras no los pisen)
+  // SR_B alto = espacio para los años COMPLETOS en diagonal
+  const SR_W=262,SR_H=158,SR_T=15,SR_B=30,SR_L=23,SR_R=7;
   const ok=v=>v!=null&&!isNaN(v);
   function linePath(arr,x,y){let d="",pen=false;
     arr.forEach((v,i)=>{if(!ok(v)){pen=false;return;}
@@ -581,27 +583,28 @@ Promise.all([fetch("municipios.topojson").then(r=>r.json()),fetch("sudamerica.to
     let lo=Math.min(0,d3.min(vals)),hi=Math.max(0,d3.max(vals));
     if(lo===hi)hi=lo+1;
     const pad=(hi-lo)*.10;if(hi>0)hi+=pad;if(lo<0)lo-=pad;
-    const bw=(SR_W-SR_R)/YEARS.length,barW=Math.min(15,bw*.62);
-    const xc=i=>SR_R/2+bw*i+bw/2;
+    const bw=(SR_W-SR_L-SR_R)/YEARS.length,barW=Math.min(15,bw*.6);
+    const xc=i=>SR_L+bw*i+bw/2;
     const y=v=>SR_H-SR_B-(v-lo)/(hi-lo)*(SR_H-SR_T-SR_B);
     const y0=y(0);
     let g="";
-    // rejilla en valores redondos; los rótulos van ARRIBA de su línea y ALINEADOS A LA IZQUIERDA (x=0),
-    // en la misma vertical que el título de la tarjeta. El halo los despega de las barras.
+    // rejilla en valores redondos; rótulos del eje y en su banda izquierda (x=0, alineados con el
+    // título), centrados con la línea. La rejilla arranca en SR_L para no cruzar por los números.
     const tk=d3.ticks(lo,hi,3).filter(v=>y(v)>SR_T-2&&y(v)<SR_H-SR_B+2);
-    tk.forEach(v=>{g+=`<line class="gl" x1="0" y1="${y(v).toFixed(1)}" x2="${SR_W}" y2="${y(v).toFixed(1)}"/>`;});
+    tk.forEach(v=>{g+=`<line class="gl" x1="${SR_L}" y1="${y(v).toFixed(1)}" x2="${SR_W}" y2="${y(v).toFixed(1)}"/>`
+       +`<text class="ay" x="0" y="${y(v).toFixed(1)}" dominant-baseline="middle">${fmtShort(v,cur.unit)}</text>`;});
     // barras de la serie principal, ancladas en el cero
     prim.forEach((v,i)=>{if(!ok(v))return;
       const yv=y(v),top=Math.min(yv,y0),h=Math.max(1,Math.abs(yv-y0));
       g+=`<rect class="bar${i===yIdx?' now':''}" data-i="${i}" x="${(xc(i)-barW/2).toFixed(1)}" y="${top.toFixed(1)}" width="${barW.toFixed(1)}" height="${h.toFixed(1)}"/>`;});
-    g+=`<line class="base" x1="0" y1="${y0.toFixed(1)}" x2="${SR_W}" y2="${y0.toFixed(1)}"/>`;
+    g+=`<line class="base" x1="${SR_L}" y1="${y0.toFixed(1)}" x2="${SR_W}" y2="${y0.toFixed(1)}"/>`;
     // promedio nacional: línea punteada por encima (solo si hay municipio; si no, ya son las barras)
     if(mu){g+=`<path class="ln-na" d="${linePath(nat,xc,y)}"/>`;
       nat.forEach((v,i)=>{if(ok(v))g+=`<circle class="dot-na" cx="${xc(i).toFixed(1)}" cy="${y(v).toFixed(1)}" r="1.3"/>`;});}
-    // rótulos del eje y encima de las barras, para que el halo funcione
-    tk.forEach(v=>{g+=`<text class="ay" x="0" y="${(y(v)-3).toFixed(1)}">${fmtShort(v,cur.unit)}</text>`;});
-    // años en DOS DÍGITOS: entran los diez sin pisarse
-    YEARS.forEach((yy,i)=>{g+=`<text class="ax${i===yIdx?' now':''}" x="${xc(i).toFixed(1)}" y="${SR_H-6}" text-anchor="middle">${String(yy).slice(2)}</text>`;});
+    // años COMPLETOS en diagonal ascendente hacia la derecha (rotar -40° con ancla al final:
+    // el texto queda debajo-izquierda de su barra y nunca se sale por el borde derecho)
+    const yAx=SR_H-SR_B+11;
+    YEARS.forEach((yy,i)=>{g+=`<text class="ax${i===yIdx?' now':''}" x="${xc(i).toFixed(1)}" y="${yAx}" text-anchor="end" transform="rotate(-40 ${xc(i).toFixed(1)} ${yAx})">${yy}</text>`;});
     // zonas sensibles para señalar/elegir gestión
     YEARS.forEach((_,i)=>{g+=`<rect class="hit" data-i="${i}" x="${(xc(i)-bw/2).toFixed(1)}" y="0" width="${bw.toFixed(1)}" height="${SR_H}"/>`;});
     const huecos=prim.filter(v=>!ok(v)).length;
