@@ -145,23 +145,33 @@ body.dark .ind.on .mini{opacity:1;filter:none}
 .d-links{display:block;margin-top:3px}.d-links .sep{color:var(--faint);margin:0 5px}
 .back{color:var(--teal-dk);cursor:pointer;font-weight:700;text-decoration:none}.back:hover{text-decoration:underline}
 /* serie 2016-2025 del indicador en pantalla, contra el promedio nacional */
-.serie{border:1px solid var(--linea-2);background:var(--card-solid);padding:9px 10px 4px;margin-bottom:9px}
-.sr-top{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:2px}
-.sr-t{font-size:.63rem;font-weight:700;line-height:1.2;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.sr-u{font-size:.53rem;color:var(--faint);font-weight:600;flex:none}
-.sr-lg{display:flex;gap:11px;font-size:.53rem;color:var(--suave);font-weight:600;margin:3px 0 1px}
-.sr-lg i{display:inline-block;width:13px;height:0;border-top:2.5px solid currentColor;vertical-align:middle;margin-right:4px;font-style:normal}
-.sr-lg .mu{color:var(--sel)}.sr-lg .na{color:var(--faint)}
-.sr-svg{display:block;width:100%;height:96px;overflow:visible}
+.serie{border:1px solid var(--linea-2);background:var(--card-solid);padding:10px 11px 7px;margin-bottom:9px}
+.sr-top{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.sr-t{font-size:.66rem;font-weight:700;line-height:1.2;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sr-u{font-size:.54rem;color:var(--faint);font-weight:600;flex:none}
+/* la lectura ES la leyenda: mismo color que la marca del gráfico + el valor de la gestión señalada */
+.sr-rd{display:flex;align-items:baseline;gap:9px;margin:6px 0 3px;font-size:.55rem;font-weight:600;color:var(--suave);flex-wrap:wrap}
+.sr-rd .rd-y{font-size:.68rem;font-weight:800;color:var(--tx);letter-spacing:-.01em;flex:none}
+.sr-rd .it{display:inline-flex;align-items:center;gap:4px;min-width:0}
+.sr-rd .it b{color:var(--tx);font-weight:800;font-size:.68rem;letter-spacing:-.01em}
+.sr-rd .sw{width:9px;height:9px;flex:none;background:var(--sel);border-radius:1px}
+.sr-rd .sw.li{height:0;width:12px;border-radius:0;background:none;border-top:2.5px dashed var(--faint)}
+.sr-rd .nm{max-width:8.4rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sr-svg{display:block;width:100%;height:auto;overflow:visible;cursor:pointer;touch-action:pan-y}
 .sr-svg .gl{stroke:var(--linea-2);stroke-width:1}
-.sr-svg .zero{stroke:var(--faint);stroke-width:1;stroke-dasharray:2 2}
-.sr-svg .ln-na{fill:none;stroke:var(--faint);stroke-width:1.6;stroke-dasharray:3.5 2.5}
-.sr-svg .ln-mu{fill:none;stroke:var(--sel);stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round}
-.sr-svg .dot{fill:var(--sel)}
-.sr-svg .dot-now{fill:var(--warm);stroke:var(--card-solid);stroke-width:1.6}
-.sr-svg .ax{fill:var(--faint);font-size:7.5px;font-weight:600;font-family:var(--f)}
-.sr-svg .gap{fill:none;stroke:var(--sel);stroke-width:1.4;stroke-dasharray:2 2;opacity:.55}
-.sr-foot{font-size:.5rem;color:var(--faint);font-weight:500;line-height:1.35;margin-top:1px}
+.sr-svg .base{stroke:var(--faint);stroke-width:1.1;opacity:.75}
+.sr-svg .bar{fill:var(--sel);opacity:.82}
+.sr-svg .bar.now{fill:var(--warm);opacity:1}
+.sr-svg .bar.hov{opacity:1}
+.sr-svg .ln-na{fill:none;stroke:var(--faint);stroke-width:1.7;stroke-dasharray:4 2.6;stroke-linecap:round}
+.sr-svg .dot-na{fill:var(--faint)}
+.sr-svg .ax{fill:var(--faint);font-size:7.6px;font-weight:600;font-family:var(--f)}
+/* halo del color de la tarjeta: los rótulos del eje y se alinean con el título (x=0) y pisan la barra sin ensuciarse */
+.sr-svg .ay{fill:var(--suave);font-size:7.8px;font-weight:700;font-family:var(--f);
+  paint-order:stroke;stroke:var(--card-solid);stroke-width:2.6px;stroke-linejoin:round}
+.sr-svg .ax.now{fill:var(--warm);font-weight:800}
+.sr-svg .hit{fill:transparent}
+.sr-foot{font-size:.5rem;color:var(--faint);font-weight:500;line-height:1.35;margin-top:3px}
 .kgrid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--linea-2);border:1px solid var(--linea-2)}
 .kpi{background:var(--card-solid);padding:.5rem .6rem;cursor:pointer;border-top:2px solid var(--teal);
   transition:background-color .22s ease,border-color .22s ease;
@@ -179,16 +189,19 @@ body.dark .ind.on .mini{opacity:1;filter:none}
 .zc button:last-child{border-bottom:0;font-size:.7rem}.zc button:hover{background:var(--gris-card)}
 
 .termo{position:fixed;bottom:14px;left:50%;transform:translateX(-50%);z-index:8;
-  width:min(34rem,calc(100vw - 47rem));background:var(--glass);border:1px solid var(--linea);box-shadow:var(--sh);
-  -webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);padding:.5rem .85rem}
-.tm-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:.35rem}
-.tm-t{font-size:.68rem;font-weight:700}.tm-t small{color:var(--faint);font-weight:500;margin-left:.25rem}
-.tm-st{font-size:.55rem;color:var(--suave);font-weight:500}.tm-st b{color:var(--tx);font-weight:700}
-.tm-row{display:flex;align-items:center;gap:9px}
-.tm-side{font-size:.58rem;color:var(--tx);font-weight:700;white-space:nowrap;flex:none}
+  width:min(38rem,calc(100vw - 46rem));background:var(--glass);border:1px solid var(--linea);box-shadow:var(--sh);
+  -webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);padding:.6rem 1rem 1.05rem}
+.tm-top{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:.42rem}
+.tm-t{font-size:.75rem;font-weight:700}.tm-t small{color:var(--faint);font-weight:500;margin-left:.28rem}
+.tm-st{font-size:.58rem;color:var(--suave);font-weight:500;white-space:nowrap}.tm-st b{color:var(--tx);font-weight:700}
+.tm-row{display:flex;align-items:center;gap:10px}
+.tm-side{font-size:.63rem;color:var(--tx);font-weight:700;white-space:nowrap;flex:none}
 .tm-side .cap{color:var(--faint);font-weight:500}
-.tm-bar{flex:1;height:8px;position:relative;border-radius:1px}
-.tm-mk{position:absolute;top:-2px;width:1px;height:12px;background:var(--suave)}
+.tm-bar{flex:1;height:11px;position:relative;border-radius:1px}
+.tm-mk{position:absolute;top:-3px;width:1px;height:17px;background:var(--suave)}
+/* rótulo del pivote: sin él, la marca central es un palito sin explicación */
+.tm-mkl{position:absolute;top:16px;transform:translateX(-50%);font-size:.5rem;font-weight:600;
+  color:var(--faint);white-space:nowrap}
 .termo.swap .tm-t,.termo.swap .tm-st,.termo.swap .tm-side{animation:softIn .34s ease both}
 
 /* créditos */
@@ -225,9 +238,10 @@ body.dark .ind.on .mini{opacity:1;filter:none}
   .i-df{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-size:.6rem;line-height:1.32;margin-top:.2rem;font-weight:500}
   /* mapa: SIEMPRE completo; la ficha flota por encima (no se re-renderiza) */
   #mapbox{inset:auto;top:202px;left:0;right:0;bottom:0}
-  .termo{left:8px;right:8px;transform:none;width:auto;bottom:8px;padding:.45rem .7rem;transition:opacity .2s}
+  .termo{left:8px;right:8px;transform:none;width:auto;bottom:8px;padding:.5rem .75rem .95rem;transition:opacity .2s}
   body.sheet-open .termo{opacity:0;pointer-events:none}
-  .tm-t{font-size:.66rem}.tm-t small{font-size:.52rem}.tm-st{display:none}.tm-side{font-size:.58rem}
+  .tm-t{font-size:.7rem}.tm-t small{font-size:.54rem}.tm-st{display:none}.tm-side{font-size:.6rem}
+  .tm-bar{height:10px}
   .zc{right:8px;bottom:12px;transition:bottom .28s cubic-bezier(.22,.61,.36,1)}
   body.sheet-open .zc{bottom:calc(var(--peek) + 16px)}
   /* ── ficha municipal = bottom-sheet deslizable (peek / full) ── */
@@ -328,6 +342,7 @@ const fmt=(v,u)=>{if(v==null||isNaN(v))return"s/d";
   if(u==="%")return(+v).toFixed(1).replace(".",",")+"%";
   return(+v).toFixed(1).replace(".",",")+" "+u;};
 const fmtShort=(v,u)=>{if(v==null||isNaN(v))return"";
+  if(v===0)return"0";                                   // el cero se escribe "0", no "0,0"
   if(u==="Bs/hab")return Math.abs(v)>=1000?(v/1000).toFixed(1).replace(".",",")+"k":String(Math.round(v));
   return(+v).toFixed(Math.abs(v)<10?1:0).replace(".",",");};
 const sgn=d=>(d>=0?"▲":"▼")+" "+fmt(Math.abs(d),"").trim();
@@ -524,12 +539,15 @@ Promise.all([fetch("municipios.topojson").then(r=>r.json()),fetch("sudamerica.to
     const d0=sc.dv?sc.dv.domain():[sc.lo,sc.med,sc.hi];
     document.getElementById("tm-lo").innerHTML=`<span class="cap">≤ </span>${fmt(d0[0],cur.unit)}`;
     document.getElementById("tm-hi").innerHTML=`<span class="cap">≥ </span>${fmt(d0[d0.length-1],cur.unit)}`;
-    const bar=document.getElementById("tm-bar");bar.querySelectorAll(".tm-mk").forEach(m=>m.remove());
-    // la marca central solo tiene sentido si hay pivote: cero (resultado fiscal) o mediana.
-    // En los indicadores de contexto (dir 0) la rampa es secuencial y no hay pivote que marcar.
-    if(cur.dir!==0){const m=document.createElement("div");m.className="tm-mk";m.style.left="50%";
-      m.title=cur.div?"cero":"mediana";bar.appendChild(m);}
-    document.getElementById("tm-st").innerHTML=`n <b>${sc.n}</b> · mín <b>${fmt(sc.min,cur.unit)}</b> · med <b>${fmt(sc.med,cur.unit)}</b> · máx <b>${fmt(sc.max,cur.unit)}</b>`;}
+    const bar=document.getElementById("tm-bar");bar.querySelectorAll(".tm-mk,.tm-mkl").forEach(m=>m.remove());
+    // TODAS las escalas son divergentes (también las de contexto, tras el arreglo de la rampa neutra),
+    // así que el centro SIEMPRE es un pivote real y va marcado y rotulado: cero en Resultado Fiscal,
+    // mediana en el resto. Antes se ocultaba en dir 0 y quedaba un centro sin explicar.
+    const m=document.createElement("div");m.className="tm-mk";m.style.left="50%";bar.appendChild(m);
+    const ml=document.createElement("div");ml.className="tm-mkl";ml.style.left="50%";
+    ml.textContent=cur.div?"cero":"mediana "+fmt(sc.med,cur.unit);bar.appendChild(ml);
+    // la mediana ya va rotulada bajo la marca central -> acá no se repite
+    document.getElementById("tm-st").innerHTML=`<b>${sc.n}</b> con dato · mín <b>${fmt(sc.min,cur.unit)}</b> · máx <b>${fmt(sc.max,cur.unit)}</b>`;}
 
   // cambiar de indicador NO reconstruye la ficha (evita el parpadeo y conserva el scroll):
   // solo mueve el resalte, repinta el mapa con crossfade y actualiza el bloque peek
@@ -544,46 +562,69 @@ Promise.all([fetch("municipios.topojson").then(r=>r.json()),fetch("sudamerica.to
 
   // ── SERIE 2016–2025 del indicador en pantalla, contra el promedio nacional ──
   // sig=null -> resumen nacional: la serie nacional pasa a ser la línea principal.
-  const SR_W=260,SR_H=96,SR_L=27,SR_R=7,SR_T=9,SR_B=15;
+  const SR_W=260,SR_H=150,SR_T=20,SR_B=21,SR_R=2;
+  const ok=v=>v!=null&&!isNaN(v);
   function linePath(arr,x,y){let d="",pen=false;
-    arr.forEach((v,i)=>{if(v==null||isNaN(v)){pen=false;return;}
+    arr.forEach((v,i)=>{if(!ok(v)){pen=false;return;}
       d+=(pen?"L":"M")+x(i).toFixed(1)+" "+y(v).toFixed(1)+" ";pen=true;});
     return d.trim();}
+  let srShow=null;                                  // fn que refresca la lectura al pasar por una gestión
   function renderSerie(sig){
     const box=document.getElementById("serie-box");
     const nat=YEARS.map((_,i)=>agg(allRows,cur,i));
     const mu=sig?DATA[sig].s[cur.key]:null;
-    const solo=!sig;                                   // nacional: una sola línea
-    const vals=(mu||[]).concat(nat).filter(v=>v!=null&&!isNaN(v));
-    if(!vals.length){box.innerHTML="";return;}
-    let lo=d3.min(vals),hi=d3.max(vals);
-    if(cur.div){const m=Math.max(Math.abs(lo),Math.abs(hi));lo=Math.min(lo,-m*.08);hi=Math.max(hi,m*.08);}
-    if(lo===hi){lo-=1;hi+=1;}
-    const pad=(hi-lo)*.12;lo-=pad;hi+=pad;
-    const x=i=>SR_L+i*(SR_W-SR_L-SR_R)/(YEARS.length-1);
+    const prim=mu||nat;                             // la serie principal va en BARRAS
+    const vals=prim.concat(mu?nat:[]).filter(ok);
+    if(!vals.length){box.innerHTML="";srShow=null;return;}
+    // Las barras SIEMPRE arrancan en cero: una barra con base distinta de cero exagera
+    // la variación y miente. Por eso el dominio incluye el 0 aunque quede aire.
+    let lo=Math.min(0,d3.min(vals)),hi=Math.max(0,d3.max(vals));
+    if(lo===hi)hi=lo+1;
+    const pad=(hi-lo)*.10;if(hi>0)hi+=pad;if(lo<0)lo-=pad;
+    const bw=(SR_W-SR_R)/YEARS.length,barW=Math.min(15,bw*.62);
+    const xc=i=>SR_R/2+bw*i+bw/2;
     const y=v=>SR_H-SR_B-(v-lo)/(hi-lo)*(SR_H-SR_T-SR_B);
+    const y0=y(0);
     let g="";
-    // rejilla + rótulos del eje y en valores REDONDOS (d3.ticks), no en los extremos crudos
-    d3.ticks(lo+pad*.5,hi-pad*.5,3).forEach(v=>{
-      g+=`<line class="gl" x1="${SR_L}" y1="${y(v).toFixed(1)}" x2="${SR_W-SR_R}" y2="${y(v).toFixed(1)}"/>`
-       +`<text class="ax" x="${SR_L-4}" y="${(y(v)+2.6).toFixed(1)}" text-anchor="end">${fmtShort(v,cur.unit)}</text>`;});
-    if(lo<0&&hi>0)g+=`<line class="zero" x1="${SR_L}" y1="${y(0).toFixed(1)}" x2="${SR_W-SR_R}" y2="${y(0).toFixed(1)}"/>`;
-    // años: primero, último y el que está en pantalla
-    new Set([0,YEARS.length-1,yIdx]).forEach(i=>{
-      g+=`<text class="ax" x="${x(i).toFixed(1)}" y="${SR_H-4}" text-anchor="${i===0?'start':i===YEARS.length-1?'end':'middle'}"${i===yIdx?' style="fill:var(--warm);font-weight:800"':''}>${YEARS[i]}</text>`;});
-    // línea del promedio nacional (punteada) — principal si no hay municipio
-    g+=`<path class="${solo?'ln-mu':'ln-na'}" d="${linePath(nat,x,y)}"/>`;
-    if(mu)g+=`<path class="ln-mu" d="${linePath(mu,x,y)}"/>`;
-    const serie=solo?nat:mu;
-    serie.forEach((v,i)=>{if(v==null||isNaN(v))return;
-      g+=`<circle class="${i===yIdx?'dot-now':'dot'}" cx="${x(i).toFixed(1)}" cy="${y(v).toFixed(1)}" r="${i===yIdx?3.1:1.5}"/>`;});
-    const huecos=serie.filter(v=>v==null).length;
+    // rejilla en valores redondos; los rótulos van ARRIBA de su línea y ALINEADOS A LA IZQUIERDA (x=0),
+    // en la misma vertical que el título de la tarjeta. El halo los despega de las barras.
+    const tk=d3.ticks(lo,hi,3).filter(v=>y(v)>SR_T-2&&y(v)<SR_H-SR_B+2);
+    tk.forEach(v=>{g+=`<line class="gl" x1="0" y1="${y(v).toFixed(1)}" x2="${SR_W}" y2="${y(v).toFixed(1)}"/>`;});
+    // barras de la serie principal, ancladas en el cero
+    prim.forEach((v,i)=>{if(!ok(v))return;
+      const yv=y(v),top=Math.min(yv,y0),h=Math.max(1,Math.abs(yv-y0));
+      g+=`<rect class="bar${i===yIdx?' now':''}" data-i="${i}" x="${(xc(i)-barW/2).toFixed(1)}" y="${top.toFixed(1)}" width="${barW.toFixed(1)}" height="${h.toFixed(1)}"/>`;});
+    g+=`<line class="base" x1="0" y1="${y0.toFixed(1)}" x2="${SR_W}" y2="${y0.toFixed(1)}"/>`;
+    // promedio nacional: línea punteada por encima (solo si hay municipio; si no, ya son las barras)
+    if(mu){g+=`<path class="ln-na" d="${linePath(nat,xc,y)}"/>`;
+      nat.forEach((v,i)=>{if(ok(v))g+=`<circle class="dot-na" cx="${xc(i).toFixed(1)}" cy="${y(v).toFixed(1)}" r="1.3"/>`;});}
+    // rótulos del eje y encima de las barras, para que el halo funcione
+    tk.forEach(v=>{g+=`<text class="ay" x="0" y="${(y(v)-3).toFixed(1)}">${fmtShort(v,cur.unit)}</text>`;});
+    // años en DOS DÍGITOS: entran los diez sin pisarse
+    YEARS.forEach((yy,i)=>{g+=`<text class="ax${i===yIdx?' now':''}" x="${xc(i).toFixed(1)}" y="${SR_H-6}" text-anchor="middle">${String(yy).slice(2)}</text>`;});
+    // zonas sensibles para señalar/elegir gestión
+    YEARS.forEach((_,i)=>{g+=`<rect class="hit" data-i="${i}" x="${(xc(i)-bw/2).toFixed(1)}" y="0" width="${bw.toFixed(1)}" height="${SR_H}"/>`;});
+    const huecos=prim.filter(v=>!ok(v)).length;
     box.innerHTML=`<div class="serie">
       <div class="sr-top"><div class="sr-t">${cur.label}</div><div class="sr-u">${cur.unit}</div></div>
-      <div class="sr-lg">${solo?'':'<span class="mu"><i></i>'+DATA[sig].nombre+'</span>'}<span class="na"><i></i>Promedio nacional</span></div>
+      <div class="sr-rd" id="sr-rd"></div>
       <svg class="sr-svg" viewBox="0 0 ${SR_W} ${SR_H}" role="img" aria-label="Serie ${YEARS[0]}–${YEARS[YEARS.length-1]}">${g}</svg>
-      <div class="sr-foot">Promedio nacional ponderado por población.${huecos?' '+huecos+' gestión(es) sin dato.':''}</div>
-    </div>`;}
+      <div class="sr-foot">${YEARS[0]}–${YEARS[YEARS.length-1]} · promedio nacional ponderado por población · tocá una gestión para llevar el mapa a ese año.${huecos?' '+huecos+' sin dato.':''}</div>
+    </div>`;
+    const rd=box.querySelector("#sr-rd"),svg=box.querySelector(".sr-svg"),bars=svg.querySelectorAll(".bar");
+    const nom=sig?DATA[sig].nombre:"Promedio nacional";
+    srShow=i=>{
+      const a=prim[i],b=mu?nat[i]:null;
+      rd.innerHTML=`<span class="rd-y">${YEARS[i]}</span>`
+        +`<span class="it"><i class="sw"${i===yIdx?' style="background:var(--warm)"':''}></i><span class="nm">${nom}</span> <b>${fmt(a,cur.unit)}</b></span>`
+        +(mu?`<span class="it"><i class="sw li"></i>Nacional <b>${fmt(b,cur.unit)}</b></span>`:"");
+      bars.forEach(bx=>bx.classList.toggle("hov",+bx.dataset.i===i));};
+    srShow(yIdx);
+    const idxAt=e=>{const r=svg.getBoundingClientRect();
+      return Math.max(0,Math.min(YEARS.length-1,Math.floor((e.clientX-r.left)/r.width*YEARS.length)));};
+    svg.addEventListener("pointermove",e=>srShow(idxAt(e)));
+    svg.addEventListener("pointerleave",()=>srShow(yIdx));
+    svg.addEventListener("click",e=>setYear(idxAt(e)));}
   function wireKpi(){document.querySelectorAll("#kgrid .kpi").forEach(el=>el.onclick=()=>select(INDS.find(i=>i.key===el.dataset.k)));}
   // ── ficha = bottom-sheet deslizable en móvil (peek / full / hidden) ──
   const sheet=document.getElementById("panel-det"),grip=document.getElementById("sheet-grip");
