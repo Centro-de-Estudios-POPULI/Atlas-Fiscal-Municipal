@@ -19,6 +19,7 @@
   --topbar:#5c1618;--arena:#e9d8a6;
   --fondo:#f2efe8;--glass:#fffefbdb;--gris-card:#f1ede3;--linea:#ddd6c9;--linea-2:#eae4d7;
   --tx:#16232c;--suave:#5f6f79;--faint:#93a3ac;--sel:#005f73;--warm:#ee9b00;--peek:138px;
+  --dep:#0a9396;   /* serie del departamento: teal medio, familia de las barras (--sel) */
   --sh:0 1px 0 #12203508,0 10px 30px #12203512;
   --card-solid:#fff;--card-hov:#f7f9fa;--kpi-on:#f6fbfc;--foot-bg:#ffffff88;
   --topline:#3f0e10;--sheet-fade:#fffefbf2;
@@ -26,7 +27,7 @@
 /* ── MODO OSCURO ── mismos tokens, valores nocturnos (el canvas se repinta desde JS) */
 body.dark{
   color-scheme:dark;
-  --orange:#f0834a;--teal-dk:#5cc3c9;--sel:#43b3bd;--topbar:#3d0e10;--topline:#5c1618;
+  --orange:#f0834a;--teal-dk:#5cc3c9;--sel:#43b3bd;--topbar:#3d0e10;--topline:#5c1618;--dep:#8ad4c4;
   --fondo:#0b1318;--glass:#131f26e6;--gris-card:#16242c;--linea:#2b3d47;--linea-2:#22323b;
   --tx:#e9eff2;--suave:#a1b3bd;--faint:#6f8794;
   --card-solid:#1b2a33;--card-hov:#20313b;--kpi-on:#17323a;--foot-bg:#0f1a2040;
@@ -149,15 +150,29 @@ body.dark .ind.on .mini{opacity:1;filter:none}
 .sr-top{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
 .sr-t{font-size:.66rem;font-weight:700;line-height:1.2;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .sr-u{font-size:.54rem;color:var(--faint);font-weight:600;flex:none}
-/* la lectura ES la leyenda: mismo color que la marca del gráfico + el valor de la gestión señalada */
-.sr-rd{display:flex;align-items:baseline;gap:9px;margin:6px 0 3px;font-size:.55rem;font-weight:600;color:var(--suave);flex-wrap:wrap}
-.sr-rd .rd-y{font-size:.68rem;font-weight:800;color:var(--tx);letter-spacing:-.01em;flex:none}
-.sr-rd .it{display:inline-flex;align-items:center;gap:4px;min-width:0}
-.sr-rd .it b{color:var(--tx);font-weight:800;font-size:.68rem;letter-spacing:-.01em}
+/* la lectura ES la leyenda: mismo color que la marca del gráfico + el valor de la gestión señalada.
+   OJO alineación: NADA de align-items:baseline acá. Los ítems son inline-flex y su baseline la
+   define su PRIMER hijo (el cuadrito/línea de color, que no tiene texto), así que con baseline
+   cada bloque se desplazaba por su swatch y el año, el nombre y el valor quedaban en tres alturas
+   distintas. Todo va centrado y con line-height:1 para que la fila lea como una sola línea. */
+   Con tres series (municipio + depto + país) la fila no entra en el ancho del panel y envolvía
+   sola, partiéndose donde caía; por eso el reparto en filas es EXPLÍCITO: protagonista arriba
+   con el año, referencias abajo. */
+.sr-rd{display:flex;flex-direction:column;row-gap:3px;margin:6px 0 4px;
+  font-size:.55rem;font-weight:600;color:var(--suave);line-height:1}
+.rd-row{display:flex;align-items:center;column-gap:10px;row-gap:3px;flex-wrap:wrap;min-width:0}
+.sr-rd .rd-y{font-size:.68rem;font-weight:800;color:var(--tx);letter-spacing:-.01em;flex:none;line-height:1}
+.sr-rd .it{display:inline-flex;align-items:center;gap:5px;min-width:0;line-height:1}
+.sr-rd .it b{color:var(--tx);font-weight:800;font-size:.68rem;letter-spacing:-.01em;line-height:1;
+  font-variant-numeric:tabular-nums;flex:none}
 .sr-rd .sw{width:9px;height:9px;flex:none;background:var(--sel);border-radius:1px}
-.sr-rd .sw.li{height:0;width:12px;border-radius:0;background:none;border-top:2.5px dashed var(--faint)}
-.sr-rd .nm{max-width:8.4rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.sr-svg{display:block;width:100%;height:auto;overflow:visible;cursor:pointer;touch-action:pan-y}
+.sr-rd .sw.ln{height:0;width:13px;border-radius:0;background:none;border-top:2.5px solid var(--dep)}
+.sr-rd .sw.li{height:0;width:13px;border-radius:0;background:none;border-top:2.5px dashed var(--suave)}
+.sr-rd .nm{max-width:8.4rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;line-height:1}
+/* la serie protagonista tiene su fila entera: que el nombre use el ancho libre y recorte solo si sobra */
+.rd-row:first-child .it{flex:1 1 auto;min-width:0}
+.rd-row:first-child .nm{max-width:none}
+.sr-svg{display:block;width:100%;height:auto;overflow:visible;cursor:crosshair;touch-action:pan-y}
 .sr-svg .gl{stroke:var(--linea-2);stroke-width:1}
 .sr-svg .base{stroke:var(--faint);stroke-width:1.1;opacity:.75}
 .sr-svg .bar{fill:var(--sel);opacity:.68}
@@ -165,6 +180,10 @@ body.dark .ind.on .mini{opacity:1;filter:none}
 .sr-svg .bar.hov{opacity:1}
 .sr-svg .ln-na{fill:none;stroke:var(--suave);stroke-width:1.9;stroke-dasharray:4 2.6;stroke-linecap:round}
 .sr-svg .dot-na{fill:var(--suave)}
+/* promedio del DEPARTAMENTO: línea sólida teal medio — misma familia que las barras del municipio
+   (es su entorno inmediato), distinta del gris punteado del país */
+.sr-svg .ln-dp{fill:none;stroke:var(--dep);stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.sr-svg .dot-dp{fill:var(--dep)}
 .sr-svg .ax{fill:var(--faint);font-size:7px;font-weight:600;font-family:var(--f)}
 /* halo del color de la tarjeta: los rótulos del eje y se alinean con el título (x=0) y pisan la barra sin ensuciarse */
 .sr-svg .ay{fill:var(--suave);font-size:7.8px;font-weight:700;font-family:var(--f);
@@ -415,9 +434,7 @@ Promise.all([fetch("municipios.topojson").then(r=>r.json()),fetch("sudamerica.to
   const deptDD=document.getElementById("dept-dd");
   document.getElementById("dept-drop").innerHTML=[`<div class="tbop on" data-d="">Bolivia (todo)</div>`].concat(DEPTOS.map(d=>`<div class="tbop" data-d="${d}">${d}</div>`)).join("");
   deptDD.querySelector(".tbbtn").onclick=e=>{e.stopPropagation();catBar.classList.remove("open");yrDD.classList.remove("open");deptDD.classList.toggle("open");};
-  document.querySelectorAll("#dept-drop .tbop").forEach(op=>op.onclick=()=>{
-    document.querySelectorAll("#dept-drop .tbop").forEach(o=>o.classList.remove("on"));op.classList.add("on");
-    document.getElementById("dept-lab").textContent=op.dataset.d||"Bolivia";deptDD.classList.remove("open");zoomToDept(op.dataset.d);});
+  document.querySelectorAll("#dept-drop .tbop").forEach(op=>op.onclick=()=>{deptDD.classList.remove("open");setDept(op.dataset.d);});
   // ── eje temporal: stepper ‹ 2025 › + desplegable de gestión ──
   const yrDD=document.getElementById("yr-dd");
   document.getElementById("yr-drop").innerHTML=YEARS.map((y,i)=>`<div class="yrop" data-i="${i}">${y}</div>`).join("");
@@ -430,7 +447,7 @@ Promise.all([fetch("municipios.topojson").then(r=>r.json()),fetch("sudamerica.to
   function paintYear(){yearChrome();
     buildCards();                       // los mini-mapas son del año en pantalla
     fadeSwap(drawBase);drawOver();termo();
-    sel?renderMun(sel.properties.sigep):renderNational();}
+    sel?renderMun(sel.properties.sigep):renderSummary();}
   document.getElementById("y-prev").onclick=e=>{e.stopPropagation();setYear(yIdx-1);};
   document.getElementById("y-next").onclick=e=>{e.stopPropagation();setYear(yIdx+1);};
   document.getElementById("y-val").onclick=e=>{e.stopPropagation();
@@ -458,7 +475,7 @@ Promise.all([fetch("municipios.topojson").then(r=>r.json()),fetch("sudamerica.to
     const ps=document.getElementById("p-sub");if(ps)ps.textContent=`${INDS.length} indicadores · elegí uno para verlo en el mapa`;}
   function setCategory(gkey){const g=GRUPOS.find(x=>x.key===gkey);if(!g)return;curCat=g;INDS=g.indicadores;cur=INDS[0];
     document.querySelector("#cat-btn .cn").textContent=g.label;catBar.classList.remove("open");
-    buildCards();renderCatDrop();updateHints();fadeSwap(drawBase);drawOver();termo();sel?renderMun(sel.properties.sigep):renderNational();}
+    buildCards();renderCatDrop();updateHints();fadeSwap(drawBase);drawOver();termo();sel?renderMun(sel.properties.sigep):renderSummary();}
 
   const wrap=document.getElementById("map-wrap");
   const base=document.getElementById("base"),fade=document.getElementById("fade"),over=document.getElementById("over"),pick=document.getElementById("pick"),catchEl=document.getElementById("catch");
@@ -496,7 +513,14 @@ Promise.all([fetch("municipios.topojson").then(r=>r.json()),fetch("sudamerica.to
   d3.select(catchEl).call(zoom);
   document.getElementById("z-in").onclick=()=>d3.select(catchEl).transition().duration(250).call(zoom.scaleBy,1.6);
   document.getElementById("z-out").onclick=()=>d3.select(catchEl).transition().duration(250).call(zoom.scaleBy,1/1.6);
-  document.getElementById("z-rst").onclick=()=>{focusDept=null;document.getElementById("dept-lab").textContent="Bolivia";document.querySelectorAll("#dept-drop .tbop").forEach((o,i)=>o.classList.toggle("on",i===0));drawBase();d3.select(catchEl).transition().duration(350).call(zoom.transform,d3.zoomIdentity);};
+  // el botón ⤢ vuelve a Bolivia, pero NO descarta el municipio señalado (solo resetea la vista)
+  document.getElementById("z-rst").onclick=()=>setDept("",true);
+  // único punto de entrada para cambiar el foco: sincroniza top bar + mapa + ficha
+  function setDept(dp,keepSel){focusDept=dp||null;
+    document.getElementById("dept-lab").textContent=dp||"Bolivia";
+    document.querySelectorAll("#dept-drop .tbop").forEach(o=>o.classList.toggle("on",(o.dataset.d||"")===(dp||"")));
+    zoomToDept(dp);
+    if(keepSel&&sel)renderMun(sel.properties.sigep);else renderSummary();}
   function zoomToDept(dp){focusDept=dp||null;drawBase();drawOver();
     if(!dp){d3.select(catchEl).transition().duration(400).call(zoom.transform,d3.zoomIdentity);return;}
     const feats=F.filter(f=>DATA[f.properties.sigep].dpto===dp),b=d3.geoPath(proj).bounds({type:"FeatureCollection",features:feats});
@@ -526,7 +550,7 @@ Promise.all([fetch("municipios.topojson").then(r=>r.json()),fetch("sudamerica.to
   catchEl.addEventListener("mouseleave",()=>{hov=null;drawOver();pop.style.opacity=0;});
   let _tapXY=null;
   catchEl.addEventListener("pointerdown",e=>{_tapXY=[e.clientX,e.clientY];});
-  catchEl.addEventListener("pointerup",e=>{if(!_tapXY)return;const mv=Math.hypot(e.clientX-_tapXY[0],e.clientY-_tapXY[1]);_tapXY=null;if(mv>8)return;const f=featAt(e);if(f){sel=f;drawOver();renderMun(f.properties.sigep);}else renderNational();});
+  catchEl.addEventListener("pointerup",e=>{if(!_tapXY)return;const mv=Math.hypot(e.clientX-_tapXY[0],e.clientY-_tapXY[1]);_tapXY=null;if(mv>8)return;const f=featAt(e);if(f){sel=f;drawOver();renderMun(f.properties.sigep);}else renderSummary();});
 
   const termoEl=document.querySelector(".termo");
   function termo(){const sc=scale(cur);
@@ -555,10 +579,19 @@ Promise.all([fetch("municipios.topojson").then(r=>r.json()),fetch("sudamerica.to
     document.querySelectorAll(".ind").forEach(c=>c.classList.toggle("on",c.dataset.k===ind.key));
     document.querySelectorAll("#kgrid .kpi").forEach(el=>el.classList.toggle("on",el.dataset.k===ind.key));
     fadeSwap(drawBase);drawOver();termo();
-    renderSerie(sel?sel.properties.sigep:null);
-    if(sel)renderPeek(sel.properties.sigep);}
+    renderSerie(sel?sel.properties.sigep:null,sel?null:focusDept);
+    if(sel)renderPeek(sel.properties.sigep);else if(focusDept)renderPeekDept(focusDept);else renderPeekNat();}
 
   const cls=x=>x>=0?"up":"dn";
+  const pctTxt=v=>(v*100).toFixed(1).replace(".",",")+"%";
+  // puesto del departamento entre los 9, ORIENTADO POR dir igual que el ranking municipal:
+  // puesto 1 = el mejor según la dirección favorable del indicador, no "el más alto"
+  function deptRank(dp,ind,yi){
+    const arr=DEPTOS.map(d=>[d,agg(byDpto[d],ind,yi)]).filter(x=>x[1]!=null)
+      .sort((a,b)=>ind.dir<0?d3.ascending(a[1],b[1]):d3.descending(a[1],b[1]));
+    const p=arr.findIndex(x=>x[0]===dp);return p<0?null:{pos:p+1,n:arr.length};}
+  // la ficha por defecto sigue al foco del top bar: el departamento si hay zoom a uno, el país si no
+  const renderSummary=()=>focusDept?renderDept(focusDept):renderNational();
 
   // ── SERIE 2016–2025 del indicador en pantalla, contra el promedio nacional ──
   // sig=null -> resumen nacional: la serie nacional pasa a ser la línea principal.
@@ -571,12 +604,20 @@ Promise.all([fetch("municipios.topojson").then(r=>r.json()),fetch("sudamerica.to
       d+=(pen?"L":"M")+x(i).toFixed(1)+" "+y(v).toFixed(1)+" ";pen=true;});
     return d.trim();}
   let srShow=null;                                  // fn que refresca la lectura al pasar por una gestión
-  function renderSerie(sig){
+  // sig = municipio (barras) → se le superponen su DEPARTAMENTO (línea sólida) y el PAÍS (punteada)
+  // dp  = resumen departamental (barras = depto) → se le superpone el PAÍS
+  // ninguno = resumen nacional (barras = país, sin líneas: no se compara consigo mismo)
+  function renderSerie(sig,dp){
     const box=document.getElementById("serie-box");
+    const dpto=sig?DATA[sig].dpto:(dp||null);
     const nat=YEARS.map((_,i)=>agg(allRows,cur,i));
+    const dep=dpto?YEARS.map((_,i)=>agg(byDpto[dpto],cur,i)):null;
     const mu=sig?DATA[sig].s[cur.key]:null;
-    const prim=mu||nat;                             // la serie principal va en BARRAS
-    const vals=prim.concat(mu?nat:[]).filter(ok);
+    const prim=mu||dep||nat;                        // la serie principal va en BARRAS
+    // capas superpuestas, de fondo a frente; cada una se dibuja y se rotula igual en la lectura
+    const capas=mu?[{k:"dp",arr:dep,lab:dpto,sw:"sw ln"},{k:"na",arr:nat,lab:"Nacional",sw:"sw li"}]
+              :dep?[{k:"na",arr:nat,lab:"Nacional",sw:"sw li"}]:[];
+    const vals=prim.concat(...capas.map(c=>c.arr)).filter(ok);
     if(!vals.length){box.innerHTML="";srShow=null;return;}
     // Las barras SIEMPRE arrancan en cero: una barra con base distinta de cero exagera
     // la variación y miente. Por eso el dominio incluye el 0 aunque quede aire.
@@ -598,9 +639,9 @@ Promise.all([fetch("municipios.topojson").then(r=>r.json()),fetch("sudamerica.to
       const yv=y(v),top=Math.min(yv,y0),h=Math.max(1,Math.abs(yv-y0));
       g+=`<rect class="bar${i===yIdx?' now':''}" data-i="${i}" x="${(xc(i)-barW/2).toFixed(1)}" y="${top.toFixed(1)}" width="${barW.toFixed(1)}" height="${h.toFixed(1)}"/>`;});
     g+=`<line class="base" x1="${SR_L}" y1="${y0.toFixed(1)}" x2="${SR_W}" y2="${y0.toFixed(1)}"/>`;
-    // promedio nacional: línea punteada por encima (solo si hay municipio; si no, ya son las barras)
-    if(mu){g+=`<path class="ln-na" d="${linePath(nat,xc,y)}"/>`;
-      nat.forEach((v,i)=>{if(ok(v))g+=`<circle class="dot-na" cx="${xc(i).toFixed(1)}" cy="${y(v).toFixed(1)}" r="1.3"/>`;});}
+    // promedios de referencia por encima de las barras: departamento (sólida) y país (punteada)
+    capas.forEach(c=>{g+=`<path class="ln-${c.k}" d="${linePath(c.arr,xc,y)}"/>`;
+      c.arr.forEach((v,i)=>{if(ok(v))g+=`<circle class="dot-${c.k}" cx="${xc(i).toFixed(1)}" cy="${y(v).toFixed(1)}" r="1.3"/>`;});});
     // años COMPLETOS en diagonal ascendente hacia la derecha (rotar -40° con ancla al final:
     // el texto queda debajo-izquierda de su barra y nunca se sale por el borde derecho)
     const yAx=SR_H-SR_B+11;
@@ -612,22 +653,34 @@ Promise.all([fetch("municipios.topojson").then(r=>r.json()),fetch("sudamerica.to
       <div class="sr-top"><div class="sr-t">${cur.label}</div><div class="sr-u">${cur.unit}</div></div>
       <div class="sr-rd" id="sr-rd"></div>
       <svg class="sr-svg" viewBox="0 0 ${SR_W} ${SR_H}" role="img" aria-label="Serie ${YEARS[0]}–${YEARS[YEARS.length-1]}">${g}</svg>
-      <div class="sr-foot">${YEARS[0]}–${YEARS[YEARS.length-1]} · promedio nacional ponderado por población · tocá una gestión para llevar el mapa a ese año.${huecos?' '+huecos+' sin dato.':''}</div>
+      <div class="sr-foot">${YEARS[0]}–${YEARS[YEARS.length-1]} · promedios ponderados por población · señalá una gestión para leer sus valores.${huecos?' '+huecos+' sin dato.':''}</div>
     </div>`;
     const rd=box.querySelector("#sr-rd"),svg=box.querySelector(".sr-svg"),bars=svg.querySelectorAll(".bar");
-    const nom=sig?DATA[sig].nombre:"Promedio nacional";
+    const nom=sig?DATA[sig].nombre:(dp||"Promedio nacional");
+    const item=(sw,lab,v,st)=>`<span class="it"><i class="${sw}"${st||""}></i><span class="nm">${lab}</span><b>${fmt(v,cur.unit)}</b></span>`;
     srShow=i=>{
-      const a=prim[i],b=mu?nat[i]:null;
-      rd.innerHTML=`<span class="rd-y">${YEARS[i]}</span>`
-        +`<span class="it"><i class="sw"${i===yIdx?' style="background:var(--warm)"':''}></i><span class="nm">${nom}</span> <b>${fmt(a,cur.unit)}</b></span>`
-        +(mu?`<span class="it"><i class="sw li"></i>Nacional <b>${fmt(b,cur.unit)}</b></span>`:"");
+      const pr=item("sw",nom,prim[i],i===yIdx?' style="background:var(--warm)"':""),
+            refs=capas.map(c=>item(c.sw,c.lab,c.arr[i])).join("");
+      // las referencias van SIEMPRE en su propia fila: en el ancho del panel no entran ni las tres
+      // series del municipio ni, por poco, las dos del departamento, y dejar que el flex envuelva
+      // donde caiga es lo que descolocaba la lectura
+      rd.innerHTML=capas.length>0
+        ?`<div class="rd-row"><span class="rd-y">${YEARS[i]}</span>${pr}</div><div class="rd-row">${refs}</div>`
+        :`<div class="rd-row"><span class="rd-y">${YEARS[i]}</span>${pr}${refs}</div>`;
       bars.forEach(bx=>bx.classList.toggle("hov",+bx.dataset.i===i));};
     srShow(yIdx);
+    // OJO calibración: las barras NO ocupan todo el ancho del svg — hay una banda izquierda de
+    // SR_L px (rótulos del eje) y SR_R a la derecha. Repartir el ancho completo entre los años
+    // corría la lectura casi una gestión a la izquierda (había que apuntar más a la derecha).
+    // Se convierte el puntero a coordenadas del viewBox y se divide por el ancho REAL de celda.
     const idxAt=e=>{const r=svg.getBoundingClientRect();
-      return Math.max(0,Math.min(YEARS.length-1,Math.floor((e.clientX-r.left)/r.width*YEARS.length)));};
+      const vx=(e.clientX-r.left)/r.width*SR_W;
+      return Math.max(0,Math.min(YEARS.length-1,Math.floor((vx-SR_L)/bw)));};
+    // señalar una gestión SOLO mueve la lectura: el año del mapa se cambia en el top bar.
+    // (llevar todo el mapa a otro año con un clic en la barra confundía más de lo que ayudaba)
     svg.addEventListener("pointermove",e=>srShow(idxAt(e)));
-    svg.addEventListener("pointerleave",()=>srShow(yIdx));
-    svg.addEventListener("click",e=>setYear(idxAt(e)));}
+    svg.addEventListener("pointerdown",e=>srShow(idxAt(e)));
+    svg.addEventListener("pointerleave",()=>srShow(yIdx));}
   function wireKpi(){document.querySelectorAll("#kgrid .kpi").forEach(el=>el.onclick=()=>select(INDS.find(i=>i.key===el.dataset.k)));}
   // ── ficha = bottom-sheet deslizable en móvil (peek / full / hidden) ──
   const sheet=document.getElementById("panel-det"),grip=document.getElementById("sheet-grip");
@@ -654,7 +707,7 @@ Promise.all([fetch("municipios.topojson").then(r=>r.json()),fetch("sudamerica.to
     if(dMv<6){setSheet(sheetState==="full"?"peek":"full");return;}
     const y=curY(),cand=[["full",detentY("full")],["peek",detentY("peek")],["hidden",sheet.clientHeight]];
     let best=cand[0],bd=1e9;cand.forEach(c=>{const d=Math.abs(c[1]-y);if(d<bd){bd=d;best=c;}});
-    if(best[0]==="hidden")renderNational();else setSheet(best[0]);}
+    if(best[0]==="hidden"){renderSummary();setSheet("hidden");}else setSheet(best[0]);}
   grip.addEventListener("pointerup",endDrag);grip.addEventListener("pointercancel",endDrag);
   function renderNational(){setDetailVisible(false);sel=null;drawOver();
     document.getElementById("panel-det").style.display="flex";
@@ -665,15 +718,33 @@ Promise.all([fetch("municipios.topojson").then(r=>r.json()),fetch("sudamerica.to
       return `<div class="kpi ${ind.key===cur.key?'on':''}" data-k="${ind.key}" style="--d:${Math.min(i,14)*14}ms">
         <div class="k-l">${ind.label}</div><div class="k-v">${fmt(agg(allRows,ind,yIdx),ind.unit)}</div>
         <div class="k-c"><span>mín <b>${fmt(sc.min,ind.unit)}</b></span><span>máx <b>${fmt(sc.max,ind.unit)}</b></span></div></div>`;}).join("");
-    wireKpi();resetScroll();}
+    renderPeekNat();wireKpi();resetScroll();}
+  // resumen del DEPARTAMENTO como un todo: sale al elegirlo en el top bar mientras no haya municipio
+  // señalado. Agregación = la misma fn agg (promedio ponderado por población del año, que para los
+  // per cápita es exactamente total Bs / total habitantes).
+  function renderDept(dp){const rows=byDpto[dp];if(!rows)return;sel=null;drawOver();setDetailVisible(true);
+    document.getElementById("panel-det").style.display="flex";
+    document.getElementById("d-mun").textContent=dp;
+    document.getElementById("d-sub").innerHTML=`Resumen departamental · gestión <b>${YEARS[yIdx]}</b> · ${rows.length} entidades`
+      +`<span class="d-links"><a class="back" id="back-nac">‹ resumen nacional</a></span>`;
+    document.getElementById("back-nac").onclick=()=>setDept("");
+    renderSerie(null,dp);
+    document.getElementById("kgrid").innerHTML=INDS.map((ind,i)=>{
+      const vv=agg(rows,ind,yIdx),nv=agg(allRows,ind,yIdx),rk=deptRank(dp,ind,yIdx);
+      const c1=vv==null||nv==null?"vs. país <b>s/d</b>":`vs. país <b class="${cls(vv-nv)}">${sgn(vv-nv)}</b>`;
+      const c2=rk?`puesto <b>${rk.pos}/${rk.n}</b>`:"puesto <b>s/d</b>";
+      return `<div class="kpi ${ind.key===cur.key?'on':''}" data-k="${ind.key}" style="--d:${Math.min(i,14)*14}ms">
+        <div class="k-l">${ind.label}</div><div class="k-v">${fmt(vv,ind.unit)}</div>
+        <div class="k-c"><span>${c1}</span><span>${c2}</span></div></div>`;}).join("");
+    renderPeekDept(dp);wireKpi();resetScroll();}
   function renderMun(sig){const r=DATA[sig];if(!r)return;setDetailVisible(true);
     document.getElementById("panel-det").style.display="flex";
     document.getElementById("d-mun").textContent=r.nombre;
     document.getElementById("d-sub").innerHTML=`${r.prov}, ${r.dpto} · gestión <b>${YEARS[yIdx]}</b>`
       +`<span class="d-links">`
       +(r.dash?`<a class="back" href="${r.dash}" target="_blank" rel="noopener">perfil completo ↗</a><span class="sep">·</span>`:"")
-      +`<a class="back" id="back-nac">‹ resumen nacional</a></span>`;
-    document.getElementById("back-nac").onclick=renderNational;
+      +`<a class="back" id="back-nac">${focusDept?"‹ resumen departamental":"‹ resumen nacional"}</a></span>`;
+    document.getElementById("back-nac").onclick=renderSummary;
     renderSerie(sig);
     document.getElementById("kgrid").innerHTML=INDS.map((ind,i)=>{
       const vv=r.s[ind.key][yIdx],dv=agg(byDpto[r.dpto],ind,yIdx),nv=agg(allRows,ind,yIdx);
@@ -694,6 +765,19 @@ Promise.all([fetch("municipios.topojson").then(r=>r.json()),fetch("sudamerica.to
       +`<span class="pk-lab">Indicador en pantalla<b>${cur.label}</b></span>`
       +`<span class="pk-val">${fmt(v,cur.unit)}</span>`
       +`<span class="pk-rk">${rk?`Puesto <b>${rk.pos}</b>/${rk.n}`:"Sin dato"}<br>${v!=null&&psc.avg!=null?`vs. país <b>${sgn(v-psc.avg)}</b>`:""}</span>`;}
+  // peek del resumen departamental: el valor es el agregado del depto, el puesto es entre los 9
+  function renderPeekDept(dp){const rows=byDpto[dp];if(!rows)return;
+    const psc=scale(cur),v=agg(rows,cur,yIdx),nv=agg(allRows,cur,yIdx),rk=deptRank(dp,cur,yIdx);
+    document.getElementById("pk").innerHTML=`<span class="pk-chip" style="background:${psc.color(v)}"></span>`
+      +`<span class="pk-lab">Indicador en pantalla<b>${cur.label}</b></span>`
+      +`<span class="pk-val">${fmt(v,cur.unit)}</span>`
+      +`<span class="pk-rk">${rk?`Puesto <b>${rk.pos}</b>/${rk.n}`:"Sin dato"}<br>${v!=null&&nv!=null?`vs. país <b>${sgn(v-nv)}</b>`:""}</span>`;}
+  // peek nacional: sin puesto ni comparación (el país no se compara consigo mismo), rango de los 343
+  function renderPeekNat(){const psc=scale(cur),v=agg(allRows,cur,yIdx);
+    document.getElementById("pk").innerHTML=`<span class="pk-chip" style="background:${psc.color(v)}"></span>`
+      +`<span class="pk-lab">Indicador en pantalla<b>${cur.label}</b></span>`
+      +`<span class="pk-val">${fmt(v,cur.unit)}</span>`
+      +`<span class="pk-rk">mín <b>${fmt(psc.min,cur.unit)}</b><br>máx <b>${fmt(psc.max,cur.unit)}</b></span>`;}
 
   let rt;window.addEventListener("resize",()=>{clearTimeout(rt);rt=setTimeout(()=>{layout();setSheet(isMob()?sheetState:"hidden");},120);});
   yearChrome();buildCards();renderCatDrop();updateHints();layout();termo();renderNational();
