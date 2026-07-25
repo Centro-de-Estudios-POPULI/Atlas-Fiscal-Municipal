@@ -67,12 +67,31 @@ a{color:inherit}
 .hero h1{font-family:var(--serif);font-weight:700;font-size:clamp(1.9rem,5vw,3.2rem);line-height:1.04;
   letter-spacing:-.5px;color:#fff;max-width:17ch;margin-bottom:14px;text-wrap:balance;position:relative}
 .hero-sub{font-size:.9rem;line-height:1.65;color:var(--onDark2);max-width:60ch;margin-bottom:28px;position:relative}
-.hero-act{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-bottom:30px;position:relative}
-.btn{display:inline-flex;align-items:center;gap:9px;text-decoration:none;color:#fff;background:var(--acc);
-  padding:11px 22px;font-size:.76rem;font-weight:700;letter-spacing:.3px;transition:filter .18s,transform .18s}
-.btn:hover{filter:brightness(1.22);transform:translateX(2px)}
-.btn.ghost{background:transparent;border:1px solid rgba(255,255,255,.24);color:var(--onDark)}
-.btn.ghost:hover{border-color:var(--arena);color:#fff}
+.hero-act{display:flex;gap:14px;flex-wrap:wrap;align-items:stretch;margin-bottom:30px;position:relative}
+/* ACCESO PRINCIPAL: el mapa es EL producto, asi que su entrada no es un boton mas sino un bloque
+   con jerarquia propia (etiqueta, nombre y de que tamaño es la base que abre) */
+.cta{display:flex;align-items:center;gap:16px;text-decoration:none;color:#fff;min-width:min(100%,21rem);
+  background:linear-gradient(120deg,var(--acc-dk),var(--acc) 58%,#6d1a1c);
+  border-left:4px solid var(--arena);padding:15px 22px 15px 18px;
+  box-shadow:0 10px 26px rgba(0,0,0,.34);transition:box-shadow .2s,transform .2s,filter .2s}
+.cta:hover{filter:brightness(1.1);transform:translateY(-2px);box-shadow:0 14px 32px rgba(0,0,0,.44)}
+.cta-ic{width:34px;height:34px;flex:none;display:grid;place-items:center;color:var(--arena)}
+.cta-ic svg{width:28px;height:28px;display:block}
+.cta-tx{display:flex;flex-direction:column;gap:3px;min-width:0}
+.cta-k{font-size:.55rem;letter-spacing:2px;text-transform:uppercase;font-weight:700;color:var(--arena)}
+.cta-t{font-size:1.02rem;font-weight:800;letter-spacing:-.3px;line-height:1.1}
+.cta-d{font-size:.62rem;color:rgba(255,255,255,.62);font-weight:500;font-variant-numeric:tabular-nums}
+.cta-ar{margin-left:auto;padding-left:12px;font-size:1.1rem;color:var(--arena);transition:transform .2s}
+.cta:hover .cta-ar{transform:translateX(4px)}
+/* accion secundaria: el otro atlas del Observatorio, mismo lugar pero sin robarle peso */
+.btn{display:inline-flex;align-items:center;gap:9px;text-decoration:none;color:var(--onDark);
+  background:transparent;border:1px solid rgba(255,255,255,.22);padding:11px 20px;
+  font-size:.74rem;font-weight:600;letter-spacing:.2px;transition:border-color .18s,color .18s,background .18s}
+.btn:hover{border-color:var(--arena);color:#fff;background:rgba(255,255,255,.05)}
+.btn small{color:rgba(255,255,255,.5);font-weight:500;font-size:.9em}
+.act-tip{font-size:.64rem;color:var(--onDark3);margin:-18px 0 30px;position:relative}
+.act-tip a{color:var(--arena);text-decoration:none;border-bottom:1px solid rgba(233,216,166,.35);font-weight:600}
+.act-tip a:hover{border-bottom-color:var(--arena)}
 .kpis{display:flex;gap:13px;flex-wrap:wrap;position:relative}
 .kpi{background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.1);
   border-top:3px solid var(--acc-lt);padding:12px 17px 10px;min-width:112px}
@@ -104,6 +123,16 @@ a{color:inherit}
 .lead{font-size:.84rem;line-height:1.7;color:var(--ink2);max-width:92ch;margin-bottom:26px;
   border-left:3px solid var(--acc-lt);padding:2px 0 2px 15px}
 .lead strong{color:var(--acc-lt);font-weight:700}
+/* si el texto nombra una herramienta, la nombra CON su enlace */
+.lead a{color:var(--acc-lt);font-weight:700;text-decoration:none;
+  border-bottom:1.5px solid color-mix(in srgb,var(--acc-lt) 35%,transparent);transition:border-color .18s}
+.lead a:hover{border-bottom-color:var(--acc-lt)}
+.eyebrow a{color:inherit;text-decoration:none;border-bottom:1px solid rgba(233,216,166,.3)}
+.eyebrow a:hover{border-bottom-color:var(--arena)}
+.hero-cred a{color:var(--onDark2);text-decoration:none;border-bottom:1px solid rgba(255,255,255,.18)}
+.hero-cred a:hover{color:#fff;border-bottom-color:var(--arena)}
+footer a{color:var(--onDark2);text-decoration:none;border-bottom:1px solid rgba(255,255,255,.16)}
+footer a:hover{color:#fff;border-bottom-color:var(--acc-lt)}
 
 /* ── TARJETA DE DEPARTAMENTO ── */
 .dpto-card{background:var(--card);border:1px solid var(--line);box-shadow:var(--sh);margin-bottom:11px;
@@ -164,6 +193,7 @@ footer{background:var(--dark2);color:var(--onDark3);padding:26px clamp(18px,4vw,
   .search{flex:1 1 100%;max-width:none;order:1}
   .search-clear{order:2}
   .search-meta{flex:1 1 100%;margin-left:0;order:3;font-size:.6rem}
+  .cta{min-width:100%}.btn{width:100%;justify-content:center}
   .mun-grid{grid-template-columns:1fr 1fr}
   .sec{flex-wrap:wrap;gap:8px}.sec-note{margin-left:0;width:100%}
   footer{flex-direction:column;text-align:center}.ft-a,.ft-m{text-align:center}
@@ -185,16 +215,25 @@ footer{background:var(--dark2);color:var(--onDark3);padding:26px clamp(18px,4vw,
 
 <section class="hero">
   <div class="hero-wm">IGF</div>
-  <div class="eyebrow">Observatorio de Finanzas P&uacute;blicas y Desarrollo Territorial</div>
+  <div class="eyebrow"><a href="https://centro-de-estudios-populi.github.io/observatorio-ofpdt/" target="_blank" rel="noopener">Observatorio de Finanzas P&uacute;blicas y Desarrollo Territorial &#8599;</a></div>
   <h1>Las finanzas de cada municipio de Bolivia</h1>
   <p class="hero-sub">Cuenta Ingreso &middot; Gasto &middot; Financiamiento de las 343 entidades territoriales del pa&iacute;s
   &mdash;335 municipios y 8 Gobiernos Aut&oacute;nomos Ind&iacute;gena Originario Campesinos&mdash; con datos ejecutados
   del SIGEP entre 2016 y 2025. Cada perfil abre la estructura de sus ingresos, su inversi&oacute;n, sus recursos
   propios y su resultado fiscal, gesti&oacute;n por gesti&oacute;n.</p>
   <div class="hero-act">
-    <a href="mapa.html" class="btn">&#9783;&nbsp; Abrir el mapa fiscal</a>
-    <a href="#main" class="btn ghost">Buscar un municipio</a>
+    <a href="mapa.html" class="cta">
+      <span class="cta-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true"><path d="M9 3 3 5.3v15.4L9 18.4l6 2.3 6-2.3V3l-6 2.3L9 3Z"/><path d="M9 3v15.4M15 5.3v15.4"/></svg></span>
+      <span class="cta-tx">
+        <span class="cta-k">Herramienta principal</span>
+        <span class="cta-t">Abrir el Mapa Fiscal</span>
+        <span class="cta-d">343 entidades &middot; 30 indicadores &middot; 2016&ndash;2025</span>
+      </span>
+      <span class="cta-ar">&rarr;</span>
+    </a>
+    <a href="Mapa_Censo_2024_Bolivia.html" class="btn">Atlas Socioecon&oacute;mico <small>Censo 2024</small></a>
   </div>
+  <p class="act-tip">&iquest;Busc&aacute;s un municipio en particular? <a href="#main">Ir al directorio de las 343 entidades</a></p>
   <div class="kpis">
     <div class="kpi"><div class="kpi-v">343</div><div class="kpi-l">Entidades</div></div>
     <div class="kpi"><div class="kpi-v">10</div><div class="kpi-l">Gestiones<br>2016&ndash;2025</div></div>
@@ -203,7 +242,7 @@ footer{background:var(--dark2);color:var(--onDark3);padding:26px clamp(18px,4vw,
   </div>
   <div class="hero-cred">
     <span>Fuente: SIGEP &mdash; Ministerio de Econom&iacute;a y Finanzas P&uacute;blicas</span>
-    <span>CCTD &middot; POPULI &middot; UPSA</span>
+    <span><a href="https://centro-de-estudios-populi.github.io/observatorio-ofpdt/" target="_blank" rel="noopener">Ver todas las plataformas del Observatorio &#8599;</a></span>
   </div>
 </section>
 
@@ -222,8 +261,8 @@ footer{background:var(--dark2);color:var(--onDark3);padding:26px clamp(18px,4vw,
   </div>
   <p class="lead">Cada entidad tiene un <strong>perfil completo</strong> con su cuenta de ingresos, gasto e
   inversi&oacute;n a lo largo de diez gestiones. Para comparar entre municipios en el mapa, us&aacute; el
-  <strong>mapa fiscal</strong>; para el retrato socioecon&oacute;mico del Censo 2024, el
-  <strong>Atlas Socioecon&oacute;mico</strong> del Observatorio.</p>
+  <a href="mapa.html">Mapa Fiscal</a>; para el retrato socioecon&oacute;mico del Censo 2024, el
+  <a href="Mapa_Censo_2024_Bolivia.html">Atlas Socioecon&oacute;mico</a> del Observatorio.</p>
 <section class="dpto-card" id="sec-chuquisaca" style="--dc:#9b2226"><button class="dpto-hdr" onclick="toggle('chuquisaca')" aria-expanded="false"><span class="dh-left"><span class="dh-num">09·01</span><span class="dh-name">Chuquisaca</span></span><span class="dh-right"><span class="dh-count">28 municipios</span><span class="dh-arrow" id="arr-chuquisaca"></span></span></button><div class="dpto-body hidden" id="panel-chuquisaca"><div class="mun-grid"><a href="municipios/1101_sucre/IGF/MUN_1101_Sucre_Dashboard.html" class="mun-link" target="_blank" data-search="sucre oropeza chuquisaca 1101"><span class="mun-code">1101</span><span class="mun-info"><span class="mun-name">Sucre</span><span class="mun-prov">Oropeza</span></span></a>
 <a href="municipios/1102_yotala/IGF/MUN_1102_Yotala_Dashboard.html" class="mun-link" target="_blank" data-search="yotala oropeza chuquisaca 1102"><span class="mun-code">1102</span><span class="mun-info"><span class="mun-name">Yotala</span><span class="mun-prov">Oropeza</span></span></a>
 <a href="municipios/1103_poroma/IGF/MUN_1103_Poroma_Dashboard.html" class="mun-link" target="_blank" data-search="poroma oropeza chuquisaca 1103"><span class="mun-code">1103</span><span class="mun-info"><span class="mun-name">Poroma</span><span class="mun-prov">Oropeza</span></span></a>
@@ -584,7 +623,9 @@ footer{background:var(--dark2);color:var(--onDark3);padding:26px clamp(18px,4vw,
 <footer>
   <div class="ft-b">Atlas Fiscal Municipal<span>Bolivia</span></div>
   <div class="ft-m"><strong>Fuente:</strong> SIGEP &mdash; Ministerio de Econom&iacute;a y Finanzas P&uacute;blicas (2016&ndash;2025)<br>
-  Georreferencia y nombres: espina municipal 343 del Observatorio</div>
+  Georreferencia y nombres: espina municipal 343 del Observatorio<br>
+  <a href="mapa.html">Mapa Fiscal</a> &middot; <a href="Mapa_Censo_2024_Bolivia.html">Atlas Socioecon&oacute;mico</a> &middot;
+  <a href="https://centro-de-estudios-populi.github.io/observatorio-ofpdt/" target="_blank" rel="noopener">Portal del Observatorio</a></div>
   <div class="ft-a">POPULI<span class="ft-dot">&middot;</span>CCTD<span class="ft-dot">&middot;</span>UPSA<span class="ft-dot">&middot;</span>Carlos Augusto Aranda Herrera</div>
 </footer>
 
