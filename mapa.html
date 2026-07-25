@@ -10,6 +10,11 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,500;1,6..72,600&display=swap" rel="stylesheet">
 <style>
 :root{
+  /* ANCHO DE LOS PANELES: fuente unica de verdad. Lo usan .panel, .zc (anclado al borde del panel
+     derecho) y .termo (que descuenta los dos paneles). Fluido: se encoge con la pantalla en vez de
+     obligar a esconder la ficha en pantallas medianas -- proyectores y pantallas compartidas
+     (1024x768, 1280x720) caen justo ahi. */
+  --panel-w:clamp(15.5rem,23vw,20.5rem);
   --f:"Inter",system-ui,sans-serif;--fd:"Newsreader",Georgia,serif;
   --red:#c71e1d;--red-dk:#9b2226;--orange:#df5d25;--amber:#ee9b00;
   --mint:#94d2bd;--teal:#0a9396;--teal-dk:#005f73;--ink:#001219;
@@ -96,7 +101,7 @@ body.dark .tbtog .ic-moon{display:none}body.dark .tbtog .ic-sun{display:block}
 .yrop:first-child{border-top:0}.yrop:hover{background:var(--gris-card)}.yrop.on{color:var(--sel);font-weight:800}
 
 /* PANELES */
-.panel{position:fixed;top:62px;bottom:12px;width:20.5rem;z-index:8;background:var(--glass);
+.panel{position:fixed;top:62px;bottom:12px;width:var(--panel-w);z-index:8;background:var(--glass);
   border:1px solid var(--linea);box-shadow:var(--sh);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
   display:flex;flex-direction:column;overflow:hidden;transition:background-color .3s ease,border-color .3s ease}
 #panel-ind{left:12px}#panel-det{right:12px;display:none}.grip-bar,.pk{display:none}
@@ -197,13 +202,13 @@ body.dark .ind.on .mini{opacity:1;filter:none}
 .k-c span{font-size:.55rem;color:var(--suave);display:flex;justify-content:space-between;font-weight:500}
 .k-c .up{color:var(--teal-dk);font-weight:700}.k-c .dn{color:var(--orange);font-weight:700}
 
-.zc{position:fixed;z-index:9;right:calc(20.5rem + 26px);bottom:24px;display:flex;flex-direction:column;
+.zc{position:fixed;z-index:9;right:calc(var(--panel-w) + 26px);bottom:24px;display:flex;flex-direction:column;
   border:1px solid var(--linea);background:var(--glass);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);box-shadow:var(--sh)}
 .zc button{width:30px;height:30px;border:0;background:none;font-size:1rem;cursor:pointer;color:var(--tx);border-bottom:1px solid var(--linea-2);font-family:var(--f)}
 .zc button:last-child{border-bottom:0;font-size:.7rem}.zc button:hover{background:var(--gris-card)}
 
 .termo{position:fixed;bottom:14px;left:50%;transform:translateX(-50%);z-index:8;
-  width:min(38rem,calc(100vw - 46rem));background:var(--glass);border:1px solid var(--linea);box-shadow:var(--sh);
+  width:min(38rem,calc(100vw - (2 * var(--panel-w)) - 5rem));background:var(--glass);border:1px solid var(--linea);box-shadow:var(--sh);
   -webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);padding:.6rem 1rem 1.05rem}
 .tm-top{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:.42rem}
 .tm-t{font-size:.75rem;font-weight:700}.tm-t small{color:var(--faint);font-weight:500;margin-left:.28rem}
@@ -229,7 +234,11 @@ body.dark .ind.on .mini{opacity:1;filter:none}
 #pop .pn{font-size:.8rem;font-weight:700;letter-spacing:-.01em}#pop .pd{font-size:.55rem;color:var(--suave);font-weight:500;margin-top:1px}
 #pop .pv{display:flex;align-items:baseline;gap:.35rem;margin-top:.38rem}#pop .pv b{font-size:1.02rem;font-weight:700;color:var(--teal-dk)}#pop .pv small{font-size:.54rem;color:var(--faint)}
 #pop .pr{font-size:.55rem;color:var(--suave);margin-top:.3rem;padding-top:.3rem;border-top:1px solid var(--linea-2);display:flex;justify-content:space-between}#pop .pr b{color:var(--tx);font-weight:700}
-@media(max-width:1280px) and (min-width:821px){#panel-det,.zc{display:none!important}.termo{width:min(28rem,calc(100vw-25rem))}}
+/* Antes habia aqui un @media(max-width:1280px) and (min-width:821px) que hacia
+   #panel-det{display:none!important}: entre 821 y 1280px la ficha desaparecia y NO habia como verla
+   (el bottom-sheet movil recien entra en 820). Peor, ese !important le ganaba al style.display="flex"
+   inline que ponen renderNational/renderDept/renderMun, asi que el panel quedaba muerto.
+   Ya no hace falta: --panel-w encoge los paneles de forma continua. */
 @media(max-width:820px){
   #top{height:48px;padding:0 11px;gap:8px}
   .logo{width:26px;height:26px}.logo svg{width:26px;height:26px}
