@@ -266,7 +266,7 @@ body.dark .ind.on .mini{opacity:1;filter:none}
 <div id="pop"><div class="pn"></div><div class="pd"></div><div class="pv"><b></b><small></small></div><div class="pr"></div></div>
 
 <script>
-// categorías e indicadores se cargan desde atlas_catalogo.json
+// categorías e indicadores se cargan desde catalogo.json
 // PALETA: extremos POPULI — verde oscuro -> ... -> rojo (divergente, centro = mediana)
 const DIV=d3.interpolateRgbBasis(["#00323d","#005f73","#0a9396","#94d2bd","#e9d8a6","#eda13e","#df5d25","#c71e1d","#8f1f22"]);
 const fmt=(v,u)=>{if(v==null||isNaN(v))return"s/d";
@@ -323,9 +323,7 @@ Promise.all([fetch("municipios.topojson").then(r=>r.json()),fetch("sudamerica.to
   const deptDD=document.getElementById("dept-dd");
   document.getElementById("dept-drop").innerHTML=[`<div class="tbop on" data-d="">Bolivia (todo)</div>`].concat(DEPTOS.map(d=>`<div class="tbop" data-d="${d}">${d}</div>`)).join("");
   deptDD.querySelector(".tbbtn").onclick=e=>{e.stopPropagation();catBar.classList.remove("open");deptDD.classList.toggle("open");};
-  document.querySelectorAll("#dept-drop .tbop").forEach(op=>op.onclick=()=>{
-    document.querySelectorAll("#dept-drop .tbop").forEach(o=>o.classList.remove("on"));op.classList.add("on");
-    document.getElementById("dept-lab").textContent=op.dataset.d||"Bolivia";deptDD.classList.remove("open");zoomToDept(op.dataset.d);});
+  document.querySelectorAll("#dept-drop .tbop").forEach(op=>op.onclick=()=>{deptDD.classList.remove("open");setDept(op.dataset.d);});
   document.addEventListener("click",()=>{catBar.classList.remove("open");deptDD.classList.remove("open");});
   document.getElementById("theme-btn").onclick=e=>{e.stopPropagation();
     applyTheme(!document.body.classList.contains("dark"),true);
@@ -347,7 +345,7 @@ Promise.all([fetch("municipios.topojson").then(r=>r.json()),fetch("sudamerica.to
     const ps=document.getElementById("p-sub");if(ps)ps.textContent=`${INDS.length} indicadores · elegí uno para verlo en el mapa`;}
   function setCategory(gkey){const g=GRUPOS.find(x=>x.key===gkey);if(!g)return;curCat=g;INDS=g.indicadores;cur=INDS[0];
     document.querySelector("#cat-btn .cn").textContent=g.label;catBar.classList.remove("open");
-    buildCards();renderCatDrop();updateHints();fadeSwap(drawBase);drawOver();termo();sel?renderMun(sel.properties.sigep):renderNational();}
+    buildCards();renderCatDrop();updateHints();fadeSwap(drawBase);drawOver();termo();sel?renderMun(sel.properties.sigep):renderSummary();}
 
   const wrap=document.getElementById("map-wrap");
   const base=document.getElementById("base"),fade=document.getElementById("fade"),over=document.getElementById("over"),pick=document.getElementById("pick"),catchEl=document.getElementById("catch");
@@ -385,7 +383,14 @@ Promise.all([fetch("municipios.topojson").then(r=>r.json()),fetch("sudamerica.to
   d3.select(catchEl).call(zoom);
   document.getElementById("z-in").onclick=()=>d3.select(catchEl).transition().duration(250).call(zoom.scaleBy,1.6);
   document.getElementById("z-out").onclick=()=>d3.select(catchEl).transition().duration(250).call(zoom.scaleBy,1/1.6);
-  document.getElementById("z-rst").onclick=()=>{focusDept=null;document.getElementById("dept-lab").textContent="Bolivia";document.querySelectorAll("#dept-drop .tbop").forEach((o,i)=>o.classList.toggle("on",i===0));drawBase();d3.select(catchEl).transition().duration(350).call(zoom.transform,d3.zoomIdentity);};
+  // el botón ⤢ vuelve a Bolivia, pero NO descarta el municipio señalado (solo resetea la vista)
+  document.getElementById("z-rst").onclick=()=>setDept("",true);
+  // único punto de entrada para cambiar el foco: sincroniza top bar + mapa + ficha
+  function setDept(dp,keepSel){focusDept=dp||null;
+    document.getElementById("dept-lab").textContent=dp||"Bolivia";
+    document.querySelectorAll("#dept-drop .tbop").forEach(o=>o.classList.toggle("on",(o.dataset.d||"")===(dp||"")));
+    zoomToDept(dp);
+    if(keepSel&&sel)renderMun(sel.properties.sigep);else renderSummary();}
   function zoomToDept(dp){focusDept=dp||null;drawBase();drawOver();
     if(!dp){d3.select(catchEl).transition().duration(400).call(zoom.transform,d3.zoomIdentity);return;}
     const feats=F.filter(f=>DATA[f.properties.sigep].dpto===dp),b=d3.geoPath(proj).bounds({type:"FeatureCollection",features:feats});
@@ -415,7 +420,7 @@ Promise.all([fetch("municipios.topojson").then(r=>r.json()),fetch("sudamerica.to
   catchEl.addEventListener("mouseleave",()=>{hov=null;drawOver();pop.style.opacity=0;});
   let _tapXY=null;
   catchEl.addEventListener("pointerdown",e=>{_tapXY=[e.clientX,e.clientY];});
-  catchEl.addEventListener("pointerup",e=>{if(!_tapXY)return;const mv=Math.hypot(e.clientX-_tapXY[0],e.clientY-_tapXY[1]);_tapXY=null;if(mv>8)return;const f=featAt(e);if(f){sel=f;drawOver();renderMun(f.properties.sigep);}else renderNational();});
+  catchEl.addEventListener("pointerup",e=>{if(!_tapXY)return;const mv=Math.hypot(e.clientX-_tapXY[0],e.clientY-_tapXY[1]);_tapXY=null;if(mv>8)return;const f=featAt(e);if(f){sel=f;drawOver();renderMun(f.properties.sigep);}else renderSummary();});
 
   const termoEl=document.querySelector(".termo");
   function termo(){const sc=scale(cur);
@@ -434,11 +439,17 @@ Promise.all([fetch("municipios.topojson").then(r=>r.json()),fetch("sudamerica.to
     document.querySelectorAll(".ind").forEach(c=>c.classList.toggle("on",c.dataset.k===ind.key));
     document.querySelectorAll("#kgrid .kpi").forEach(el=>el.classList.toggle("on",el.dataset.k===ind.key));
     fadeSwap(drawBase);drawOver();termo();
-    if(sel)renderPeek(sel.properties.sigep);}
+    if(sel)renderPeek(sel.properties.sigep);else if(focusDept)renderPeekDept(focusDept);else renderPeekNat();}
 
   function agg(rows,ind){if(ind.unit==="hab")return d3.sum(rows.map(r=>r[ind.key]).filter(v=>v!=null));
     let n=0,d=0;rows.forEach(r=>{const v=r[ind.key],w=r.pob_total;if(v!=null&&w!=null){n+=v*w;d+=w;}});return d?n/d:null;}
   const cls=x=>x>=0?"up":"dn";
+  const pctTxt=(v,d)=>(v*100).toFixed(d==null?1:d).replace(".",",")+"%";
+  // puesto del departamento entre los 9 (1 = valor más alto), mismo criterio que el ranking municipal
+  function deptRank(dp,ind){const arr=DEPTOS.map(d=>[d,agg(byDpto[d],ind)]).filter(x=>x[1]!=null).sort((a,b)=>d3.descending(a[1],b[1]));
+    return arr.findIndex(x=>x[0]===dp)+1;}
+  // la ficha por defecto sigue al foco del top bar: el departamento si hay zoom a uno, el país si no
+  const renderSummary=()=>focusDept?renderDept(focusDept):renderNational();
   function wireKpi(){document.querySelectorAll("#kgrid .kpi").forEach(el=>el.onclick=()=>select(INDS.find(i=>i.key===el.dataset.k)));}
   // ── ficha = bottom-sheet deslizable en móvil (peek / full / hidden) ──
   const sheet=document.getElementById("panel-det"),grip=document.getElementById("sheet-grip");
@@ -465,7 +476,8 @@ Promise.all([fetch("municipios.topojson").then(r=>r.json()),fetch("sudamerica.to
     if(dMv<6){setSheet(sheetState==="full"?"peek":"full");return;}
     const y=curY(),cand=[["full",detentY("full")],["peek",detentY("peek")],["hidden",sheet.clientHeight]];
     let best=cand[0],bd=1e9;cand.forEach(c=>{const d=Math.abs(c[1]-y);if(d<bd){bd=d;best=c;}});
-    if(best[0]==="hidden")renderNational();else setSheet(best[0]);}
+    // arrastrar hasta abajo cierra la ficha: se repuebla con el resumen vigente y se oculta en el mismo tick
+    if(best[0]==="hidden"){renderSummary();setSheet("hidden");}else setSheet(best[0]);}
   grip.addEventListener("pointerup",endDrag);grip.addEventListener("pointercancel",endDrag);
   function renderNational(){setDetailVisible(false);sel=null;drawOver();
     document.getElementById("panel-det").style.display="flex";
@@ -475,12 +487,27 @@ Promise.all([fetch("municipios.topojson").then(r=>r.json()),fetch("sudamerica.to
       return `<div class="kpi ${ind.key===cur.key?'on':''}" data-k="${ind.key}" style="--d:${Math.min(i,14)*14}ms">
         <div class="k-l">${ind.label}</div><div class="k-v">${fmt(agg(allRows,ind),ind.unit)}</div>
         <div class="k-c"><span>mín <b>${fmt(sc.min,ind.unit)}</b></span><span>máx <b>${fmt(sc.max,ind.unit)}</b></span></div></div>`;}).join("");
-    wireKpi();resetScroll();}
+    renderPeekNat();wireKpi();resetScroll();}
+  // resumen del DEPARTAMENTO como un todo: sale al elegirlo en el top bar mientras no haya municipio señalado.
+  // Agregación igual que el nacional (fn agg): conteos = suma, tasas = promedio ponderado por población.
+  function renderDept(dp){const rows=byDpto[dp];if(!rows)return;sel=null;drawOver();setDetailVisible(true);
+    document.getElementById("panel-det").style.display="flex";
+    document.getElementById("d-mun").textContent=dp;
+    document.getElementById("d-sub").innerHTML=`Resumen departamental · ${rows.length} municipios · <a class="back" id="back-nac">‹ resumen nacional</a>`;
+    document.getElementById("back-nac").onclick=()=>{setDept("");};
+    document.getElementById("kgrid").innerHTML=INDS.map((ind,i)=>{const vv=agg(rows,ind),nv=agg(allRows,ind);
+      const c1=ind.unit==="hab"?`del país <b>${pctTxt(vv/nv)}</b>`:`vs. país <b class="${cls(vv-nv)}">${sgn(vv-nv)}</b>`;
+      const c2=`puesto <b>${deptRank(dp,ind)}/${DEPTOS.length}</b>`;
+      return `<div class="kpi ${ind.key===cur.key?'on':''}" data-k="${ind.key}" style="--d:${Math.min(i,14)*14}ms">
+        <div class="k-l">${ind.label}</div><div class="k-v">${fmt(vv,ind.unit)}</div>
+        <div class="k-c"><span>${c1}</span><span>${c2}</span></div></div>`;}).join("");
+    renderPeekDept(dp);wireKpi();resetScroll();}
   function renderMun(sig){const r=DATA[sig];if(!r)return;setDetailVisible(true);
     document.getElementById("panel-det").style.display="flex";
     document.getElementById("d-mun").textContent=r.nombre;
-    document.getElementById("d-sub").innerHTML=r.dpto+' · <a class="back" id="back-nac">‹ resumen nacional</a>';
-    document.getElementById("back-nac").onclick=renderNational;
+    const volver=focusDept?"‹ resumen departamental":"‹ resumen nacional";
+    document.getElementById("d-sub").innerHTML=r.dpto+' · <a class="back" id="back-nac">'+volver+'</a>';
+    document.getElementById("back-nac").onclick=renderSummary;
     document.getElementById("kgrid").innerHTML=INDS.map((ind,i)=>{const vv=r[ind.key],dv=agg(byDpto[r.dpto],ind),nv=agg(allRows,ind);
       let c1,c2;
       if(ind.unit==="hab"){c1=`del depto <b>${(vv/dv*100).toFixed(1).replace(".",",")}%</b>`;c2=`del país <b>${(vv/nv*100).toFixed(2).replace(".",",")}%</b>`;}
@@ -496,6 +523,19 @@ Promise.all([fetch("municipios.topojson").then(r=>r.json()),fetch("sudamerica.to
       +`<span class="pk-lab">Indicador en pantalla<b>${cur.label}</b></span>`
       +`<span class="pk-val">${fmt(r[cur.key],cur.unit)}<small>${cur.unit}</small></span>`
       +`<span class="pk-rk">Puesto <b>${prk}</b>/343<br>vs. país <b>${sgn(r[cur.key]-psc.avg)}</b></span>`;}
+  // peek nacional: sin puesto ni comparación (no se compara consigo mismo), rango de los 343
+  function renderPeekNat(){const vv=agg(allRows,cur),psc=scale(cur);
+    document.getElementById("pk").innerHTML=`<span class="pk-chip" style="background:${psc.color(vv)}"></span>`
+      +`<span class="pk-lab">Indicador en pantalla<b>${cur.label}</b></span>`
+      +`<span class="pk-val">${fmt(vv,cur.unit)}<small>${cur.unit}</small></span>`
+      +`<span class="pk-rk">mín <b>${fmt(psc.min,cur.unit)}</b><br>máx <b>${fmt(psc.max,cur.unit)}</b></span>`;}
+  // ídem para el resumen departamental (el valor es el agregado, no el de un municipio)
+  function renderPeekDept(dp){const rows=byDpto[dp];if(!rows)return;const vv=agg(rows,cur),nv=agg(allRows,cur),psc=scale(cur);
+    const rel=cur.unit==="hab"?`del país <b>${pctTxt(vv/nv)}</b>`:`vs. país <b>${sgn(vv-nv)}</b>`;
+    document.getElementById("pk").innerHTML=`<span class="pk-chip" style="background:${psc.color(vv)}"></span>`
+      +`<span class="pk-lab">Indicador en pantalla<b>${cur.label}</b></span>`
+      +`<span class="pk-val">${fmt(vv,cur.unit)}<small>${cur.unit}</small></span>`
+      +`<span class="pk-rk">Puesto <b>${deptRank(dp,cur)}</b>/${DEPTOS.length}<br>${rel}</span>`;}
 
   let rt;window.addEventListener("resize",()=>{clearTimeout(rt);rt=setTimeout(()=>{layout();setSheet(isMob()?sheetState:"hidden");},120);});
   buildCards();renderCatDrop();updateHints();layout();termo();renderNational();
