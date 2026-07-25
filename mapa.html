@@ -19,7 +19,6 @@
   --topbar:#5c1618;--arena:#e9d8a6;
   --fondo:#f2efe8;--glass:#fffefbdb;--gris-card:#f1ede3;--linea:#ddd6c9;--linea-2:#eae4d7;
   --tx:#16232c;--suave:#5f6f79;--faint:#93a3ac;--sel:#005f73;--warm:#ee9b00;--peek:138px;
-  --dep:#0a9396;   /* serie del departamento: teal medio, familia de las barras (--sel) */
   --sh:0 1px 0 #12203508,0 10px 30px #12203512;
   --card-solid:#fff;--card-hov:#f7f9fa;--kpi-on:#f6fbfc;--foot-bg:#ffffff88;
   --topline:#3f0e10;--sheet-fade:#fffefbf2;
@@ -27,7 +26,7 @@
 /* ── MODO OSCURO ── mismos tokens, valores nocturnos (el canvas se repinta desde JS) */
 body.dark{
   color-scheme:dark;
-  --orange:#f0834a;--teal-dk:#5cc3c9;--sel:#43b3bd;--topbar:#3d0e10;--topline:#5c1618;--dep:#8ad4c4;
+  --orange:#f0834a;--teal-dk:#5cc3c9;--sel:#43b3bd;--topbar:#3d0e10;--topline:#5c1618;
   --fondo:#0b1318;--glass:#131f26e6;--gris-card:#16242c;--linea:#2b3d47;--linea-2:#22323b;
   --tx:#e9eff2;--suave:#a1b3bd;--faint:#6f8794;
   --card-solid:#1b2a33;--card-hov:#20313b;--kpi-on:#17323a;--foot-bg:#0f1a2040;
@@ -148,30 +147,30 @@ body.dark .ind.on .mini{opacity:1;filter:none}
 /* serie 2016-2025 del indicador en pantalla, contra el promedio nacional */
 .serie{border:1px solid var(--linea-2);background:var(--card-solid);padding:10px 11px 7px;margin-bottom:9px}
 .sr-top{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
-.sr-t{font-size:.66rem;font-weight:700;line-height:1.2;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+/* el titulo lleva la GESTION señalada: ", 2025" del mismo tamaño y peso que el nombre del
+   indicador; en ambar cuando es el año que pinta el mapa, en tinta cuando estas recorriendo otra */
+.sr-t{font-size:.66rem;font-weight:700;line-height:1.2;min-width:0;display:flex;color:var(--tx)}
+.sr-lbl{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sr-sep{flex:none;margin-right:.3em}
+.sr-yr{flex:none;font-variant-numeric:tabular-nums;transition:color .18s}
+.sr-yr.now{color:var(--warm)}
 .sr-u{font-size:.54rem;color:var(--faint);font-weight:600;flex:none}
-/* la lectura ES la leyenda: mismo color que la marca del gráfico + el valor de la gestión señalada.
-   OJO alineación: NADA de align-items:baseline acá. Los ítems son inline-flex y su baseline la
-   define su PRIMER hijo (el cuadrito/línea de color, que no tiene texto), así que con baseline
-   cada bloque se desplazaba por su swatch y el año, el nombre y el valor quedaban en tres alturas
-   distintas. Todo va centrado y con line-height:1 para que la fila lea como una sola línea. */
-   Con tres series (municipio + depto + país) la fila no entra en el ancho del panel y envolvía
-   sola, partiéndose donde caía; por eso el reparto en filas es EXPLÍCITO: protagonista arriba
-   con el año, referencias abajo. */
-.sr-rd{display:flex;flex-direction:column;row-gap:3px;margin:6px 0 4px;
-  font-size:.55rem;font-weight:600;color:var(--suave);line-height:1}
-.rd-row{display:flex;align-items:center;column-gap:10px;row-gap:3px;flex-wrap:wrap;min-width:0}
-.sr-rd .rd-y{font-size:.68rem;font-weight:800;color:var(--tx);letter-spacing:-.01em;flex:none;line-height:1}
+/* la lectura ES la leyenda: mismo color que la marca del grafico + el valor de la gestion señalada.
+   Va POR DEBAJO del titulo en jerarquia (fuente menor): antes los valores iban en .68rem/800,
+   mas grandes que el propio titulo del grafico, y la tarjeta se veia desproporcionada.
+   OJO alineacion: nada de align-items:baseline aca — los items son inline-flex y su baseline la
+   define su primer hijo (el swatch, que no tiene texto), asi que nombre y valor caian a distinta
+   altura. Todo centrado y con line-height:1 para que la fila lea como una sola linea. */
+.sr-rd{display:flex;align-items:center;column-gap:13px;row-gap:3px;flex-wrap:wrap;margin:5px 0 4px;
+  font-size:.56rem;font-weight:600;color:var(--suave);line-height:1}
 .sr-rd .it{display:inline-flex;align-items:center;gap:5px;min-width:0;line-height:1}
-.sr-rd .it b{color:var(--tx);font-weight:800;font-size:.68rem;letter-spacing:-.01em;line-height:1;
+.sr-rd .it b{color:var(--tx);font-weight:700;font-size:.615rem;letter-spacing:-.01em;line-height:1;
   font-variant-numeric:tabular-nums;flex:none}
 .sr-rd .sw{width:9px;height:9px;flex:none;background:var(--sel);border-radius:1px}
-.sr-rd .sw.ln{height:0;width:13px;border-radius:0;background:none;border-top:2.5px solid var(--dep)}
 .sr-rd .sw.li{height:0;width:13px;border-radius:0;background:none;border-top:2.5px dashed var(--suave)}
-.sr-rd .nm{max-width:8.4rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;line-height:1}
-/* la serie protagonista tiene su fila entera: que el nombre use el ancho libre y recorte solo si sobra */
-.rd-row:first-child .it{flex:1 1 auto;min-width:0}
-.rd-row:first-child .nm{max-width:none}
+.sr-rd .nm{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;line-height:1}
+/* la serie protagonista cede primero: su nombre usa el ancho libre y recorta solo si hace falta */
+.sr-rd .it:first-child{flex:1 1 auto;min-width:0}
 .sr-svg{display:block;width:100%;height:auto;overflow:visible;cursor:crosshair;touch-action:pan-y}
 .sr-svg .gl{stroke:var(--linea-2);stroke-width:1}
 .sr-svg .base{stroke:var(--faint);stroke-width:1.1;opacity:.75}
@@ -180,10 +179,6 @@ body.dark .ind.on .mini{opacity:1;filter:none}
 .sr-svg .bar.hov{opacity:1}
 .sr-svg .ln-na{fill:none;stroke:var(--suave);stroke-width:1.9;stroke-dasharray:4 2.6;stroke-linecap:round}
 .sr-svg .dot-na{fill:var(--suave)}
-/* promedio del DEPARTAMENTO: línea sólida teal medio — misma familia que las barras del municipio
-   (es su entorno inmediato), distinta del gris punteado del país */
-.sr-svg .ln-dp{fill:none;stroke:var(--dep);stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
-.sr-svg .dot-dp{fill:var(--dep)}
 .sr-svg .ax{fill:var(--faint);font-size:7px;font-weight:600;font-family:var(--f)}
 /* halo del color de la tarjeta: los rótulos del eje y se alinean con el título (x=0) y pisan la barra sin ensuciarse */
 .sr-svg .ay{fill:var(--suave);font-size:7.8px;font-weight:700;font-family:var(--f);
@@ -611,12 +606,13 @@ Promise.all([fetch("municipios.topojson").then(r=>r.json()),fetch("sudamerica.to
     const box=document.getElementById("serie-box");
     const dpto=sig?DATA[sig].dpto:(dp||null);
     const nat=YEARS.map((_,i)=>agg(allRows,cur,i));
-    const dep=dpto?YEARS.map((_,i)=>agg(byDpto[dpto],cur,i)):null;
+    const dep=(dp&&!sig)?YEARS.map((_,i)=>agg(byDpto[dpto],cur,i)):null;
     const mu=sig?DATA[sig].s[cur.key]:null;
     const prim=mu||dep||nat;                        // la serie principal va en BARRAS
-    // capas superpuestas, de fondo a frente; cada una se dibuja y se rotula igual en la lectura
-    const capas=mu?[{k:"dp",arr:dep,lab:dpto,sw:"sw ln"},{k:"na",arr:nat,lab:"Nacional",sw:"sw li"}]
-              :dep?[{k:"na",arr:nat,lab:"Nacional",sw:"sw li"}]:[];
+    // unica referencia superpuesta: el promedio nacional. La linea del departamento se probo y se
+    // saco — con tres marcas encima de las barras el grafico se ensuciaba; el contraste con el
+    // departamento vive en los KPIs de la ficha ("vs. depto"), que es donde se lee mejor.
+    const capas=(mu||dep)?[{k:"na",arr:nat,lab:"Nacional",sw:"sw li"}]:[];
     const vals=prim.concat(...capas.map(c=>c.arr)).filter(ok);
     if(!vals.length){box.innerHTML="";srShow=null;return;}
     // Las barras SIEMPRE arrancan en cero: una barra con base distinta de cero exagera
@@ -650,23 +646,20 @@ Promise.all([fetch("municipios.topojson").then(r=>r.json()),fetch("sudamerica.to
     YEARS.forEach((_,i)=>{g+=`<rect class="hit" data-i="${i}" x="${(xc(i)-bw/2).toFixed(1)}" y="0" width="${bw.toFixed(1)}" height="${SR_H}"/>`;});
     const huecos=prim.filter(v=>!ok(v)).length;
     box.innerHTML=`<div class="serie">
-      <div class="sr-top"><div class="sr-t">${cur.label}</div><div class="sr-u">${cur.unit}</div></div>
+      <div class="sr-top"><div class="sr-t"><span class="sr-lbl">${cur.label}</span><span class="sr-sep">,</span><span class="sr-yr" id="sr-yr"></span></div><div class="sr-u">${cur.unit}</div></div>
       <div class="sr-rd" id="sr-rd"></div>
       <svg class="sr-svg" viewBox="0 0 ${SR_W} ${SR_H}" role="img" aria-label="Serie ${YEARS[0]}–${YEARS[YEARS.length-1]}">${g}</svg>
-      <div class="sr-foot">${YEARS[0]}–${YEARS[YEARS.length-1]} · promedios ponderados por población · señalá una gestión para leer sus valores.${huecos?' '+huecos+' sin dato.':''}</div>
+      <div class="sr-foot">${YEARS[0]}–${YEARS[YEARS.length-1]} · promedio nacional ponderado por población · señalá una gestión para leer sus valores.${huecos?' '+huecos+' sin dato.':''}</div>
     </div>`;
-    const rd=box.querySelector("#sr-rd"),svg=box.querySelector(".sr-svg"),bars=svg.querySelectorAll(".bar");
+    const rd=box.querySelector("#sr-rd"),svg=box.querySelector(".sr-svg"),bars=svg.querySelectorAll(".bar"),yrEl=box.querySelector("#sr-yr");
     const nom=sig?DATA[sig].nombre:(dp||"Promedio nacional");
     const item=(sw,lab,v,st)=>`<span class="it"><i class="${sw}"${st||""}></i><span class="nm">${lab}</span><b>${fmt(v,cur.unit)}</b></span>`;
     srShow=i=>{
-      const pr=item("sw",nom,prim[i],i===yIdx?' style="background:var(--warm)"':""),
-            refs=capas.map(c=>item(c.sw,c.lab,c.arr[i])).join("");
-      // las referencias van SIEMPRE en su propia fila: en el ancho del panel no entran ni las tres
-      // series del municipio ni, por poco, las dos del departamento, y dejar que el flex envuelva
-      // donde caiga es lo que descolocaba la lectura
-      rd.innerHTML=capas.length>0
-        ?`<div class="rd-row"><span class="rd-y">${YEARS[i]}</span>${pr}</div><div class="rd-row">${refs}</div>`
-        :`<div class="rd-row"><span class="rd-y">${YEARS[i]}</span>${pr}${refs}</div>`;
+      // la gestion señalada se rotula UNA sola vez, en el titulo; la lectura queda como leyenda
+      yrEl.textContent=YEARS[i];
+      yrEl.classList.toggle("now",i===yIdx);
+      rd.innerHTML=item("sw",nom,prim[i],i===yIdx?' style="background:var(--warm)"':"")
+        +capas.map(c=>item(c.sw,c.lab,c.arr[i])).join("");
       bars.forEach(bx=>bx.classList.toggle("hov",+bx.dataset.i===i));};
     srShow(yIdx);
     // OJO calibración: las barras NO ocupan todo el ancho del svg — hay una banda izquierda de
