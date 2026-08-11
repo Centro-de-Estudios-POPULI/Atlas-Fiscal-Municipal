@@ -312,12 +312,43 @@ Promise.all([fetch("municipios.topojson").then(r=>r.json()),fetch("sudamerica.to
   const byDpto={};for(const s in DATA){const d=DATA[s].dpto;(byDpto[d]=byDpto[d]||[]).push(DATA[s]);}
   const DEPTOS=Object.keys(byDpto).sort(),allRows=Object.values(DATA);
   const dMean=(dp,k)=>d3.mean(byDpto[dp].map(x=>x[k]).filter(v=>v!=null));
+  // ── ESCALA: ancla real + orientación por dirección ─────────────────────────────
+  // Antes el divergente se centraba en la MEDIANA de la muestra y la rampa corría
+  // siempre en el mismo sentido (alto = rojo). Dos problemas distintos:
+  //
+  //  · el centro era un artefacto de la muestra, no una magnitud del país. El mismo
+  //    tono significaba cosas distintas en cada indicador, y el lector cree estar
+  //    leyendo "cuánto tenés" cuando en realidad leía "cómo te comparás con el resto".
+  //  · el eje verde↔rojo ES una valoración, y se aplicaba a los 136 indicadores por
+  //    igual. En los 38 con dir:+1 (urbanización, cédula de identidad, años de
+  //    estudio) pintaba de ROJO el mejor resultado. En los 60 con dir:0 (población,
+  //    edad mediana, índice de masculinidad) inventaba un lado bueno y uno malo que
+  //    no existen.
+  //
+  // Ahora el pivote es el PROMEDIO NACIONAL PONDERADO POR POBLACIÓN (agg ya lo
+  // calcula así) — una magnitud real, la del país — y sólo cae en la mediana donde no
+  // hay valor-país comparable (población total, que es una suma). Y la rampa se
+  // orienta por `dir`:
+  //     dir −1 (más es peor)  → alto = rojo
+  //     dir +1 (más es mejor) → alto = verde, rampa invertida
+  //     dir  0 (sin lado)     → espectro completo, pero con el pivote en un centro
+  //                             real el tono ya no dice bueno/malo sino POR DEBAJO /
+  //                             POR ENCIMA del país. Mismo criterio que el atlas fiscal.
+  const RAMP=ind=>ind.dir===1?(t=>DIV(1-t)):DIV;
   function scale(ind){if(cache[ind.key])return cache[ind.key];
     const vals=Object.values(DATA).map(d=>d[ind.key]).filter(v=>v!=null&&!isNaN(v)).sort(d3.ascending);
+    if(!vals.length)return cache[ind.key]={vacio:true,color:()=>TH.nd,lo:null,hi:null,med:null,piv:null,pivTipo:"—",min:null,max:null,avg:null};
     const lo=d3.quantile(vals,.02),hi=d3.quantile(vals,.98),med=d3.quantile(vals,.5);
-    const dv=d3.scaleDiverging(DIV).domain([lo,med,hi]).clamp(true);
+    let piv=null,pivTipo="mediana";
+    if(ind.unit!=="hab"){const a=agg(allRows,ind);if(a!=null&&!isNaN(a)){piv=a;pivTipo="país";}}
+    if(piv==null)piv=med;
+    // El pivote tiene que caer DENTRO del rango dibujado: pegado a un extremo la rampa
+    // se degenera y media paleta no se usa nunca.
+    const pad=(hi-lo)*.08;
+    if(pad>0)piv=Math.min(Math.max(piv,lo+pad),hi-pad);
+    const dv=d3.scaleDiverging(RAMP(ind)).domain([lo,piv,hi]).clamp(true);
     const color=v=>v==null||isNaN(v)?TH.nd:dv(v);
-    return cache[ind.key]={lo,hi,med,dv,color,min:vals[0],max:vals[vals.length-1],avg:d3.mean(vals)};}
+    return cache[ind.key]={lo,hi,med,piv,pivTipo,dv,color,min:vals[0],max:vals[vals.length-1],avg:d3.mean(vals)};}
   const valOf=(s,k)=>DATA[s]?.[k];
   let cur=INDS[0],sel=null,hov=null,zt=d3.zoomIdentity,focusDept=null,zr=d3.zoomIdentity;
 
@@ -435,12 +466,16 @@ Promise.all([fetch("municipios.topojson").then(r=>r.json()),fetch("sudamerica.to
   function termo(){const sc=scale(cur);
     if(!reduceMo()){termoEl.classList.remove("swap");void termoEl.offsetWidth;termoEl.classList.add("swap");}
     document.getElementById("tm-t").innerHTML=cur.label+` <small>${cur.unit}</small>`;
-    document.getElementById("tm-bar").style.background=`linear-gradient(to right,${d3.range(0,1.001,.04).map(t=>DIV(t)).join(",")})`;
+    // La barra usa la MISMA rampa orientada que el mapa: en un indicador con dir:+1 el
+    // degradado corre al revés, si no la leyenda diría lo contrario de lo que se ve.
+    document.getElementById("tm-bar").style.background=`linear-gradient(to right,${d3.range(0,1.001,.04).map(t=>RAMP(cur)(t)).join(",")})`;
     document.getElementById("tm-lo").innerHTML=`<span class="cap">≤ </span>${fmt(sc.lo,cur.unit)}`;
     document.getElementById("tm-hi").innerHTML=`<span class="cap">≥ </span>${fmt(sc.hi,cur.unit)}`;
     const bar=document.getElementById("tm-bar");bar.querySelectorAll(".tm-mk").forEach(m=>m.remove());
     const m=document.createElement("div");m.className="tm-mk";m.style.left="50%";bar.appendChild(m);
-    document.getElementById("tm-st").innerHTML=`n <b>343</b> · mín <b>${fmt(sc.min,cur.unit)}</b> · med <b>${fmt(sc.med,cur.unit)}</b> · máx <b>${fmt(sc.max,cur.unit)}</b>`;}
+    // El marcador del centro está en el 50% de la barra porque scaleDiverging manda el
+    // pivote justo al medio de la rampa. Se nombra: si no, el lector supone "mediana".
+    document.getElementById("tm-st").innerHTML=`n <b>343</b> · mín <b>${fmt(sc.min,cur.unit)}</b> · ${sc.pivTipo} <b>${fmt(sc.piv,cur.unit)}</b> · máx <b>${fmt(sc.max,cur.unit)}</b>`;}
 
   // cambiar de indicador NO reconstruye la ficha (evita el parpadeo y conserva el scroll):
   // solo mueve el resalte, repinta el mapa con crossfade y actualiza el bloque peek
