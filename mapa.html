@@ -324,7 +324,10 @@ body.dark .ind.on .mini{opacity:1;filter:none}
 <div class="panel" id="panel-ind">
   <div class="cat-bar" id="cat-bar">
     <div class="p-kick"><span>Categoría</span><span class="kick-n" id="kick-n"></span></div>
-    <button class="cat-btn" id="cat-btn"><span class="cn">Demografía</span><span class="ar">▾</span></button>
+    <!-- Marcador de carga: el JS lo reemplaza por curCat.label al leer el catálogo.
+         Decía "Demografía", que es una categoría del atlas SOCIOECONÓMICO — herencia
+         de cuando este atlas se clonó de aquél. Se veía un instante al abrir el link. -->
+    <button class="cat-btn" id="cat-btn"><span class="cn">Estructura de Ingresos</span><span class="ar">▾</span></button>
     <div class="cat-drop" id="cat-drop"></div>
   </div>
   <div class="p-body"><div class="p-sub" id="p-sub">elegí un indicador para verlo en el mapa</div><div class="lista" id="lista"></div></div>
@@ -359,7 +362,12 @@ body.dark .ind.on .mini{opacity:1;filter:none}
 const ESP=["#00323d","#005f73","#0a9396","#94d2bd","#e9d8a6","#eda13e","#df5d25","#c71e1d","#8f1f22"];
 const RAMP_HI_BAD =d3.interpolateRgbBasis(ESP);              // alto = rojo   (dir -1)
 const RAMP_HI_GOOD=d3.interpolateRgbBasis([...ESP].reverse());// alto = teal   (dir  1)
-const RAMP_NEUTRAL=d3.interpolateRgbBasis(["#efe4c4","#e9d8a6","#94d2bd","#0a9396","#005f73","#00323d"]); // sin juicio (dir 0)
+// dir:0 (contexto) — pasa al ESPECTRO COMPLETO, igual que el resto del sitio y que el
+// atlas socioeconómico. Antes usaba media rampa (crema→petróleo) para no "emitir juicio".
+// Con el pivote en la MEDIANA el eje de tono no dice bueno/malo sino POR DEBAJO / POR
+// ENCIMA de lo típico, así que el rojo deja de ser una valoración y pasa a ser una
+// dirección. Sin orientar por `dir`: para un indicador de contexto no hay lado favorable.
+const RAMP_NEUTRAL=d3.interpolateRgbBasis(ESP);              // alto = rojo = muy sobre la mediana
 const fmt=(v,u)=>{if(v==null||isNaN(v))return"s/d";
   if(u==="Bs/hab")return d3.format(",")(Math.round(v)).replace(/,/g,".")+" Bs";
   if(u==="%")return(+v).toFixed(1).replace(".",",")+"%";
@@ -404,26 +412,56 @@ Promise.all([fetch("municipios.topojson").then(r=>r.json()),fetch("sudamerica.to
   function agg(rows,ind,yi){let n=0,d=0;
     rows.forEach(r=>{const v=r.s[ind.key][yi],w=r.pob[yi];if(v!=null&&w!=null){n+=v*w;d+=w;}});
     return d?n/d:null;}
+  // ── ESCALA DE ANCLA FIJA ───────────────────────────────────────────────────
+  // El pivote y los extremos se calculan UNA sola vez, sobre la gestión de
+  // referencia, y quedan congelados para todas las gestiones.
+  //
+  // Antes se recalculaban año por año con la mediana móvil. Eso resolvía bien el
+  // sesgo —las distribuciones fiscales tienen colas largas y una escala secuencial
+  // pura dejaba al 80% de los municipios apilado en el extremo pálido— pero traía
+  // dos efectos que engañan al lector:
+  //   · un municipio podía cambiar de color entre gestiones SIN haber cambiado su
+  //     valor: bastaba con que se movieran los demás. Al recorrer el eje temporal
+  //     eso se leía como un cambio que no ocurrió.
+  //   · el mismo tono significaba magnitudes distintas en cada indicador, porque
+  //     cada uno tenía su propio centro.
+  // Con ancla fija el color responde «¿cuánto tenés?» en vez de «¿cómo te
+  // comparás con los demás, hoy?», que es lo que la gente cree estar leyendo.
+  //
+  // El pivote se elige según la naturaleza del indicador:
+  //   · con signo (Resultado Fiscal) -> el CERO. Es el caso ideal: el centro existe.
+  //   · ratios y estructura (%)      -> el PROMEDIO NACIONAL ponderado por población.
+  //                                     Es una magnitud real —la del país—, no un
+  //                                     artefacto de la muestra.
+  //   · per cápita y montos          -> la mediana de la gestión de referencia,
+  //                                     congelada (no hay un "valor país" comparable).
+  const BASE_YI=YEARS.length-1;                  // gestión de referencia: la más reciente
+  const domCache={};
+  function dominio(ind){
+    if(domCache[ind.key]!==undefined)return domCache[ind.key];
+    const vals=allRows.map(d=>d.s[ind.key]&&d.s[ind.key][BASE_YI]).filter(v=>v!=null&&!isNaN(v)).sort(d3.ascending);
+    if(!vals.length)return domCache[ind.key]=null;
+    const lo=d3.quantile(vals,.02),hi=d3.quantile(vals,.98);
+    if(ind.div){const m=Math.max(Math.abs(lo),Math.abs(hi))||1;return domCache[ind.key]=[-m,0,m];}
+    let piv=(ind.unit==="%")?agg(allRows,ind,BASE_YI):null;
+    if(piv==null||isNaN(piv))piv=d3.quantile(vals,.5);
+    // el pivote tiene que caer DENTRO del rango: si queda pegado a un extremo la
+    // rampa se degenera y media paleta no se usa.
+    const pad=(hi-lo)*.08;
+    if(pad>0)piv=Math.min(Math.max(piv,lo+pad),hi-pad);
+    return domCache[ind.key]=[lo,piv,hi];
+  }
   function scale(ind,yi){yi=(yi===undefined?yIdx:yi);const ck=ind.key+"|"+yi;if(cache[ck])return cache[ck];
-    const vals=allRows.map(d=>d.s[ind.key][yi]).filter(v=>v!=null&&!isNaN(v)).sort(d3.ascending);
-    if(!vals.length)return cache[ck]={vacio:true,color:()=>TH.nd,lo:null,hi:null,med:null,min:null,max:null,avg:null,n:0};
-    const lo=d3.quantile(vals,.02),hi=d3.quantile(vals,.98),med=d3.quantile(vals,.5);
+    const vals=allRows.map(d=>d.s[ind.key]&&d.s[ind.key][yi]).filter(v=>v!=null&&!isNaN(v)).sort(d3.ascending);
+    const dom=dominio(ind);
+    if(!vals.length||!dom)return cache[ck]={vacio:true,color:()=>TH.nd,lo:null,hi:null,med:null,min:null,max:null,avg:null,n:0};
     const ramp=ind.dir>0?RAMP_HI_GOOD:ind.dir<0?RAMP_HI_BAD:RAMP_NEUTRAL;
-    let dv;
-    if(ind.div){        // Resultado Fiscal: el pivote con sentido es el CERO (superávit vs déficit), no la mediana
-      const m=Math.max(Math.abs(lo),Math.abs(hi))||1;
-      dv=d3.scaleDiverging(ramp).domain([-m,0,m]).clamp(true);
-    }else if(ind.dir===0){
-      // contexto: rampa sin juicio, pero ANCLADA EN LA MEDIANA igual que las otras.
-      // Con una secuencial pura [p2,p98] las distribuciones sesgadas (casi todas las
-      // fiscales lo son) apilaban al 80% de los municipios en el extremo pálido y el
-      // mapa quedaba en blanco. Centrar en la mediana reparte mitad y mitad.
-      dv=d3.scaleDiverging(ramp).domain([lo,med,hi]).clamp(true);
-    }else{
-      dv=d3.scaleDiverging(ramp).domain([lo,med,hi]).clamp(true);
-    }
+    const dv=d3.scaleDiverging(ramp).domain(dom).clamp(true);
     const color=v=>v==null||isNaN(v)?TH.nd:dv(v);
-    return cache[ck]={lo,hi,med,dv,color,min:vals[0],max:vals[vals.length-1],avg:agg(allRows,ind,yi),n:vals.length};}
+    // lo/med/hi salen del dominio CONGELADO (la leyenda es la misma en todas las
+    // gestiones, que es justamente el punto); min/max/avg/n sí son del año en pantalla.
+    return cache[ck]={lo:dom[0],med:dom[1],hi:dom[2],dv,color,
+      min:vals[0],max:vals[vals.length-1],avg:agg(allRows,ind,yi),n:vals.length};}
   const valOf=(s,k)=>DATA[s]&&DATA[s].s[k]?DATA[s].s[k][yIdx]:null;
   let cur=INDS[0],sel=null,hov=null,zt=d3.zoomIdentity,focusDept=null,zr=d3.zoomIdentity;
 
@@ -568,13 +606,18 @@ Promise.all([fetch("municipios.topojson").then(r=>r.json()),fetch("sudamerica.to
     document.getElementById("tm-lo").innerHTML=`<span class="cap">≤ </span>${fmt(d0[0],cur.unit)}`;
     document.getElementById("tm-hi").innerHTML=`<span class="cap">≥ </span>${fmt(d0[d0.length-1],cur.unit)}`;
     const bar=document.getElementById("tm-bar");bar.querySelectorAll(".tm-mk,.tm-mkl").forEach(m=>m.remove());
-    // TODAS las escalas son divergentes (también las de contexto, tras el arreglo de la rampa neutra),
-    // así que el centro SIEMPRE es un pivote real y va marcado y rotulado: cero en Resultado Fiscal,
-    // mediana en el resto. Antes se ocultaba en dir 0 y quedaba un centro sin explicar.
+    // TODAS las escalas son divergentes, así que el centro SIEMPRE es un pivote real y
+    // va marcado y rotulado. El rótulo tiene que decir QUÉ es ese centro, porque desde
+    // el paso a ancla fija ya no es siempre la mediana:
+    //   · con signo (Resultado Fiscal) -> "cero"
+    //   · ratios y estructura (%)      -> "promedio nacional" (ponderado por población)
+    //   · per cápita y montos          -> "mediana" de la gestión de referencia
+    // Decía "mediana" en todos los casos; en los ratios eso pasó a ser falso.
     const m=document.createElement("div");m.className="tm-mk";m.style.left="50%";bar.appendChild(m);
     const ml=document.createElement("div");ml.className="tm-mkl";ml.style.left="50%";
-    ml.textContent=cur.div?"cero":"mediana "+fmt(sc.med,cur.unit);bar.appendChild(ml);
-    // la mediana ya va rotulada bajo la marca central -> acá no se repite
+    const pivLbl=cur.div?"cero":(cur.unit==="%"?"promedio nacional ":"mediana ")+fmt(sc.med,cur.unit);
+    ml.textContent=pivLbl;bar.appendChild(ml);
+    // el pivote ya va rotulado bajo la marca central -> acá no se repite
     document.getElementById("tm-st").innerHTML=`<b>${sc.n}</b> con dato · mín <b>${fmt(sc.min,cur.unit)}</b> · máx <b>${fmt(sc.max,cur.unit)}</b>`;}
 
   // cambiar de indicador NO reconstruye la ficha (evita el parpadeo y conserva el scroll):
