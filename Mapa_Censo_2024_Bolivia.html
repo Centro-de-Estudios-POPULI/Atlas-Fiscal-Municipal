@@ -305,7 +305,11 @@ function applyTheme(dark,save){document.body.classList.toggle("dark",dark);TH=da
   applyTheme(p?p==="dark":matchMedia("(prefers-color-scheme:dark)").matches,false);})();
 
 Promise.all([fetch("municipios.topojson").then(r=>r.json()),fetch("sudamerica.topojson").then(r=>r.json()),
-  fetch("catalogo.json").then(r=>r.json()),fetch("data.json").then(r=>r.json())]).then(([topo,wtopo,cat,DATA])=>{
+  fetch("catalogo.json").then(r=>r.json()),fetch("data.json").then(r=>r.json()),
+  // denominadores: el universo propio de cada indicador, para agregar bien
+  fetch("denominadores.json").then(r=>r.json()).catch(()=>({orden:[],municipios:{}}))
+  ]).then(([topo,wtopo,cat,DATA,DENS])=>{
+  const DEN_ORDEN=DENS.orden||[], DEN=DENS.municipios||{};
   const geo=topojson.feature(topo,topo.objects.data),F=geo.features,bolivia=topojson.merge(topo,topo.objects.data.geometries);
   const world=topojson.feature(wtopo,wtopo.objects.countries).features.filter(w=>{const c=d3.geoCentroid(w);return c[0]>-95&&c[0]<-28&&c[1]>-58&&c[1]<18;});
   const GRUPOS=cat.grupos,cache={};let curCat=GRUPOS[0],INDS=curCat.indicadores;
@@ -485,8 +489,32 @@ Promise.all([fetch("municipios.topojson").then(r=>r.json()),fetch("sudamerica.to
     fadeSwap(drawBase);drawOver();termo();
     if(sel)renderPeek(sel.properties.sigep);else if(focusDept)renderPeekDept(focusDept);else renderPeekNat();}
 
-  function agg(rows,ind){if(ind.unit==="hab")return d3.sum(rows.map(r=>r[ind.key]).filter(v=>v!=null));
-    let n=0,d=0;rows.forEach(r=>{const v=r[ind.key],w=r.pob_total;if(v!=null&&w!=null){n+=v*w;d+=w;}});return d?n/d:null;}
+  // ★ AGREGACIÓN POR EL UNIVERSO DE CADA INDICADOR, no por población.
+  //   Antes esta función ponderaba TODO por `pob_total`, y como cada indicador
+  //   tiene su propio denominador, cualquier cifra departamental o nacional
+  //   salía mal aunque las municipales fueran exactas:
+  //     agua por cañería  INE 71,19%  ·  por población 72,27%  ·  por viviendas 71,19% ✓
+  //     emigra a Argentina real 31,11% ·  por población 26,97% ·  por emigrantes 31,11% ✓
+  //   El catálogo declara el modo en `ind.agg` y el denominador en `ind.den`.
+  const peso=(r,ind)=>{const D=DEN[r.sigep||r.cod_ine];
+    if(!D||!ind.den)return r.pob_total;
+    const j=DEN_ORDEN.indexOf(ind.den);return j<0?r.pob_total:D[j];};
+  function agg(rows,ind){
+    // conteos: se SUMAN
+    if(ind.unit==="hab"||ind.unit==="viv"||ind.unit==="pers")
+      return d3.sum(rows.map(r=>r[ind.key]).filter(v=>v!=null));
+    // no agregable desde lo municipal (la mediana nacional no es función de las
+    // medianas municipales): mejor no mostrar nada que mostrar algo falso
+    if(ind.agg==="no")return null;
+    // una brecha es una RESTA de dos porcentajes: se rearma de sus componentes
+    if(ind.agg==="brecha"&&ind.comp){
+      const p=k=>{let n=0,d=0;rows.forEach(r=>{const v=r[k],w=peso(r,ind);
+        if(v!=null&&w!=null){n+=v*w;d+=w;}});return d?n/d:null;};
+      const a=p(ind.comp[0]),b=p(ind.comp[1]);
+      return (a==null||b==null)?null:a-b;}
+    // el resto: promedio ponderado por SU denominador
+    let n=0,d=0;rows.forEach(r=>{const v=r[ind.key],w=peso(r,ind);
+      if(v!=null&&w!=null){n+=v*w;d+=w;}});return d?n/d:null;}
   const cls=x=>x>=0?"up":"dn";
   const pctTxt=(v,d)=>(v*100).toFixed(d==null?1:d).replace(".",",")+"%";
   // puesto del departamento entre los 9 (1 = valor más alto), mismo criterio que el ranking municipal
