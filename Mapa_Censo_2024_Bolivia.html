@@ -500,8 +500,12 @@ Promise.all([fetch("municipios.topojson").then(r=>r.json()),fetch("sudamerica.to
     if(!D||!ind.den)return r.pob_total;
     const j=DEN_ORDEN.indexOf(ind.den);return j<0?r.pob_total:D[j];};
   function agg(rows,ind){
-    // conteos: se SUMAN
-    if(ind.unit==="hab"||ind.unit==="viv"||ind.unit==="pers")
+    // conteos: se SUMAN. ⚠️ Esto se decidía mirando la UNIDAD (hab/viv/pers) y
+    // `pers` es AMBIGUA: vale "personas" (conteo) y "personas por hogar" (razón).
+    // Por eso la pantalla de entrada mostraba "Personas por hogar: 1.049,2", que
+    // es la suma de los 343 promedios municipales. Ahora lo declara el catálogo
+    // (`agregacion.py` → agg:"suma") y acá no se adivina nada.
+    if(ind.agg==="suma")
       return d3.sum(rows.map(r=>r[ind.key]).filter(v=>v!=null));
     // no agregable desde lo municipal (la mediana nacional no es función de las
     // medianas municipales): mejor no mostrar nada que mostrar algo falso
