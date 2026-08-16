@@ -82,6 +82,20 @@ body.dark .tbtog .ic-moon{display:none}body.dark .tbtog .ic-sun{display:block}
 .tbop{padding:6px 12px;font-size:.72rem;font-weight:500;cursor:pointer;border-top:1px solid var(--linea-2);white-space:nowrap}
 .tbop:first-child{border-top:0}.tbop:hover{background:var(--gris-card)}.tbop.on{color:var(--sel);font-weight:700}
 .t-s{font-size:.62rem;color:rgba(255,255,255,.6);font-weight:500;margin-left:12px}.t-s b{color:var(--mint);font-weight:700}
+/* ── CONMUTADOR DE CENSO ──
+   Vive en el top bar, al lado del otro control global ("Zoom a"), y no en el
+   termómetro: en móvil el termómetro se apaga al subir la ficha del municipio y
+   ahí el control quedaría inalcanzable. Mismo lenguaje que el botón de tema
+   (borde tenue sobre el teal) con el activo en ámbar, que en esta identidad ya
+   significa "lo elegido". */
+.tbseg{display:flex;flex:none;border:1px solid rgba(255,255,255,.22);background:rgba(255,255,255,.06)}
+.tbseg button{border:0;background:none;color:rgba(255,255,255,.72);font-family:var(--f);font-size:.68rem;
+  font-weight:600;padding:5px 9px;cursor:pointer;border-left:1px solid rgba(255,255,255,.14);white-space:nowrap;
+  transition:background .18s,color .18s}
+.tbseg button:first-child{border-left:0}
+.tbseg button:hover{background:rgba(255,255,255,.13);color:#fff}
+.tbseg button.on{background:var(--warm);color:#04202a;font-weight:700}
+.tbseg.cargando button{opacity:.5;cursor:progress}
 
 /* PANELES */
 .panel{position:fixed;top:62px;bottom:12px;width:var(--panel-w);z-index:8;background:var(--glass);
@@ -119,6 +133,12 @@ body.dark .tbtog .ic-moon{display:none}body.dark .tbtog .ic-sun{display:block}
 .ind.on{background:var(--card-solid);border-color:var(--sel);box-shadow:inset 3px 0 0 var(--sel)}
 .i-nm{font-size:.83rem;font-weight:600;line-height:1.22;letter-spacing:-.005em}
 .i-df{font-size:.69rem;color:var(--suave);line-height:1.32;margin-top:.3rem;font-weight:500}
+/* indicador que el censo de 2012 no puede dar: se apaga y se explica en la propia
+   tarjeta. No se oculta ni se bloquea — que un indicador exista y no tenga serie
+   es información, y esconderlo haría creer que el menú cambia de tamaño solo. */
+.ind.sin12{opacity:.66}.ind.sin12 .i-nm{color:var(--suave)}
+.i-tag{display:inline-block;font-size:.54rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;
+  color:var(--suave);border:1px solid var(--linea);padding:0 5px;margin-bottom:4px}
 .mini{width:110px;height:80px;flex:none;pointer-events:none;opacity:.6;filter:saturate(.32);transition:opacity .28s ease,filter .28s ease}
 .ind:hover .mini{opacity:.9;filter:saturate(.7)}
 .ind.on .mini{opacity:1;filter:saturate(.88)}
@@ -136,6 +156,7 @@ body.dark .ind.on .mini{opacity:1;filter:none}
   transition:background-color .22s ease,border-color .22s ease;
   animation:kpiIn .34s cubic-bezier(.2,.7,.3,1) both;animation-delay:var(--d,0ms)}
 .kpi:hover{background:var(--card-hov)}.kpi.on{border-top-color:var(--sel);background:var(--kpi-on)}
+.kpi.sin12{opacity:.6;border-top-color:var(--linea)}
 .k-l{font-size:.57rem;color:var(--suave);line-height:1.15;height:2.3em;overflow:hidden;font-weight:600}
 .k-v{font-size:.96rem;font-weight:700;letter-spacing:-.02em;margin-top:.15rem}
 .k-c{margin-top:.3rem;padding-top:.26rem;border-top:1px solid var(--linea-2);display:flex;flex-direction:column;gap:.06rem}
@@ -152,13 +173,17 @@ body.dark .ind.on .mini{opacity:1;filter:none}
   -webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);padding:.5rem .85rem}
 .tm-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:.35rem}
 .tm-t{font-size:.68rem;font-weight:700}.tm-t small{color:var(--faint);font-weight:500;margin-left:.25rem}
-.tm-st{font-size:.55rem;color:var(--suave);font-weight:500}.tm-st b{color:var(--tx);font-weight:700}
+.tm-st{font-size:.55rem;color:var(--suave);font-weight:500;text-align:right;max-width:64%;line-height:1.3}.tm-st b{color:var(--tx);font-weight:700}
 .tm-row{display:flex;align-items:center;gap:9px}
 .tm-side{font-size:.58rem;color:var(--tx);font-weight:700;white-space:nowrap;flex:none}
 .tm-side .cap{color:var(--faint);font-weight:500}
 .tm-bar{flex:1;height:8px;position:relative;border-radius: 0}
 .tm-mk{position:absolute;top:-2px;width:1px;height:12px;background:var(--suave)}
 .termo.swap .tm-t,.termo.swap .tm-st,.termo.swap .tm-side{animation:softIn .34s ease both}
+/* cuando la leyenda explica una ausencia el texto es una frase, no cuatro cifras:
+   pasa a ocupar su propio renglón en vez de pelearle el ancho al título */
+.termo.nodata .tm-top{display:block}
+.termo.nodata .tm-st{max-width:100%;text-align:left;margin-top:3px}
 
 /* créditos */
 .cred{position:fixed;left:16px;bottom:16px;z-index:7;font-size:.58rem;color:var(--suave);font-weight:500;
@@ -181,6 +206,9 @@ body.dark .ind.on .mini{opacity:1;filter:none}
   .logo{width:26px;height:26px}.logo svg{width:26px;height:26px}
   .t-tit{flex:1;min-width:0}.t-h{font-size:.72rem;line-height:1.12;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .t-name{display:none}.top-sp{display:none}.t-s{display:none}
+  /* el conmutador SÍ sobrevive en móvil: es el control de lo que se está mirando.
+     Se aprieta, y el que cede ancho es el título, que ya tiene ellipsis. */
+  .tbseg button{padding:4px 6px;font-size:.62rem}
   .tbdd{flex:none}.tbdd .lab{display:none}.tbbtn{font-size:.7rem;padding-bottom:2px}
   .tbdrop{min-width:min(13rem,calc(100vw - 22px));max-height:60vh}
   /* franja superior: categoría + tira de tarjetas (mini-mapa + nombre + definición) */
@@ -238,6 +266,7 @@ body.dark .ind.on .mini{opacity:1;filter:none}
     <div class="t-name">Observatorio de Finanzas Públicas y Desarrollo Territorial</div>
   </div>
   <div class="top-sp"></div>
+  <div class="tbseg" id="anio-seg" role="group" aria-label="Censo en pantalla"><button data-a="2024" class="on">2024</button><button data-a="2012">2012</button><button data-a="cambio">Cambio</button></div>
   <div class="tbdd" id="dept-dd"><span class="lab">Zoom a</span><button class="tbbtn"><span id="dept-lab">Bolivia</span><span class="ar">▾</span></button><div class="tbdrop" id="dept-drop"></div></div>
   <button class="tbtog" id="theme-btn" aria-label="Cambiar tema" title="Modo oscuro">
     <svg class="ic-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M20.5 14.6A8.6 8.6 0 0 1 9.4 3.5a8.6 8.6 0 1 0 11.1 11.1Z"/></svg>
@@ -283,6 +312,10 @@ const fmt=(v,u)=>{if(v==null||isNaN(v))return"s/d";
   if(u==="%")return(+v).toFixed(1).replace(".",",")+"%";
   return(+v).toFixed(1).replace(".",",")+(u==="h/100m"?"":" "+u);};
 const sgn=d=>(d>=0?"▲":"▼")+" "+fmt(Math.abs(d),"").trim();
+// ⚠️ NUNCA combinar `sgn` con esto: la flecha y el signo juntos dan "▼ +5,5 pp",
+//    que se contradice sola. `sgn` para comparar contra otro lugar (lleva flecha),
+//    `fmtD` para un cambio en el tiempo (lleva signo).
+const fmtD=(v,u)=>v==null||isNaN(v)?"s/d":(v>0?"+":v<0?"−":"")+fmt(Math.abs(v),u);
 const dpr=Math.min(window.devicePixelRatio||1,2);
 const fitC=(cv,w,h,rf)=>{cv.width=w*dpr;cv.height=h*dpr;return cv.getContext("2d",rf?{willReadFrequently:true}:undefined);};
 
@@ -313,9 +346,31 @@ Promise.all([fetch("municipios.topojson").then(r=>r.json()),fetch("sudamerica.to
   const geo=topojson.feature(topo,topo.objects.data),F=geo.features,bolivia=topojson.merge(topo,topo.objects.data.geometries);
   const world=topojson.feature(wtopo,wtopo.objects.countries).features.filter(w=>{const c=d3.geoCentroid(w);return c[0]>-95&&c[0]<-28&&c[1]>-58&&c[1]<18;});
   const GRUPOS=cat.grupos,cache={};let curCat=GRUPOS[0],INDS=curCat.indicadores;
-  const byDpto={};for(const s in DATA){const d=DATA[s].dpto;(byDpto[d]=byDpto[d]||[]).push(DATA[s]);}
-  const DEPTOS=Object.keys(byDpto).sort(),allRows=Object.values(DATA);
-  const dMean=(dp,k)=>d3.mean(byDpto[dp].map(x=>x[k]).filter(v=>v!=null));
+  // los ámbitos son listas de códigos SIGEP, no de filas: la misma lista sirve
+  // para pedirle datos a 2024 o a 2012
+  const byDpto={};for(const s in DATA){const d=DATA[s].dpto;(byDpto[d]=byDpto[d]||[]).push(s);}
+  const DEPTOS=Object.keys(byDpto).sort(),SIG=Object.keys(DATA);
+
+  // ── EL CENSO DE 2012 LLEGA DESPUÉS DEL PRIMER PINTADO ─────────────────────
+  // Pesa 266 KB comprimidos: un 80% más de lo que hoy pesa el mapa, y buena
+  // parte de las visitas no va a salir de 2024. Así el arranque no paga nada.
+  // La descarga se dispara sola 1,2 s después del primer pintado —el mismo
+  // criterio con que el tablero metropolitano precarga las manzanas— y quien
+  // toque "2012" antes de que llegue espera la MISMA promesa, no una segunda.
+  let D12={},DEN12={},pedido=null,hay12=false;
+  const seg=document.getElementById("anio-seg");
+  function pedir2012(){
+    if(!pedido)pedido=Promise.all([
+        fetch("data_2012.json").then(r=>r.json()),
+        fetch("denominadores_2012.json").then(r=>r.json()).catch(()=>({municipios:{}}))
+      ]).then(([d,n])=>{D12=d;DEN12=n.municipios||{};hay12=true;
+        // los cachés se armaron sin 2012: `pais(ind,"2012")` pudo quedar guardado
+        // en null y se convertiría en un "—" permanente. Se vacían los dos.
+        for(const k in cache)delete cache[k];
+        for(const k in paisC)delete paisC[k];})
+        .catch(e=>{pedido=null;throw e;});
+    return pedido;}
+  let ANIO="2024";                     // "2024" | "2012" | "cambio"
   // ── ESCALA: ancla real + orientación por dirección ─────────────────────────────
   // Antes el divergente se centraba en la MEDIANA de la muestra y la rampa corría
   // siempre en el mismo sentido (alto = rojo). Dos problemas distintos:
@@ -339,21 +394,93 @@ Promise.all([fetch("municipios.topojson").then(r=>r.json()),fetch("sudamerica.to
   //                             real el tono ya no dice bueno/malo sino POR DEBAJO /
   //                             POR ENCIMA del país. Mismo criterio que el atlas fiscal.
   const RAMP=ind=>ind.dir===1?(t=>DIV(1-t)):DIV;
-  function scale(ind){if(cache[ind.key])return cache[ind.key];
-    const vals=Object.values(DATA).map(d=>d[ind.key]).filter(v=>v!=null&&!isNaN(v)).sort(d3.ascending);
-    if(!vals.length)return cache[ind.key]={vacio:true,color:()=>TH.nd,lo:null,hi:null,med:null,piv:null,pivTipo:"—",min:null,max:null,avg:null};
-    const lo=d3.quantile(vals,.02),hi=d3.quantile(vals,.98),med=d3.quantile(vals,.5);
-    let piv=null,pivTipo="mediana";
-    if(ind.unit!=="hab"){const a=agg(allRows,ind);if(a!=null&&!isNaN(a)){piv=a;pivTipo="país";}}
-    if(piv==null)piv=med;
+
+  // ── EN QUÉ UNIDAD SE MIDE UN CAMBIO ──
+  // Un porcentaje cambia en PUNTOS PORCENTUALES y un conteo en PORCENTAJE. Quién
+  // es conteo lo DECLARA el catálogo (`agg:"suma"`), no se deduce de la unidad:
+  // `pers` vale "personas" y también "personas por hogar", y adivinar por unidad
+  // es exactamente lo que puso "Personas por hogar: 1.049,2" en la pantalla de
+  // entrada de este mismo Atlas.
+  const esConteo=ind=>ind.agg==="suma";
+  const uMode=ind=>ANIO!=="cambio"?ind.unit
+                  :(esConteo(ind)?"%":(ind.unit==="%"?"pp":ind.unit));
+  const v24=(s,k)=>DATA[s]?.[k],v12=(s,k)=>D12[s]?.[k];
+  function dif(s,ind){const a=v12(s,ind.key),b=v24(s,ind.key);
+    if(a==null||b==null||isNaN(a)||isNaN(b))return null;
+    return esConteo(ind)?(a?100*(b-a)/a:null):b-a;}
+  // el valor que corresponde a lo que está en pantalla
+  const valOf=(s,ind)=>ANIO==="2024"?v24(s,ind.key)
+                      :!ind.s12?null
+                      :ANIO==="2012"?v12(s,ind.key):dif(s,ind);
+
+  function scale(ind,modo){modo=modo||ANIO;
+    const ck=ind.key+"|"+modo;if(cache[ck])return cache[ck];
+    const vacio=()=>cache[ck]={vacio:true,color:()=>TH.nd,lo:null,hi:null,med:null,
+      piv:null,pivTipo:"—",min:null,max:null,avg:null};
+    if(modo!=="2024"&&!ind.s12)return vacio();
+    let vals,lo,hi,piv,pivTipo;
+    if(modo==="cambio"){
+      vals=SIG.map(s=>dif(s,ind)).filter(v=>v!=null&&!isNaN(v)).sort(d3.ascending);
+      if(!vals.length&&ind.domd==null)return vacio();
+      // SIMÉTRICO ALREDEDOR DE CERO: si el dominio no es simétrico, un avance de
+      // +2 y un retroceso de −2 se pintan con intensidades distintas y el mapa
+      // miente sobre la magnitud del cambio.
+      const M=ind.domd!=null?ind.domd
+             :(Math.max(Math.abs(d3.quantile(vals,.02)),Math.abs(d3.quantile(vals,.98)))||1);
+      lo=-M;hi=M;piv=0;pivTipo="sin cambio";
+    }else{
+      // ★ UNA SOLA ESCALA PARA LOS DOS CENSOS. El dominio se calcula sobre la
+      //   UNIÓN de 2012 y 2024, así un mismo tono significa un mismo valor en los
+      //   dos mapas y el avance del país se ve al alternar de año. Medido antes de
+      //   adoptarlo: el mapa de 2024 —que ya está publicado— se corre 0,020 de la
+      //   rampa en la mediana y 178 de 179 indicadores quedan por debajo de 0,10,
+      //   o sea que compartir escala no le cuesta contraste. La excepción es
+      //   `pct_cedula_identidad`, cuyo rango se ensancha 6,8× porque en 2012 la
+      //   cobertura era muchísimo menor: ahí el mapa de 2024 sí se aplana, y es
+      //   la lectura honesta.
+      //   El rango llega DECLARADO en `ind.dom` (calculado sobre los dos censos
+      //   al generar los datos): si se calculara acá no podría hacerse hasta que
+      //   bajara el archivo de 2012, que llega en diferido, y el mapa cambiaría
+      //   de color solo un segundo después de cargar.
+      //   OJO a la asimetría deliberada: el RANGO DIBUJADO es el de los dos
+      //   censos juntos (para que el color signifique lo mismo), pero el mínimo y
+      //   el máximo que informa la leyenda son los del censo EN PANTALLA — es lo
+      //   que el lector está mirando, y además así no dependen de si el archivo
+      //   de 2012 ya llegó.
+      vals=SIG.map(s=>modo==="2012"?v12(s,ind.key):v24(s,ind.key))
+             .filter(v=>v!=null&&!isNaN(v)).sort(d3.ascending);
+      if(!vals.length)return vacio();
+      lo=ind.dom?ind.dom[0]:d3.quantile(vals,.02);
+      hi=ind.dom?ind.dom[1]:d3.quantile(vals,.98);
+      piv=null;pivTipo="mediana";
+      // ★ El pivote es el país DE 2024 en los DOS mapas. Si cada censo se centrara
+      //   en su propio promedio, el color diría "cómo te comparás dentro de tu
+      //   época" y los dos mapas se parecerían aunque el país entero haya
+      //   cambiado. Con el ancla fija, el corrimiento de color ES el avance.
+      // ⚠️ …PERO NO PARA LOS CONTEOS. El "valor país" de un conteo es la SUMA de
+      //   los 343, que por construcción cae fuera del rango municipal: en
+      //   `viviendas` el país son 3.623.711 y el rango dibujado llega a ~62.000.
+      //   La guarda decía `unit!=="hab"` y dejaba pasar `viv` y `pers`, así que la
+      //   leyenda publicaba **"país 2024 62.550"** para un país de 3,6 millones de
+      //   viviendas. Es otra vez inferir la naturaleza del indicador de su unidad;
+      //   ahora la decide `agg:"suma"`, que es lo declarado. Un conteo se centra en
+      //   su MEDIANA, que sí es una magnitud municipal.
+      if(!esConteo(ind)){const x=aggFor(SIG,ind,"2024");
+        if(x!=null&&!isNaN(x)){piv=x;pivTipo="país 2024";}}
+      if(piv==null)piv=d3.quantile(vals,.5);
+    }
     // El pivote tiene que caer DENTRO del rango dibujado: pegado a un extremo la rampa
     // se degenera y media paleta no se usa nunca.
-    const pad=(hi-lo)*.08;
+    // ⚠️ Cuando eso pasa, el número recortado YA NO ES la mediana ni el país: se
+    //    guarda el real aparte (`pivReal`) para que la leyenda diga la verdad y
+    //    nombre el recorte en vez de rebautizar un borde con el nombre de una
+    //    estadística. Pasa en 17 de los 215.
+    const pivReal=piv,pad=(hi-lo)*.08;
     if(pad>0)piv=Math.min(Math.max(piv,lo+pad),hi-pad);
     const dv=d3.scaleDiverging(RAMP(ind)).domain([lo,piv,hi]).clamp(true);
-    const color=v=>v==null||isNaN(v)?TH.nd:dv(v);
-    return cache[ind.key]={lo,hi,med,piv,pivTipo,dv,color,min:vals[0],max:vals[vals.length-1],avg:d3.mean(vals)};}
-  const valOf=(s,k)=>DATA[s]?.[k];
+    return cache[ck]={lo,hi,med:d3.quantile(vals,.5),piv,pivReal,pivTipo,dv,
+      color:v=>v==null||isNaN(v)?TH.nd:dv(v),
+      min:vals[0],max:vals[vals.length-1],avg:d3.mean(vals)};}
   let cur=INDS[0],sel=null,hov=null,zt=d3.zoomIdentity,focusDept=null,zr=d3.zoomIdentity;
 
   // desplegables
@@ -375,18 +502,49 @@ Promise.all([fetch("municipios.topojson").then(r=>r.json()),fetch("sudamerica.to
 
   const projMini=d3.geoMercator().fitExtent([[2,2],[108,78]],geo);
   const lista=document.getElementById("lista");
+  const mudo=ind=>ANIO!=="2024"&&!ind.s12;      // no se puede mirar en este censo
   function buildCards(){lista.innerHTML="";INDS.forEach((ind,i)=>{const sc=scale(ind);
-    const el=document.createElement("button");el.className="ind"+(ind.key===cur.key?" on":"");el.dataset.k=ind.key;
+    const el=document.createElement("button");
+    el.className="ind"+(ind.key===cur.key?" on":"")+(mudo(ind)?" sin12":"");el.dataset.k=ind.key;
     el.style.setProperty("--d",Math.min(i,14)*16+"ms");
-    el.innerHTML=`<div><div class="i-nm">${ind.label}</div><div class="i-df">${ind.desc}</div></div>`;
+    el.innerHTML=`<div>${mudo(ind)?'<span class="i-tag">Sólo 2024</span>':""}`
+      +`<div class="i-nm">${ind.label}</div>`
+      +`<div class="i-df">${mudo(ind)?(ind.w12||"Sin cifra comparable para 2012."):ind.desc}</div></div>`;
     const cv=document.createElement("canvas");cv.className="mini";el.appendChild(cv);lista.appendChild(el);
     const c=fitC(cv,110,80);c.setTransform(dpr,0,0,dpr,0,0);const p=d3.geoPath(projMini,c);
-    F.forEach(f=>{c.beginPath();p(f);c.fillStyle=sc.color(valOf(f.properties.sigep,ind.key));c.fill();c.lineWidth=.22;c.strokeStyle=TH.miniLine;c.stroke();});
+    F.forEach(f=>{c.beginPath();p(f);c.fillStyle=sc.color(valOf(f.properties.sigep,ind));c.fill();c.lineWidth=.22;c.strokeStyle=TH.miniLine;c.stroke();});
     c.beginPath();p(bolivia);c.lineWidth=.75;c.strokeStyle=TH.miniBol;c.stroke();
     el.onclick=()=>select(ind);});}
   const TOT_IND=GRUPOS.reduce((a,g)=>a+g.indicadores.length,0);
-  function updateHints(){const kn=document.getElementById("kick-n");if(kn)kn.textContent=`${GRUPOS.length} categorías · ${TOT_IND} indicadores`;
-    const ps=document.getElementById("p-sub");if(ps)ps.textContent=`${INDS.length} indicadores · elegí uno para verlo en el mapa`;}
+  const TOT_12=GRUPOS.reduce((a,g)=>a+g.indicadores.filter(i=>i.s12).length,0);
+  function updateHints(){const kn=document.getElementById("kick-n");
+    if(kn)kn.textContent=ANIO==="2024"?`${GRUPOS.length} categorías · ${TOT_IND} indicadores`
+                                      :`${GRUPOS.length} categorías · ${TOT_12} con serie 2012`;
+    const ps=document.getElementById("p-sub");if(!ps)return;
+    const n=INDS.filter(i=>i.s12).length;
+    ps.textContent=ANIO==="2024"?`${INDS.length} indicadores · elegí uno para verlo en el mapa`
+      :n===0?`ninguno de los ${INDS.length} de esta categoría tiene cifra de 2012`
+      :n===INDS.length?`los ${n} tienen serie 2012 · elegí uno para verlo en el mapa`
+      :`${n} de ${INDS.length} con serie 2012 · los demás quedan apagados`;
+    const ts=document.querySelector(".t-s");
+    if(ts)ts.innerHTML=(ANIO==="cambio"?"Cambio 2012→2024":"Censo "+ANIO)+" · <b>343 municipios</b>";}
+
+  // ── CONMUTADOR DE CENSO ──
+  function setAnio(a){
+    if(a===ANIO)return;
+    const pintar=()=>{ANIO=a;
+      seg.querySelectorAll("button").forEach(b=>b.classList.toggle("on",b.dataset.a===a));
+      buildCards();updateHints();fadeSwap(drawBase);drawOver();termo();
+      sel?renderMun(sel.properties.sigep):renderSummary();};
+    if(a==="2024"||hay12){pintar();return;}
+    // el archivo de 2012 todavía viaja: se espera la MISMA promesa que arrancó
+    // sola tras el primer pintado, no se dispara una segunda descarga
+    seg.classList.add("cargando");
+    pedir2012().then(()=>{seg.classList.remove("cargando");pintar();})
+      .catch(()=>{seg.classList.remove("cargando");
+        const ps=document.getElementById("p-sub");
+        if(ps)ps.textContent="no se pudo cargar el censo de 2012 · reintentá en un momento";});}
+  seg.querySelectorAll("button").forEach(b=>b.onclick=e=>{e.stopPropagation();setAnio(b.dataset.a);});
   function setCategory(gkey){const g=GRUPOS.find(x=>x.key===gkey);if(!g)return;curCat=g;INDS=g.indicadores;cur=INDS[0];
     document.querySelector("#cat-btn .cn").textContent=g.label;catBar.classList.remove("open");
     buildCards();renderCatDrop();updateHints();fadeSwap(drawBase);drawOver();termo();sel?renderMun(sel.properties.sigep):renderSummary();}
@@ -408,7 +566,7 @@ Promise.all([fetch("municipios.topojson").then(r=>r.json()),fetch("sudamerica.to
     const g=d3.geoPath(proj,bctx);bctx.fillStyle=TH.world;bctx.strokeStyle=TH.worldLine;bctx.lineWidth=.5/zt.k;
     world.forEach(w=>{bctx.beginPath();g(w);bctx.fill();bctx.stroke();});
     F.forEach(f=>{const s=f.properties.sigep,off=focusDept&&DATA[s].dpto!==focusDept;bctx.beginPath();g(f);
-      bctx.globalAlpha=off?1:TH.alpha;bctx.fillStyle=off?TH.off:sc.color(valOf(s,cur.key));bctx.fill();bctx.globalAlpha=1;
+      bctx.globalAlpha=off?1:TH.alpha;bctx.fillStyle=off?TH.off:sc.color(valOf(s,cur));bctx.fill();bctx.globalAlpha=1;
       bctx.lineWidth=.45/zt.k;bctx.strokeStyle=off?TH.lineOff:TH.lineOn;bctx.stroke();});}
   function drawPick(){pctx.setTransform(dpr,0,0,dpr,0,0);pctx.clearRect(0,0,W,H);setT(pctx);const g=d3.geoPath(proj,pctx);
     F.forEach((f,i)=>{const c=i+1;pctx.beginPath();g(f);pctx.fillStyle=`rgb(${(c>>16)&255},${(c>>8)&255},${c&255})`;pctx.fill();});}
@@ -454,11 +612,21 @@ Promise.all([fetch("municipios.topojson").then(r=>r.json()),fetch("sudamerica.to
     return best;}
   catchEl.addEventListener("mousemove",e=>{if(innerWidth<=820){pop.style.opacity=0;return;}const px=pixel(e),f=idx.get((px[0]<<16)+(px[1]<<8)+px[2])||null;
     if(f!==hov){hov=f;drawOver();}
-    if(f){const d=DATA[f.properties.sigep],sc=scale(cur);
-      const arr=Object.values(DATA).map(x=>x[cur.key]).filter(x=>x!=null).sort(d3.descending),rk=arr.indexOf(d[cur.key])+1;
-      pop.querySelector(".pn").textContent=d.nombre;pop.querySelector(".pd").textContent=d.dpto+" · "+cur.label;
-      pop.querySelector(".pv b").textContent=fmt(d[cur.key],cur.unit);pop.querySelector(".pv small").textContent=cur.unit;
-      pop.querySelector(".pr").innerHTML=`<span>Puesto <b>${rk}</b>/343</span><span>vs. país <b>${sgn(d[cur.key]-sc.avg)}</b></span>`;
+    if(f){const s=f.properties.sigep,d=DATA[s],u=uMode(cur),v=valOf(s,cur);
+      pop.querySelector(".pn").textContent=d.nombre;
+      pop.querySelector(".pd").textContent=d.dpto+" · "+cur.label;
+      pop.querySelector(".pv b").textContent=mudo(cur)?"s/d":fmtM(v,cur);
+      pop.querySelector(".pv small").textContent=mudo(cur)?"":u;
+      if(mudo(cur))
+        pop.querySelector(".pr").innerHTML=`<span>Este indicador sólo existe en 2024</span>`;
+      else if(ANIO==="cambio")
+        // en el modo cambio la comparación útil no es contra los vecinos sino
+        // contra uno mismo: de dónde venía y dónde está
+        pop.querySelector(".pr").innerHTML=`<span>2012 <b>${fmtY(v12(s,cur.key),cur)}</b></span>`
+          +`<span>2024 <b>${fmtY(v24(s,cur.key),cur)}</b></span>`;
+      else{const p=pais(cur,ANIO);
+        pop.querySelector(".pr").innerHTML=`<span>Puesto <b>${puesto(s,cur)||"—"}</b>/343</span>`
+          +`<span>vs. país <b>${p==null||v==null?"—":sgn(v-p)}</b></span>`;}
       pop.style.opacity=1;pop.style.left=Math.min(e.clientX+16,innerWidth-200)+"px";pop.style.top=Math.min(e.clientY+16,innerHeight-110)+"px";
     }else pop.style.opacity=0;});
   catchEl.addEventListener("mouseleave",()=>{hov=null;drawOver();pop.style.opacity=0;});
@@ -467,19 +635,29 @@ Promise.all([fetch("municipios.topojson").then(r=>r.json()),fetch("sudamerica.to
   catchEl.addEventListener("pointerup",e=>{if(!_tapXY)return;const mv=Math.hypot(e.clientX-_tapXY[0],e.clientY-_tapXY[1]);_tapXY=null;if(mv>8)return;const f=featAt(e);if(f){sel=f;drawOver();renderMun(f.properties.sigep);}else renderSummary();});
 
   const termoEl=document.querySelector(".termo");
-  function termo(){const sc=scale(cur);
+  function termo(){const sc=scale(cur),u=uMode(cur),f=v=>fmtM(v,cur);
     if(!reduceMo()){termoEl.classList.remove("swap");void termoEl.offsetWidth;termoEl.classList.add("swap");}
-    document.getElementById("tm-t").innerHTML=cur.label+` <small>${cur.unit}</small>`;
+    const eti=ANIO==="cambio"?"cambio 2012→2024":"censo "+ANIO;
+    termoEl.classList.toggle("nodata",mudo(cur));
+    document.getElementById("tm-t").innerHTML=cur.label+` <small>${mudo(cur)?eti:u+" · "+eti}</small>`;
+    const bar=document.getElementById("tm-bar");bar.querySelectorAll(".tm-mk").forEach(m=>m.remove());
+    // el indicador existe pero este censo no lo puede dar: la leyenda lo dice con
+    // todas las letras en vez de mostrar una barra que no significa nada
+    if(mudo(cur)){
+      bar.style.background=`repeating-linear-gradient(135deg,${TH.nd},${TH.nd} 5px,transparent 5px,transparent 10px)`;
+      document.getElementById("tm-lo").innerHTML="";document.getElementById("tm-hi").innerHTML="";
+      document.getElementById("tm-st").innerHTML=`<b>Sólo 2024.</b> ${cur.w12||""}`;return;}
     // La barra usa la MISMA rampa orientada que el mapa: en un indicador con dir:+1 el
     // degradado corre al revés, si no la leyenda diría lo contrario de lo que se ve.
-    document.getElementById("tm-bar").style.background=`linear-gradient(to right,${d3.range(0,1.001,.04).map(t=>RAMP(cur)(t)).join(",")})`;
-    document.getElementById("tm-lo").innerHTML=`<span class="cap">≤ </span>${fmt(sc.lo,cur.unit)}`;
-    document.getElementById("tm-hi").innerHTML=`<span class="cap">≥ </span>${fmt(sc.hi,cur.unit)}`;
-    const bar=document.getElementById("tm-bar");bar.querySelectorAll(".tm-mk").forEach(m=>m.remove());
+    bar.style.background=`linear-gradient(to right,${d3.range(0,1.001,.04).map(t=>RAMP(cur)(t)).join(",")})`;
+    document.getElementById("tm-lo").innerHTML=`<span class="cap">≤ </span>${f(sc.lo)}`;
+    document.getElementById("tm-hi").innerHTML=`<span class="cap">≥ </span>${f(sc.hi)}`;
     const m=document.createElement("div");m.className="tm-mk";m.style.left="50%";bar.appendChild(m);
     // El marcador del centro está en el 50% de la barra porque scaleDiverging manda el
     // pivote justo al medio de la rampa. Se nombra: si no, el lector supone "mediana".
-    document.getElementById("tm-st").innerHTML=`n <b>343</b> · mín <b>${fmt(sc.min,cur.unit)}</b> · ${sc.pivTipo} <b>${fmt(sc.piv,cur.unit)}</b> · máx <b>${fmt(sc.max,cur.unit)}</b>`;}
+    const pr=sc.pivReal==null?"":`${sc.pivTipo} <b>${f(sc.pivReal)}</b>`
+      +(Math.abs(sc.pivReal-sc.piv)>1e-9?` <span style="opacity:.75">(escala centrada en ${f(sc.piv)})</span>`:"");
+    document.getElementById("tm-st").innerHTML=`n <b>343</b> · mín <b>${f(sc.min)}</b> · ${pr} · máx <b>${f(sc.max)}</b>`;}
 
   // cambiar de indicador NO reconstruye la ficha (evita el parpadeo y conserva el scroll):
   // solo mueve el resalte, repinta el mapa con crossfade y actualiza el bloque peek
@@ -496,10 +674,13 @@ Promise.all([fetch("municipios.topojson").then(r=>r.json()),fetch("sudamerica.to
   //     agua por cañería  INE 71,19%  ·  por población 72,27%  ·  por viviendas 71,19% ✓
   //     emigra a Argentina real 31,11% ·  por población 26,97% ·  por emigrantes 31,11% ✓
   //   El catálogo declara el modo en `ind.agg` y el denominador en `ind.den`.
-  const peso=(r,ind)=>{const D=DEN[r.sigep||r.cod_ine];
+  //   ⚠️ Y EL UNIVERSO ES EL DEL CENSO QUE SE MIRA: agregar 2012 con las
+  //   viviendas y la población de 2024 sería el mismo error corrido un censo.
+  //   Por eso `denominadores_2012.json` viaja aparte, con EL MISMO `orden`.
+  const peso=(r,ind,DN)=>{const D=DN[r.sigep||r.cod_ine];
     if(!D||!ind.den)return r.pob_total;
     const j=DEN_ORDEN.indexOf(ind.den);return j<0?r.pob_total:D[j];};
-  function agg(rows,ind){
+  function aggRaw(rows,ind,DN){
     // conteos: se SUMAN. ⚠️ Esto se decidía mirando la UNIDAD (hab/viv/pers) y
     // `pers` es AMBIGUA: vale "personas" (conteo) y "personas por hogar" (razón).
     // Por eso la pantalla de entrada mostraba "Personas por hogar: 1.049,2", que
@@ -512,15 +693,62 @@ Promise.all([fetch("municipios.topojson").then(r=>r.json()),fetch("sudamerica.to
     if(ind.agg==="no")return null;
     // una brecha es una RESTA de dos porcentajes: se rearma de sus componentes
     if(ind.agg==="brecha"&&ind.comp){
-      const p=k=>{let n=0,d=0;rows.forEach(r=>{const v=r[k],w=peso(r,ind);
+      const p=k=>{let n=0,d=0;rows.forEach(r=>{const v=r[k],w=peso(r,ind,DN);
         if(v!=null&&w!=null){n+=v*w;d+=w;}});return d?n/d:null;};
       const a=p(ind.comp[0]),b=p(ind.comp[1]);
       return (a==null||b==null)?null:a-b;}
     // el resto: promedio ponderado por SU denominador
-    let n=0,d=0;rows.forEach(r=>{const v=r[ind.key],w=peso(r,ind);
+    let n=0,d=0;rows.forEach(r=>{const v=r[ind.key],w=peso(r,ind,DN);
       if(v!=null&&w!=null){n+=v*w;d+=w;}});return d?n/d:null;}
+
+  // el agregado de un conjunto de municipios en UN censo concreto
+  const aggFor=(sigeps,ind,anio)=>anio==="2012"
+    ? (ind.s12&&hay12?aggRaw(sigeps.map(s=>D12[s]).filter(Boolean),ind,DEN12):null)
+    : aggRaw(sigeps.map(s=>DATA[s]).filter(Boolean),ind,DEN);
+  // …y en el modo que está en pantalla
+  function agg(sigeps,ind){
+    if(ANIO==="2024")return aggFor(sigeps,ind,"2024");
+    if(!ind.s12)return null;
+    if(ANIO==="2012")return aggFor(sigeps,ind,"2012");
+    // ★ EL CAMBIO DEL PAÍS NO ES EL PROMEDIO DE LOS CAMBIOS MUNICIPALES: es la
+    //   diferencia entre los dos agregados, cada uno calculado con su propio
+    //   universo. Promediar los 343 deltas le daría el mismo peso a Uru Chipaya
+    //   que a Santa Cruz de la Sierra.
+    const a=aggFor(sigeps,ind,"2012"),b=aggFor(sigeps,ind,"2024");
+    if(a==null||b==null)return null;
+    return esConteo(ind)?(a?100*(b-a)/a:null):b-a;}
+  // el valor del país, que es contra lo que se comparan municipio y departamento
+  const paisC={};
+  const pais=(ind,anio)=>{const k=ind.key+"|"+anio;
+    return k in paisC?paisC[k]:(paisC[k]=aggFor(SIG,ind,anio));};
+  // puesto entre los 343 EN LO QUE SE ESTÁ MIRANDO: en modo cambio ordena por
+  // cuánto cambió, no por cuánto tiene
+  function puesto(s,ind){const v=valOf(s,ind);if(v==null)return null;
+    return SIG.map(x=>valOf(x,ind)).filter(x=>x!=null).sort(d3.descending).indexOf(v)+1;}
+
   const cls=x=>x>=0?"up":"dn";
   const pctTxt=(v,d)=>(v*100).toFixed(d==null?1:d).replace(".",",")+"%";
+  // ⚠️ El separador de miles también se decidía por la UNIDAD (`u==="hab"`), así
+  //    que "Viviendas" se imprimía **453158,0 viv**: sin puntos y con un decimal
+  //    que no existe. Tercera vez que la unidad hace de declaración. Un conteo lo
+  //    dice `agg:"suma"`, y un conteo se escribe redondo y con puntos.
+  const fmtI=(v,ind)=>v==null||isNaN(v)?"s/d"
+    :d3.format(",")(Math.round(v)).replace(/,/g,".")+(ind.unit==="hab"?"":" "+ind.unit);
+  // valor en la unidad propia del indicador, sin importar el modo (lo usan el
+  // tooltip y el peek para mostrar "2012 X → 2024 Y" dentro del modo cambio)
+  const fmtY=(v,ind)=>esConteo(ind)?fmtI(v,ind):fmt(v,ind.unit);
+  const fmtM=(v,ind)=>ANIO==="cambio"?fmtD(v,uMode(ind)):fmtY(v,ind);
+  // chip de comparación. Para un CONTEO se informa qué porción representa; para
+  // el resto, la diferencia. ⚠️ En modo cambio siempre es diferencia: el valor ya
+  // es un cambio y "el 27% del cambio del país" no querría decir nada.
+  const chip=(v,n,ind,que,dec)=>
+    v==null||n==null||isNaN(v)||isNaN(n)?`vs. ${que} <b>—</b>`
+    :(esConteo(ind)&&ANIO!=="cambio"?`del ${que} <b>${pctTxt(v/n,dec)}</b>`
+    :`vs. ${que} <b class="${cls(v-n)}">${sgn(v-n)}</b>`);
+  const kpiHTML=(ind,i,v,c1,c2)=>
+    `<div class="kpi ${ind.key===cur.key?'on':''}${mudo(ind)?' sin12':''}" data-k="${ind.key}" style="--d:${Math.min(i,14)*14}ms">`
+    +`<div class="k-l">${ind.label}</div><div class="k-v">${mudo(ind)?"s/d":fmtM(v,ind)}</div>`
+    +`<div class="k-c">${mudo(ind)?"<span>sólo 2024</span>":`<span>${c1}</span><span>${c2}</span>`}</div></div>`;
   // puesto del departamento entre los 9 (1 = valor más alto), mismo criterio que el ranking municipal
   function deptRank(dp,ind){const arr=DEPTOS.map(d=>[d,agg(byDpto[d],ind)]).filter(x=>x[1]!=null).sort((a,b)=>d3.descending(a[1],b[1]));
     return arr.findIndex(x=>x[0]===dp)+1;}
@@ -558,25 +786,23 @@ Promise.all([fetch("municipios.topojson").then(r=>r.json()),fetch("sudamerica.to
   function renderNational(){setDetailVisible(false);sel=null;drawOver();
     document.getElementById("panel-det").style.display="flex";
     document.getElementById("d-mun").textContent="Bolivia";
-    document.getElementById("d-sub").innerHTML="Resumen nacional · 343 municipios";
+    document.getElementById("d-sub").innerHTML=(ANIO==="cambio"?"Cambio 2012→2024":"Censo "+ANIO)+" · 343 municipios";
     document.getElementById("kgrid").innerHTML=INDS.map((ind,i)=>{const sc=scale(ind);
-      return `<div class="kpi ${ind.key===cur.key?'on':''}" data-k="${ind.key}" style="--d:${Math.min(i,14)*14}ms">
-        <div class="k-l">${ind.label}</div><div class="k-v">${fmt(agg(allRows,ind),ind.unit)}</div>
-        <div class="k-c"><span>mín <b>${fmt(sc.min,ind.unit)}</b></span><span>máx <b>${fmt(sc.max,ind.unit)}</b></span></div></div>`;}).join("");
+      // en modo cambio el mín y el máx son el municipio que más cayó y el que
+      // más subió, que es la lectura que corresponde
+      return kpiHTML(ind,i,agg(SIG,ind),`mín <b>${fmtM(sc.min,ind)}</b>`,`máx <b>${fmtM(sc.max,ind)}</b>`);}).join("");
     renderPeekNat();wireKpi();resetScroll();}
   // resumen del DEPARTAMENTO como un todo: sale al elegirlo en el top bar mientras no haya municipio señalado.
   // Agregación igual que el nacional (fn agg): conteos = suma, tasas = promedio ponderado por población.
   function renderDept(dp){const rows=byDpto[dp];if(!rows)return;sel=null;drawOver();setDetailVisible(true);
     document.getElementById("panel-det").style.display="flex";
     document.getElementById("d-mun").textContent=dp;
-    document.getElementById("d-sub").innerHTML=`Resumen departamental · ${rows.length} municipios · <a class="back" id="back-nac">‹ resumen nacional</a>`;
+    document.getElementById("d-sub").innerHTML=`${ANIO==="cambio"?"Cambio 2012→2024":"Censo "+ANIO} · ${rows.length} municipios · <a class="back" id="back-nac">‹ resumen nacional</a>`;
     document.getElementById("back-nac").onclick=()=>{setDept("");};
-    document.getElementById("kgrid").innerHTML=INDS.map((ind,i)=>{const vv=agg(rows,ind),nv=agg(allRows,ind);
-      const c1=ind.unit==="hab"?`del país <b>${pctTxt(vv/nv)}</b>`:`vs. país <b class="${cls(vv-nv)}">${sgn(vv-nv)}</b>`;
-      const c2=`puesto <b>${deptRank(dp,ind)}/${DEPTOS.length}</b>`;
-      return `<div class="kpi ${ind.key===cur.key?'on':''}" data-k="${ind.key}" style="--d:${Math.min(i,14)*14}ms">
-        <div class="k-l">${ind.label}</div><div class="k-v">${fmt(vv,ind.unit)}</div>
-        <div class="k-c"><span>${c1}</span><span>${c2}</span></div></div>`;}).join("");
+    document.getElementById("kgrid").innerHTML=INDS.map((ind,i)=>{const vv=agg(rows,ind),nv=agg(SIG,ind);
+      const r=deptRank(dp,ind);
+      return kpiHTML(ind,i,vv,chip(vv,nv,ind,"país"),
+                     r?`puesto <b>${r}/${DEPTOS.length}</b>`:"puesto <b>—</b>");}).join("");
     renderPeekDept(dp);wireKpi();resetScroll();}
   function renderMun(sig){const r=DATA[sig];if(!r)return;setDetailVisible(true);
     document.getElementById("panel-det").style.display="flex";
@@ -584,37 +810,38 @@ Promise.all([fetch("municipios.topojson").then(r=>r.json()),fetch("sudamerica.to
     const volver=focusDept?"‹ resumen departamental":"‹ resumen nacional";
     document.getElementById("d-sub").innerHTML=r.dpto+' · <a class="back" id="back-nac">'+volver+'</a>';
     document.getElementById("back-nac").onclick=renderSummary;
-    document.getElementById("kgrid").innerHTML=INDS.map((ind,i)=>{const vv=r[ind.key],dv=agg(byDpto[r.dpto],ind),nv=agg(allRows,ind);
-      let c1,c2;
-      if(ind.unit==="hab"){c1=`del depto <b>${(vv/dv*100).toFixed(1).replace(".",",")}%</b>`;c2=`del país <b>${(vv/nv*100).toFixed(2).replace(".",",")}%</b>`;}
-      else{c1=`vs. depto <b class="${cls(vv-dv)}">${sgn(vv-dv)}</b>`;c2=`vs. país <b class="${cls(vv-nv)}">${sgn(vv-nv)}</b>`;}
-      return `<div class="kpi ${ind.key===cur.key?'on':''}" data-k="${ind.key}" style="--d:${Math.min(i,14)*14}ms">
-        <div class="k-l">${ind.label}</div><div class="k-v">${fmt(vv,ind.unit)}</div>
-        <div class="k-c"><span>${c1}</span><span>${c2}</span></div></div>`;}).join("");
+    document.getElementById("kgrid").innerHTML=INDS.map((ind,i)=>{
+      const vv=valOf(sig,ind),dv=agg(byDpto[r.dpto],ind),nv=agg(SIG,ind);
+      return kpiHTML(ind,i,vv,chip(vv,dv,ind,"depto"),chip(vv,nv,ind,"país",2));}).join("");
     renderPeek(sig);wireKpi();resetScroll();}
   // bloque "peek": lo único de la ficha que depende del indicador en pantalla
-  function renderPeek(sig){const r=DATA[sig];if(!r)return;
-    const psc=scale(cur),parr=allRows.map(x=>x[cur.key]).filter(x=>x!=null).sort(d3.descending),prk=parr.indexOf(r[cur.key])+1;
-    document.getElementById("pk").innerHTML=`<span class="pk-chip" style="background:${psc.color(r[cur.key])}"></span>`
-      +`<span class="pk-lab">Indicador en pantalla<b>${cur.label}</b></span>`
-      +`<span class="pk-val">${fmt(r[cur.key],cur.unit)}<small>${cur.unit}</small></span>`
-      +`<span class="pk-rk">Puesto <b>${prk}</b>/343<br>vs. país <b>${sgn(r[cur.key]-psc.avg)}</b></span>`;}
+  const pkHTML=(v,der)=>`<span class="pk-chip" style="background:${scale(cur).color(v)}"></span>`
+    +`<span class="pk-lab">${ANIO==="cambio"?"Cambio en pantalla":"Indicador en pantalla"}<b>${cur.label}</b></span>`
+    +`<span class="pk-val">${mudo(cur)?"s/d":fmtM(v,cur)}${mudo(cur)?"":`<small>${uMode(cur)}</small>`}</span>`
+    +`<span class="pk-rk">${der}</span>`;
+  function renderPeek(sig){const r=DATA[sig];if(!r)return;const v=valOf(sig,cur);
+    const der=mudo(cur)?"sólo<br>2024"
+      // en modo cambio lo que importa no es el puesto sino de dónde venía
+      :ANIO==="cambio"?`2012 <b>${fmtY(v12(sig,cur.key),cur)}</b><br>2024 <b>${fmtY(v24(sig,cur.key),cur)}</b>`
+      :(()=>{const p=pais(cur,ANIO);
+        return `Puesto <b>${puesto(sig,cur)||"—"}</b>/343<br>vs. país <b>${p==null||v==null?"—":sgn(v-p)}</b>`;})();
+    document.getElementById("pk").innerHTML=pkHTML(v,der);}
   // peek nacional: sin puesto ni comparación (no se compara consigo mismo), rango de los 343
-  function renderPeekNat(){const vv=agg(allRows,cur),psc=scale(cur);
-    document.getElementById("pk").innerHTML=`<span class="pk-chip" style="background:${psc.color(vv)}"></span>`
-      +`<span class="pk-lab">Indicador en pantalla<b>${cur.label}</b></span>`
-      +`<span class="pk-val">${fmt(vv,cur.unit)}<small>${cur.unit}</small></span>`
-      +`<span class="pk-rk">mín <b>${fmt(psc.min,cur.unit)}</b><br>máx <b>${fmt(psc.max,cur.unit)}</b></span>`;}
+  function renderPeekNat(){const vv=agg(SIG,cur),psc=scale(cur);
+    document.getElementById("pk").innerHTML=pkHTML(vv,mudo(cur)?"sólo<br>2024"
+      :`mín <b>${fmtM(psc.min,cur)}</b><br>máx <b>${fmtM(psc.max,cur)}</b>`);}
   // ídem para el resumen departamental (el valor es el agregado, no el de un municipio)
-  function renderPeekDept(dp){const rows=byDpto[dp];if(!rows)return;const vv=agg(rows,cur),nv=agg(allRows,cur),psc=scale(cur);
-    const rel=cur.unit==="hab"?`del país <b>${pctTxt(vv/nv)}</b>`:`vs. país <b>${sgn(vv-nv)}</b>`;
-    document.getElementById("pk").innerHTML=`<span class="pk-chip" style="background:${psc.color(vv)}"></span>`
-      +`<span class="pk-lab">Indicador en pantalla<b>${cur.label}</b></span>`
-      +`<span class="pk-val">${fmt(vv,cur.unit)}<small>${cur.unit}</small></span>`
-      +`<span class="pk-rk">Puesto <b>${deptRank(dp,cur)}</b>/${DEPTOS.length}<br>${rel}</span>`;}
+  function renderPeekDept(dp){const rows=byDpto[dp];if(!rows)return;
+    const vv=agg(rows,cur),nv=agg(SIG,cur),r=deptRank(dp,cur);
+    document.getElementById("pk").innerHTML=pkHTML(vv,mudo(cur)?"sólo<br>2024"
+      :`Puesto <b>${r||"—"}</b>/${DEPTOS.length}<br>${chip(vv,nv,cur,"país")}`);}
 
   let rt;window.addEventListener("resize",()=>{clearTimeout(rt);rt=setTimeout(()=>{layout();setSheet(isMob()?sheetState:"hidden");},120);});
   buildCards();renderCatDrop();updateHints();layout();termo();renderNational();
+  // el censo de 2012 se baja SOLO, 1,2 s después del primer pintado: para cuando
+  // alguien toque "2012" ya suele estar, y el arranque no pagó un byte por él.
+  // Si lo tocan antes, `setAnio` espera esta misma promesa.
+  setTimeout(()=>{pedir2012().catch(()=>{});},1200);
 });
 </script>
 </body>

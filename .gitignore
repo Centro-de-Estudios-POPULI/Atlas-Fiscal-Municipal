@@ -30,8 +30,15 @@ CLAUDE.md
 !.env.example
 
 # Assets del Atlas Socioeconómico Municipal (SÍ se publican al sitio)
+# ⚠️ La regla de arriba ignora *.json: todo asset nuevo necesita su excepción o
+#    el sitio queda pidiendo un archivo que nunca se subió. El código degrada en
+#    silencio (cae a ponderar por población) y el error no se ve hasta que
+#    alguien compara una cifra nacional.
 !catalogo.json
 !data.json
+!denominadores.json
+!data_2012.json
+!denominadores_2012.json
 !municipios.topojson
 !sudamerica.topojson
 
