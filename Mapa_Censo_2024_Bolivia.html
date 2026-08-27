@@ -124,6 +124,31 @@ body.dark .tbtog .ic-moon{display:none}body.dark .tbtog .ic-sun{display:block}
 .cat-op.on{color:var(--sel);font-weight:700}.cat-op.off{color:var(--faint);cursor:not-allowed}
 .p-sub{font-size:.66rem;color:var(--suave);font-weight:500;margin:2px 0 0}
 
+/* ── Buscador ───────────────────────────────────────────────────────────────
+   Vive dentro de la barra de categoría, debajo del selector: es el otro camino
+   al mismo sitio, no una función aparte. */
+.busca-caja{position:relative;margin-top:9px}
+#busca{width:100%;font-family:var(--f);font-size:.68rem;font-weight:500;
+  padding:6px 9px;color:var(--tx);background:var(--card-solid);
+  border:1px solid var(--linea);border-radius:0;outline:none}
+#busca::placeholder{color:var(--faint)}
+#busca:focus{border-color:var(--sel)}
+.busca-res{position:absolute;left:0;right:0;top:calc(100% + 3px);z-index:22;
+  max-height:min(46vh,340px);overflow-y:auto;background:var(--card-solid);
+  border:1px solid var(--linea);box-shadow:var(--sh)}
+.busca-res[hidden]{display:none}
+.bs-op{display:flex;flex-direction:column;gap:1px;width:100%;text-align:left;
+  padding:6px 9px;background:none;border:0;border-bottom:1px solid var(--linea-2);
+  cursor:pointer;font-family:var(--f);color:inherit}
+.bs-op:last-child{border-bottom:0}
+.bs-op:hover,.bs-op.sel{background:var(--linea-2)}
+.bs-l{font-size:.7rem;font-weight:600;color:var(--tx);line-height:1.25}
+.bs-g{font-size:.58rem;color:var(--faint);font-weight:500}
+/* el indicador que este censo no puede dar sigue apareciendo, apagado: que no
+   tenga serie es información, y esconderlo del buscador lo haría invisible */
+.bs-op.sin12 .bs-l{color:var(--suave)}
+.bs-nada{padding:8px 9px;font-size:.65rem;color:var(--faint)}
+
 .lista{display:flex;flex-direction:column;gap:8px;margin-top:11px}
 .ind{display:grid;grid-template-columns:minmax(0,1fr) 110px;align-items:center;gap:.7rem;text-align:left;
   cursor:pointer;width:100%;padding:.72rem;border:1px solid var(--linea-2);background:var(--gris-card);color:inherit;
@@ -172,6 +197,18 @@ body.dark .ind.on .mini{opacity:1;filter:none}
 .zc button{width:30px;height:30px;border:0;background:none;font-size:1rem;cursor:pointer;color:var(--tx);border-bottom:1px solid var(--linea-2);font-family:var(--f)}
 .zc button:last-child{border-bottom:0;font-size:.7rem}.zc button:hover{background:var(--gris-card)}
 
+/* ── Descargar la lámina ─────────────────────────────────────────────────── */
+#lamina{position:fixed;z-index:9;left:calc(var(--panel-w) + 26px);top:74px}
+#lamina:empty{display:none}
+.lam-link{display:flex;align-items:center;gap:.55rem;padding:.5rem .72rem;text-decoration:none;
+  color:var(--tx);background:var(--glass);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
+  border:1px solid var(--linea);box-shadow:var(--sh);transition:background-color .2s ease,border-color .2s ease}
+.lam-link:hover{background:var(--card-solid);border-color:var(--sel)}
+.lam-i{font-size:.95rem;color:var(--sel);line-height:1}
+.lam-tx{display:flex;flex-direction:column;line-height:1.2}
+.lam-tx b{font-size:.7rem;font-weight:600}
+.lam-tx em{font-size:.58rem;font-style:normal;color:var(--faint);font-weight:500;margin-top:1px}
+
 .termo{position:fixed;bottom:14px;left:50%;transform:translateX(-50%);z-index:8;
   width:min(34rem,calc(100vw - (2 * var(--panel-w)) - 6rem));background:var(--glass);border:1px solid var(--linea);box-shadow:var(--sh);
   -webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);padding:.5rem .85rem}
@@ -218,6 +255,22 @@ body.dark .ind.on .mini{opacity:1;filter:none}
   /* franja superior: categoría + tira de tarjetas (mini-mapa + nombre + definición) */
   #panel-ind{top:48px;left:0;right:0;bottom:auto;width:auto;height:150px;border:0;border-bottom:1px solid var(--linea);flex-direction:column;overflow:visible}
   .cat-bar{padding:7px 12px}.cat-btn .cn{font-size:.95rem}
+  /* ⛔ EL BUSCADOR APLASTA LAS TARJETAS SI SE LE DA RENGLÓN PROPIO. Medido en el
+     tablero metropolitano el 2026-08-26: la franja de arriba tiene alto FIJO
+     —acá 150 px— y adentro van la cabecera y la tira horizontal de indicadores.
+     Al sumar el campo en su propio renglón la cabecera pasó de ~60 a 111 px y a
+     la tira le quedaron 22: las tarjetas seguían ahí, midiendo 20 px, ilegibles.
+     ⇒ En el teléfono el buscador COMPARTE RENGLÓN con el selector de categoría.
+       Son dos caminos al mismo sitio; gastar dos renglones en ofrecer los dos
+       era pagar dos veces por lo mismo. */
+  #panel-ind .cat-bar{padding:6px 12px 7px;display:grid;
+    grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+    grid-template-areas:"kick kick" "cat busca";gap:3px 9px;align-items:center}
+  #panel-ind .p-kick{grid-area:kick;margin:0}
+  #panel-ind #cat-btn{grid-area:cat;padding-bottom:2px}
+  #panel-ind .busca-caja{grid-area:busca;margin:0}
+  #busca{padding:5px 8px;font-size:.64rem}
+  .busca-res{max-height:52vh}
   .cat-drop{max-height:64vh;box-shadow:0 14px 30px rgba(16,26,20,.22)}.cat-op{padding:11px 13px;font-size:.82rem}
   .p-body{padding:8px 0 8px 12px;overflow:hidden;flex:1}.p-sub{display:none}
   .lista{flex-direction:row;overflow-x:auto;overflow-y:hidden;gap:9px;margin-top:0;height:100%;scroll-snap-type:x proximity;padding-right:12px}
@@ -239,6 +292,9 @@ body.dark .ind.on .mini{opacity:1;filter:none}
   body.sheet-open .termo{opacity:0;pointer-events:none}
   .tm-t{font-size:.66rem}.tm-t small{font-size:.52rem}.tm-st{display:none}.tm-side{font-size:.58rem}
   .zc{right:8px;top:210px;bottom:auto;transition:none;background:var(--card-solid);z-index:12}
+  #lamina{left:8px;top:210px;max-width:calc(100vw - 66px)}
+  .lam-link{padding:.42rem .6rem;background:var(--card-solid)}
+  .lam-tx b{font-size:.64rem}.lam-tx em{font-size:.54rem}
   body.sheet-open .zc{top:210px;bottom:auto}
   /* ── ficha municipal = bottom-sheet deslizable (peek / full) ── */
   /* altura = 74vh (JS la fija en px exactos) para que el detent "full" quepa ENTERO en pantalla:
@@ -298,6 +354,16 @@ body.dark .ind.on .mini{opacity:1;filter:none}
     <div class="p-kick"><span>Categoría</span><span class="kick-n" id="kick-n"></span></div>
     <button class="cat-btn" id="cat-btn"><span class="cn">Demografía</span><span class="ar">▾</span></button>
     <div class="cat-drop" id="cat-drop"></div>
+    <!-- ★ BUSCADOR. Son 215 indicadores en 20 categorías y la única puerta era
+         el desplegable de arriba: para llegar a «hacinamiento» había que
+         acordarse de que vive en «Vivienda y materiales». Busca en el título,
+         en la definición Y en el universo, así que «beber» encuentra el
+         indicador de agua segura. Atajo: la tecla «/». -->
+    <div class="busca-caja">
+      <input id="busca" type="search" autocomplete="off" spellcheck="false"
+             placeholder="Buscar entre 215 indicadores…" aria-label="Buscar indicador">
+      <div class="busca-res" id="busca-res" hidden></div>
+    </div>
   </div>
   <div class="p-body"><div class="p-sub" id="p-sub">elegí un indicador para verlo en el mapa</div><div class="lista" id="lista"></div></div>
   <div class="p-foot">Una iniciativa de <a href="#">CCTD</a><span class="sep">·</span><a href="#">POPULI</a><span class="sep">·</span><a href="#">UPSA</a><br><a href="https://centro-de-estudios-populi.github.io/observatorio-ofpdt/" target="_blank" rel="noopener">Ir al portal del OFPDT ↗</a></div>
@@ -311,6 +377,15 @@ body.dark .ind.on .mini{opacity:1;filter:none}
   </div>
   <div class="p-body"><div class="kgrid" id="kgrid"></div></div>
 </div>
+
+<!-- ★ EL ATLAS Y LA GALERÍA SE HABLAN. Cada mapa censal del Banco de Gráficos
+     salió del mismo indicador y de la misma geometría que este Atlas dibuja, y
+     eran dos mundos separados: acá se explora, allá está la lámina lista para
+     imprimir y nadie sabía que existía. 134 de los 215 tienen la suya.
+     VIVE SOBRE EL MAPA, no al pie del panel: ahí quedaría a un scroll entero de
+     distancia justo cuando el lector está mirando el mapa. Va del lado opuesto
+     a la botonera de zoom para no pelearse con ella. -->
+<div id="lamina"></div>
 
 <div class="zc"><button id="z-in">+</button><button id="z-out">−</button><button id="z-rst">⤢</button></div>
 
@@ -506,13 +581,13 @@ Promise.all([fetch("municipios.topojson").then(r=>r.json()),fetch("sudamerica.to
     document.getElementById(btnSel).onclick=e=>{e.stopPropagation();document.querySelectorAll(".cat-bar,.tbdd").forEach(x=>{if(x!==bar)x.classList.remove("open")});bar.classList.toggle("open");};}
   const catBar=document.getElementById("cat-bar");
   function renderCatDrop(){document.getElementById("cat-drop").innerHTML=GRUPOS.map(g=>`<div class="cat-op ${g.key===curCat.key?'on':''}" data-g="${g.key}"><span>${g.label}</span><span class="co-n">${g.indicadores.length}</span></div>`).join("");
-    document.querySelectorAll("#cat-drop .cat-op").forEach(op=>op.onclick=()=>setCategory(op.dataset.g));}
+    document.querySelectorAll("#cat-drop .cat-op").forEach(op=>op.onclick=()=>{setCategory(op.dataset.g);escribirURL(true);});}
   document.querySelector("#cat-btn .cn").textContent=curCat.label;
   wireDrop("cat-bar","cat-btn");
   const deptDD=document.getElementById("dept-dd");
   document.getElementById("dept-drop").innerHTML=[`<div class="tbop on" data-d="">Bolivia (todo)</div>`].concat(DEPTOS.map(d=>`<div class="tbop" data-d="${d}">${d}</div>`)).join("");
   deptDD.querySelector(".tbbtn").onclick=e=>{e.stopPropagation();catBar.classList.remove("open");deptDD.classList.toggle("open");};
-  document.querySelectorAll("#dept-drop .tbop").forEach(op=>op.onclick=()=>{deptDD.classList.remove("open");setDept(op.dataset.d);});
+  document.querySelectorAll("#dept-drop .tbop").forEach(op=>op.onclick=()=>{deptDD.classList.remove("open");setDept(op.dataset.d);escribirURL(true);});
   document.addEventListener("click",()=>{catBar.classList.remove("open");deptDD.classList.remove("open");});
   document.getElementById("theme-btn").onclick=e=>{e.stopPropagation();
     applyTheme(!document.body.classList.contains("dark"),true);
@@ -539,7 +614,7 @@ Promise.all([fetch("municipios.topojson").then(r=>r.json()),fetch("sudamerica.to
     const c=fitC(cv,110,80);c.setTransform(dpr,0,0,dpr,0,0);const p=d3.geoPath(projMini,c);
     F.forEach(f=>{c.beginPath();p(f);c.fillStyle=sc.color(valOf(f.properties.sigep,ind));c.fill();c.lineWidth=.22;c.strokeStyle=TH.miniLine;c.stroke();});
     c.beginPath();p(bolivia);c.lineWidth=.75;c.strokeStyle=TH.miniBol;c.stroke();
-    el.onclick=()=>select(ind);});}
+    el.onclick=()=>{select(ind);escribirURL(true);};});}
   const TOT_IND=GRUPOS.reduce((a,g)=>a+g.indicadores.length,0);
   const TOT_12=GRUPOS.reduce((a,g)=>a+g.indicadores.filter(i=>i.s12).length,0);
   function updateHints(){const kn=document.getElementById("kick-n");
@@ -559,7 +634,7 @@ Promise.all([fetch("municipios.topojson").then(r=>r.json()),fetch("sudamerica.to
     if(a===ANIO)return;
     const pintar=()=>{ANIO=a;
       seg.querySelectorAll("button").forEach(b=>b.classList.toggle("on",b.dataset.a===a));
-      buildCards();updateHints();fadeSwap(drawBase);drawOver();termo();
+      buildCards();updateHints();fadeSwap(drawBase);drawOver();termo();renderLamina();
       sel?renderMun(sel.properties.sigep):renderSummary();};
     if(a==="2024"||hay12){pintar();return;}
     // el archivo de 2012 todavía viaja: se espera la MISMA promesa que arrancó
@@ -569,10 +644,10 @@ Promise.all([fetch("municipios.topojson").then(r=>r.json()),fetch("sudamerica.to
       .catch(()=>{seg.classList.remove("cargando");
         const ps=document.getElementById("p-sub");
         if(ps)ps.textContent="no se pudo cargar el censo de 2012 · reintentá en un momento";});}
-  seg.querySelectorAll("button").forEach(b=>b.onclick=e=>{e.stopPropagation();setAnio(b.dataset.a);});
+  seg.querySelectorAll("button").forEach(b=>b.onclick=e=>{e.stopPropagation();setAnio(b.dataset.a);escribirURL(true);});
   function setCategory(gkey){const g=GRUPOS.find(x=>x.key===gkey);if(!g)return;curCat=g;INDS=g.indicadores;cur=INDS[0];
     document.querySelector("#cat-btn .cn").textContent=g.label;catBar.classList.remove("open");
-    buildCards();renderCatDrop();updateHints();fadeSwap(drawBase);drawOver();termo();sel?renderMun(sel.properties.sigep):renderSummary();}
+    buildCards();renderCatDrop();updateHints();fadeSwap(drawBase);drawOver();termo();renderLamina();sel?renderMun(sel.properties.sigep):renderSummary();}
 
   const wrap=document.getElementById("map-wrap");
   const base=document.getElementById("base"),fade=document.getElementById("fade"),over=document.getElementById("over"),pick=document.getElementById("pick"),catchEl=document.getElementById("catch");
@@ -657,7 +732,7 @@ Promise.all([fetch("municipios.topojson").then(r=>r.json()),fetch("sudamerica.to
   catchEl.addEventListener("mouseleave",()=>{hov=null;drawOver();pop.style.opacity=0;});
   let _tapXY=null;
   catchEl.addEventListener("pointerdown",e=>{_tapXY=[e.clientX,e.clientY];});
-  catchEl.addEventListener("pointerup",e=>{if(!_tapXY)return;const mv=Math.hypot(e.clientX-_tapXY[0],e.clientY-_tapXY[1]);_tapXY=null;if(mv>8)return;const f=featAt(e);if(f){sel=f;drawOver();renderMun(f.properties.sigep);}else renderSummary();});
+  catchEl.addEventListener("pointerup",e=>{if(!_tapXY)return;const mv=Math.hypot(e.clientX-_tapXY[0],e.clientY-_tapXY[1]);_tapXY=null;if(mv>8)return;const f=featAt(e);if(f){sel=f;drawOver();renderMun(f.properties.sigep);}else{sel=null;drawOver();renderSummary();}escribirURL(true);});
 
   const termoEl=document.querySelector(".termo");
   function termo(){const sc=scale(cur),u=uMode(cur),f=v=>fmtM(v,cur);
@@ -689,8 +764,28 @@ Promise.all([fetch("municipios.topojson").then(r=>r.json()),fetch("sudamerica.to
   function select(ind){cur=ind;
     document.querySelectorAll(".ind").forEach(c=>c.classList.toggle("on",c.dataset.k===ind.key));
     document.querySelectorAll("#kgrid .kpi").forEach(el=>el.classList.toggle("on",el.dataset.k===ind.key));
-    fadeSwap(drawBase);drawOver();termo();
+    fadeSwap(drawBase);drawOver();termo();renderLamina();
     if(sel)renderPeek(sel.properties.sigep);else if(focusDept)renderPeekDept(focusDept);else renderPeekNat();}
+
+  // ── el enlace a la lámina de la Galería ──
+  // ⚠️ EL RÓTULO CAMBIA CON EL AÑO, y no es un detalle. La lámina de la Galería
+  //    es SIEMPRE del censo 2024. Ofrecer «descargar este mapa» mientras el
+  //    lector mira el mapa del cambio 2012→2024, y entregarle otro, sería
+  //    mentir. Se sigue ofreciendo —el mapa de 2024 le sirve igual— pero
+  //    diciendo cuál es.
+  const GAL="https://centro-de-estudios-populi.github.io/galeria-populi/graficas/";
+  const slug=t=>t.normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase()
+    .replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
+  function renderLamina(){
+    const el=document.getElementById("lamina");if(!el)return;
+    if(!cur.lam){el.innerHTML="";return;}
+    const es24=ANIO==="2024";
+    el.innerHTML=`<a class="lam-link" href="${GAL}${cur.lam}.png"`
+      +` download="${slug(cur.label)}-bolivia-censo-2024.png"`
+      +` title="Lámina de «${cur.label}» · los 343 municipios, censo 2024">`
+      +`<span class="lam-i" aria-hidden="true">▤</span>`
+      +`<span class="lam-tx"><b>${es24?"Descargar este mapa":"Descargar el mapa de 2024"}</b>`
+      +`<em>Lámina PNG lista para imprimir</em></span></a>`;}
 
   // ★ AGREGACIÓN POR EL UNIVERSO DE CADA INDICADOR, no por población.
   //   Antes esta función ponderaba TODO por `pob_total`, y como cada indicador
@@ -779,7 +874,7 @@ Promise.all([fetch("municipios.topojson").then(r=>r.json()),fetch("sudamerica.to
     return arr.findIndex(x=>x[0]===dp)+1;}
   // la ficha por defecto sigue al foco del top bar: el departamento si hay zoom a uno, el país si no
   const renderSummary=()=>focusDept?renderDept(focusDept):renderNational();
-  function wireKpi(){document.querySelectorAll("#kgrid .kpi").forEach(el=>el.onclick=()=>select(INDS.find(i=>i.key===el.dataset.k)));}
+  function wireKpi(){document.querySelectorAll("#kgrid .kpi").forEach(el=>el.onclick=()=>{select(INDS.find(i=>i.key===el.dataset.k));escribirURL(true);});}
   // ── ficha = bottom-sheet deslizable en móvil (peek / full / hidden) ──
   const sheet=document.getElementById("panel-det"),grip=document.getElementById("sheet-grip");
   const isMob=()=>innerWidth<=820;
@@ -823,7 +918,7 @@ Promise.all([fetch("municipios.topojson").then(r=>r.json()),fetch("sudamerica.to
     document.getElementById("panel-det").style.display="flex";
     document.getElementById("d-mun").textContent=dp;
     document.getElementById("d-sub").innerHTML=`${ANIO==="cambio"?"Cambio 2012→2024":"Censo "+ANIO} · ${rows.length} municipios · <a class="back" id="back-nac">‹ resumen nacional</a>`;
-    document.getElementById("back-nac").onclick=()=>{setDept("");};
+    document.getElementById("back-nac").onclick=()=>{setDept("");escribirURL(true);};
     document.getElementById("kgrid").innerHTML=INDS.map((ind,i)=>{const vv=agg(rows,ind),nv=agg(SIG,ind);
       const r=deptRank(dp,ind);
       return kpiHTML(ind,i,vv,chip(vv,nv,ind,"país"),
@@ -834,7 +929,7 @@ Promise.all([fetch("municipios.topojson").then(r=>r.json()),fetch("sudamerica.to
     document.getElementById("d-mun").textContent=r.nombre;
     const volver=focusDept?"‹ resumen departamental":"‹ resumen nacional";
     document.getElementById("d-sub").innerHTML=r.dpto+' · <a class="back" id="back-nac">'+volver+'</a>';
-    document.getElementById("back-nac").onclick=renderSummary;
+    document.getElementById("back-nac").onclick=()=>{sel=null;drawOver();renderSummary();escribirURL(true);};
     document.getElementById("kgrid").innerHTML=INDS.map((ind,i)=>{
       const vv=valOf(sig,ind),dv=agg(byDpto[r.dpto],ind),nv=agg(SIG,ind);
       return kpiHTML(ind,i,vv,chip(vv,dv,ind,"depto"),chip(vv,nv,ind,"país",2));}).join("");
@@ -864,8 +959,181 @@ Promise.all([fetch("municipios.topojson").then(r=>r.json()),fetch("sudamerica.to
     document.getElementById("pk").innerHTML=pkHTML(vv,mudo(cur)?"sólo<br>2024"
       :`Puesto <b>${r||"—"}</b>/${DEPTOS.length}<br>${chip(vv,nv,cur,"país")}`);}
 
+  // ════════════════════════════════════════════════════════════════════════
+  //  EL ATLAS SE PUEDE COMPARTIR, BUSCAR Y RECORRER SIN EL RATÓN
+  // ════════════════════════════════════════════════════════════════════════
+
+  // ── 1 · EL ESTADO VIVE EN LA URL ────────────────────────────────────────
+  // Hasta acá no se podía mandarle a nadie «mirá este mapa»: la dirección era
+  // siempre la misma, el botón atrás no deshacía nada y recargar perdía todo.
+  //
+  // ⚠️ NO SE GUARDA EL ENCUADRE DEL MAPA, a diferencia del tablero
+  //    metropolitano. Allá el zoom es geográfico (centro y nivel), que
+  //    significa lo mismo en cualquier pantalla. Acá es una transformación de
+  //    d3 en píxeles del lienzo: la de una pantalla de 1600 px aplicada en un
+  //    teléfono de 390 px cae en otro lado del país. Lo que sí viaja es el
+  //    DEPARTAMENTO en foco, que es el encuadre con significado y se reconstruye
+  //    solo a cualquier tamaño.
+  //
+  // ⚠️ EN LA URL VA EL CÓDIGO INE, no el `sigep` interno. Adentro el municipio
+  //    se identifica por sigep («1701») porque así viene la geometría, pero una
+  //    dirección que alguien pega en un informe tiene que llevar el código
+  //    oficial («070101»), que cualquiera puede cruzar contra otra fuente.
+  let _urlQuieta=false,_listo=false;
+  const porIne={};for(const s in DATA)porIne[DATA[s].cod_ine]=s;
+
+  function estadoActual(){const e={};
+    if(cur)e.i=cur.key;
+    if(ANIO!=="2024")e.a=ANIO;
+    if(focusDept)e.d=focusDept;
+    if(sel)e.m=DATA[sel.properties.sigep].cod_ine;
+    return e;}
+  // Dos formas de escribir, y la diferencia importa: `pushState` para lo que el
+  // lector DECIDIÓ —indicador, año, municipio, departamento—, que es lo que el
+  // botón atrás tiene que deshacer; `replaceState` para el estado inicial, que
+  // nadie eligió y no merece una entrada de historial.
+  function escribirURL(empujar){
+    if(_urlQuieta||!_listo)return;
+    const e=estadoActual();
+    const q=Object.keys(e).map(k=>k+"="+encodeURIComponent(e[k])).join("&");
+    const url=location.pathname+(q?"#"+q:"");
+    if(url===location.pathname+location.hash)return;
+    try{history[empujar?"pushState":"replaceState"](e,"",url);}catch(_){}}
+  function leerURL(){const h=location.hash.replace(/^#/,"");if(!h)return null;
+    const e={};h.split("&").forEach(p=>{const i=p.indexOf("=");
+      if(i>0)e[p.slice(0,i)]=decodeURIComponent(p.slice(i+1));});
+    return Object.keys(e).length?e:null;}
+  // ★ RECARGAR EMPIEZA LIMPIO. El hash sobrevive al F5, así que volver a la
+  //   pestaña devolvía el municipio de la visita anterior. Eso está bien para un
+  //   enlace que alguien te manda y mal para abrir el Atlas: la vista por
+  //   defecto es el país. El navegador sabe cómo se llegó y lo dice.
+  const esRecarga=()=>{try{const n=performance.getEntriesByType("navigation")[0];
+    return !!n&&n.type==="reload";}catch(_){return false;}};
+
+  function aplicarEstado(e){
+    _urlQuieta=true;
+    try{
+      // ⚠️ EL ORDEN IMPORTA. `setAnio` re-monta la lista de indicadores, así que
+      //    el año se fija por asignación directa ANTES de montar nada y el
+      //    conmutador se sincroniza a mano después. (En el metropolitano esto
+      //    costó una ronda: reventaba adentro y la excepción se llevaba puesta
+      //    la restauración entera, así que un enlace compartido abría la vista
+      //    por defecto y parecía que la URL no guardaba nada.)
+      if(e.a&&["2012","cambio"].includes(e.a)){ANIO=e.a;pedir2012().catch(()=>{});}
+      const g=e.i&&GRUPOS.find(x=>x.indicadores.some(y=>y.key===e.i));
+      if(g)setCategory(g.key);
+      if(seg)seg.querySelectorAll("button").forEach(b=>b.classList.toggle("on",b.dataset.a===ANIO));
+      const ind=e.i&&INDS.find(x=>x.key===e.i);
+      if(ind)select(ind);
+      if(e.d&&byDpto[e.d])setDept(e.d);
+      // se acepta el código INE y, por las dudas, también el sigep: un enlace
+      // guardado antes de este cambio no tiene por qué romperse
+      const s=e.m&&(porIne[e.m]||(DATA[e.m]?e.m:null));
+      if(s){const f=F.find(x=>x.properties.sigep===s);
+        if(f){sel=f;drawOver();renderMun(s);}}
+      else renderSummary();
+    }catch(err){console.warn("no se pudo restaurar el estado",err);}
+    finally{_urlQuieta=false;}
+    // ⛔ EL ENLACE A 2012 ABRÍA TODO EN «s/d» (cazado con una captura del enlace
+    //    profundo). El año se fija por asignación directa —hace falta, ver
+    //    arriba— pero eso SALTEA la espera que sí hace `setAnio`: el archivo de
+    //    2012 llega en diferido y la página se pintaba antes, con los 343
+    //    municipios sin cifra, la leyenda en «mín s/d» y los mini-mapas grises.
+    //    El mapa igual salía pintado, así que no parecía roto: parecía que el
+    //    censo de 2012 no tenía datos. Se repinta cuando el archivo llega.
+    if(ANIO!=="2024"&&!hay12){
+      seg.classList.add("cargando");
+      pedir2012().then(()=>{seg.classList.remove("cargando");
+        buildCards();updateHints();fadeSwap(drawBase);drawOver();termo();renderLamina();
+        sel?renderMun(sel.properties.sigep):renderSummary();})
+        .catch(()=>{seg.classList.remove("cargando");});}}
+
+  addEventListener("popstate",()=>{const e=leerURL();
+    if(e)aplicarEstado(e);else{sel=null;setDept("");}});
+
+  // ── 2 · BUSCADOR ────────────────────────────────────────────────────────
+  // Mira las 20 categorías a la vez y busca en el título, la definición Y el
+  // universo: desde que las tarjetas dicen qué se mide, «beber» encuentra el
+  // indicador de agua segura.
+  const _norm=t=>(t||"").normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase();
+  function buscarIndicadores(q){
+    const n=_norm(q).trim();
+    if(n.length<2)return[];
+    const term=n.split(/\s+/),res=[];
+    GRUPOS.forEach(g=>g.indicadores.forEach(i=>{
+      const heno=_norm(i.label+" "+(i.desc||"")+" "+(i.universo||"")+" "+g.label);
+      if(!term.every(t=>heno.includes(t)))return;
+      // el que calza en el TÍTULO va antes que el que calza sólo en la
+      // definición: si escribiste «agua» querés los indicadores de agua, no
+      // todos los que la mencionan de paso
+      res.push({i,g,peso:_norm(i.label).includes(n)?0:1});}));
+    return res.sort((a,b)=>a.peso-b.peso).slice(0,40);}
+
+  function irA(key,gkey){
+    const g=GRUPOS.find(x=>x.key===gkey);
+    if(g&&g.key!==curCat.key)setCategory(g.key);
+    const ind=INDS.find(x=>x.key===key);
+    if(ind){select(ind);
+      const el=document.querySelector(`.ind[data-k="${key}"]`);
+      if(el)el.scrollIntoView({block:"nearest"});
+      escribirURL(true);}}
+
+  (function montarBuscador(){
+    const inp=document.getElementById("busca"),caja=document.getElementById("busca-res");
+    if(!inp||!caja)return;
+    const cerrar=()=>{caja.innerHTML="";caja.hidden=true;};
+    inp.addEventListener("input",()=>{
+      const r=buscarIndicadores(inp.value);
+      if(!r.length){
+        if(_norm(inp.value).trim().length>=2){
+          caja.innerHTML=`<div class="bs-nada">Nada con «${inp.value}»</div>`;caja.hidden=false;
+        }else cerrar();
+        return;}
+      caja.innerHTML=r.map(({i,g})=>`<button class="bs-op${mudo(i)?" sin12":""}" data-k="${i.key}" data-g="${g.key}">`
+        +`<span class="bs-l">${i.label}</span>`
+        // el universo va en la línea de abajo junto a la categoría: es lo que
+        // desempata entre dos indicadores que se llaman casi igual
+        +`<span class="bs-g">${g.label}${i.universo?" · "+i.universo:""}${mudo(i)?" · sólo 2024":""}</span></button>`).join("");
+      caja.hidden=false;
+      caja.querySelectorAll(".bs-op").forEach(b=>b.onclick=()=>{
+        irA(b.dataset.k,b.dataset.g);inp.value="";cerrar();inp.blur();});});
+    inp.addEventListener("keydown",ev=>{
+      if(ev.key==="Escape"){inp.value="";cerrar();inp.blur();}
+      if(ev.key==="Enter"){const p=caja.querySelector(".bs-op");if(p)p.click();}});
+    document.addEventListener("click",ev=>{if(!ev.target.closest(".busca-caja"))cerrar();});})();
+
+  // ── 3 · TECLADO ─────────────────────────────────────────────────────────
+  // Lo que separa una herramienta de una página: recorrer 215 indicadores sin
+  // soltar el teclado. Se ignora mientras se escribe en un campo — si no, la
+  // flecha abajo del buscador movería el mapa de atrás.
+  addEventListener("keydown",ev=>{
+    const t=ev.target;
+    if(t&&(t.tagName==="INPUT"||t.tagName==="TEXTAREA"||t.isContentEditable))return;
+    if(ev.ctrlKey||ev.metaKey||ev.altKey)return;
+    const pos=INDS.findIndex(x=>x.key===cur.key);
+    const ir=d=>{const n=INDS[(pos+d+INDS.length)%INDS.length];
+      if(n){select(n);const el=document.querySelector(`.ind[data-k="${n.key}"]`);
+        if(el)el.scrollIntoView({block:"nearest"});escribirURL(true);}};
+    const anios=["2012","2024","cambio"];
+    switch(ev.key){
+      case "ArrowDown":ev.preventDefault();ir(1);break;
+      case "ArrowUp":ev.preventDefault();ir(-1);break;
+      case "[":case "ArrowLeft":ev.preventDefault();
+        setAnio(anios[Math.max(0,anios.indexOf(ANIO)-1)]);escribirURL(true);break;
+      case "]":case "ArrowRight":ev.preventDefault();
+        setAnio(anios[Math.min(2,anios.indexOf(ANIO)+1)]);escribirURL(true);break;
+      case "Escape":if(sel){ev.preventDefault();sel=null;drawOver();renderSummary();escribirURL(true);}break;
+      case "/":ev.preventDefault();{const b=document.getElementById("busca");if(b)b.focus();}break;
+    }});
+
   let rt;window.addEventListener("resize",()=>{clearTimeout(rt);rt=setTimeout(()=>{layout();setSheet(isMob()?sheetState:"hidden");},120);});
-  buildCards();renderCatDrop();updateHints();layout();termo();renderNational();
+  buildCards();renderCatDrop();updateHints();layout();termo();renderLamina();renderNational();
+  // ── el estado de la URL se aplica DESPUÉS del primer pintado ──
+  // Así el mapa aparece con la vista por defecto y se corrige, en vez de quedar
+  // en blanco esperando; y si el hash trae basura, el Atlas ya está en pie.
+  (function(){const e=leerURL();
+    if(e){if(esRecarga())delete e.m;aplicarEstado(e);}
+    _listo=true;escribirURL(false);})();
   // el censo de 2012 se baja SOLO, 1,2 s después del primer pintado: para cuando
   // alguien toque "2012" ya suele estar, y el arranque no pagó un byte por él.
   // Si lo tocan antes, `setAnio` espera esta misma promesa.

@@ -33,7 +33,8 @@
       40.66
      ],
      "domd": 10.232,
-     "universo": "sobre la población"
+     "universo": "sobre la población",
+     "lam": "censo-poblacion-0-14"
     },
     {
      "key": "pct_65_mas",
@@ -50,7 +51,8 @@
       17.0
      ],
      "domd": 4.2,
-     "universo": "sobre la población"
+     "universo": "sobre la población",
+     "lam": "censo-poblacion-65-mas"
     },
     {
      "key": "tam_hogar",
@@ -67,7 +69,8 @@
       4.9796
      ],
      "domd": 1.3529,
-     "universo": "sobre los hogares"
+     "universo": "sobre los hogares",
+     "lam": "censo-tamano-hogar"
     },
     {
      "key": "pct_urbano",
@@ -83,7 +86,8 @@
       98.05
      ],
      "domd": 32.608,
-     "universo": "sobre las viviendas particulares ocupadas"
+     "universo": "sobre las viviendas particulares ocupadas",
+     "lam": "censo-poblacion-urbana"
     },
     {
      "key": "indice_masculinidad",
@@ -99,7 +103,8 @@
       135.3664
      ],
      "domd": 15.4648,
-     "universo": "sobre la población"
+     "universo": "sobre la población",
+     "lam": "censo-indice-masculinidad"
     },
     {
      "key": "edad_mediana",
@@ -115,7 +120,8 @@
       36.6
      ],
      "domd": 9.0,
-     "universo": "sobre la población"
+     "universo": "sobre la población",
+     "lam": "censo-edad-mediana"
     },
     {
      "key": "razon_dependencia",
@@ -130,7 +136,8 @@
       88.4942
      ],
      "domd": 23.3178,
-     "universo": "sobre la población"
+     "universo": "sobre la población",
+     "lam": "censo-razon-dependencia"
     },
     {
      "key": "pct_hogar_unipersonal",
@@ -146,7 +153,8 @@
       45.6
      ],
      "domd": 16.796,
-     "universo": "sobre los hogares"
+     "universo": "sobre los hogares",
+     "lam": "censo-hogares-unipersonales"
     },
     {
      "key": "pct_hogar_extendido",
@@ -162,7 +170,8 @@
       13.052,
       38.648
      ],
-     "universo": "sobre los hogares"
+     "universo": "sobre los hogares",
+     "lam": "censo-hogares-extendidos"
     },
     {
      "key": "pob_mujeres",
@@ -389,7 +398,8 @@
       93.3
      ],
      "domd": 26.98,
-     "universo": "sobre la población de 15 años o más"
+     "universo": "sobre la población de 15 años o más",
+     "lam": "censo-autoident-indigena"
     },
     {
      "key": "pct_quechua",
@@ -405,7 +415,8 @@
       91.43
      ],
      "domd": 29.172,
-     "universo": "sobre la población de 15 años o más"
+     "universo": "sobre la población de 15 años o más",
+     "lam": "censo-autoident-quechua"
     },
     {
      "key": "pct_aymara",
@@ -421,7 +432,8 @@
       92.53
      ],
      "domd": 26.392,
-     "universo": "sobre la población de 15 años o más"
+     "universo": "sobre la población de 15 años o más",
+     "lam": "censo-autoident-aymara"
     },
     {
      "key": "pct_guarani",
@@ -437,7 +449,8 @@
       29.72
      ],
      "domd": 1.016,
-     "universo": "sobre la población de 15 años o más"
+     "universo": "sobre la población de 15 años o más",
+     "lam": "censo-autoident-guarani"
     },
     {
      "key": "pct_idioma_materno_originario",
@@ -454,7 +467,8 @@
       92.13
      ],
      "domd": 28.296,
-     "universo": "sobre la población"
+     "universo": "sobre la población",
+     "lam": "censo-idioma-originario"
     },
     {
      "key": "pct_idioma_materno_castellano",
@@ -471,7 +485,8 @@
       97.33
      ],
      "domd": 28.9,
-     "universo": "sobre la población"
+     "universo": "sobre la población",
+     "lam": "censo-idioma-castellano"
     },
     {
      "key": "pct_chiquitano",
@@ -542,7 +557,8 @@
       99.7
      ],
      "domd": 5.4,
-     "universo": "sobre la población"
+     "universo": "sobre la población",
+     "lam": "censo-registro-civil"
     },
     {
      "key": "pct_cedula_identidad",
@@ -559,7 +575,8 @@
       99.5
      ],
      "domd": 38.132,
-     "universo": "sobre la población"
+     "universo": "sobre la población",
+     "lam": "censo-cedula-identidad"
     }
    ]
   },
@@ -581,7 +598,8 @@
       23.7
      ],
      "domd": 6.516,
-     "universo": "sobre la población de 15 años o más"
+     "universo": "sobre la población de 15 años o más",
+     "lam": "censo-analfabetismo"
     },
     {
      "key": "prom_anios_estudio",
@@ -598,7 +616,8 @@
       11.5334
      ],
      "domd": 2.577,
-     "universo": "sobre la población de 19 años o más"
+     "universo": "sobre la población de 19 años o más",
+     "lam": "censo-anios-estudio"
     },
     {
      "key": "pct_sin_educacion",
@@ -614,7 +633,8 @@
       31.46
      ],
      "domd": 12.948,
-     "universo": "sobre la población de 19 años o más"
+     "universo": "sobre la población de 19 años o más",
+     "lam": "censo-sin-educacion"
     },
     {
      "key": "pct_edu_primaria",
@@ -630,7 +650,8 @@
       52.43
      ],
      "domd": 15.216,
-     "universo": "sobre la población de 19 años o más"
+     "universo": "sobre la población de 19 años o más",
+     "lam": "censo-edu-primaria"
     },
     {
      "key": "pct_edu_secundaria",
@@ -646,7 +667,8 @@
       62.23
      ],
      "domd": 17.332,
-     "universo": "sobre la población de 19 años o más"
+     "universo": "sobre la población de 19 años o más",
+     "lam": "censo-edu-secundaria"
     },
     {
      "key": "pct_edu_superior",
@@ -662,7 +684,8 @@
       41.53
      ],
      "domd": 14.416,
-     "universo": "sobre la población de 19 años o más"
+     "universo": "sobre la población de 19 años o más",
+     "lam": "censo-edu-superior"
     },
     {
      "key": "pct_asistencia_escolar",
@@ -679,7 +702,8 @@
       97.3
      ],
      "domd": 13.448,
-     "universo": "sobre la población de 6 a 17 años"
+     "universo": "sobre la población de 6 a 17 años",
+     "lam": "censo-asistencia-escolar"
     },
     {
      "key": "pct_secundaria_mas",
@@ -695,7 +719,8 @@
       83.06
      ],
      "domd": 21.632,
-     "universo": "sobre la población de 19 años o más"
+     "universo": "sobre la población de 19 años o más",
+     "lam": "censo-secundaria-mas"
     },
     {
      "key": "pct_educacion_publica",
@@ -711,7 +736,8 @@
       99.2
      ],
      "domd": 34.96,
-     "universo": "sobre la población de 6 a 17 años"
+     "universo": "sobre la población de 6 a 17 años",
+     "lam": "censo-educacion-publica"
     },
     {
      "key": "tasa_asistencia_4_5",
@@ -728,7 +754,8 @@
       94.63
      ],
      "domd": 52.876,
-     "universo": "sobre la población de 4 y 5 años"
+     "universo": "sobre la población de 4 y 5 años",
+     "lam": "censo-asistencia-inicial"
     },
     {
      "key": "tasa_asistencia_18_24",
@@ -744,7 +771,8 @@
       62.96
      ],
      "domd": 40.96,
-     "universo": "sobre la población de 18 a 24 años"
+     "universo": "sobre la población de 18 a 24 años",
+     "lam": "censo-asistencia-18-24"
     },
     {
      "key": "pct_analfabetismo_mujeres",
@@ -760,7 +788,8 @@
       32.29
      ],
      "domd": 8.2,
-     "universo": "sobre las mujeres de 15 años o más"
+     "universo": "sobre las mujeres de 15 años o más",
+     "lam": "censo-analfabetismo-femenino"
     },
     {
      "key": "pct_primaria_completa",
@@ -871,7 +900,8 @@
       60.788,
       93.6
      ],
-     "universo": "sobre la población"
+     "universo": "sobre la población",
+     "lam": "censo-seguro-salud"
     },
     {
      "key": "paridez_media",
@@ -904,7 +934,8 @@
       18.2724,
       22.652
      ],
-     "universo": "sobre las mujeres que declararon la edad a su primer hijo"
+     "universo": "sobre las mujeres que declararon la edad a su primer hijo",
+     "lam": "censo-edad-primer-hijo"
     },
     {
      "key": "pct_salud_publica",
@@ -920,7 +951,8 @@
       92.9
      ],
      "domd": 27.964,
-     "universo": "sobre la población"
+     "universo": "sobre la población",
+     "lam": "censo-salud-publica"
     },
     {
      "key": "pct_caja_salud",
@@ -936,7 +968,8 @@
       33.12
      ],
      "domd": 9.516,
-     "universo": "sobre la población"
+     "universo": "sobre la población",
+     "lam": "censo-cajas-salud"
     },
     {
      "key": "pct_salud_privada",
@@ -952,7 +985,8 @@
       33.5
      ],
      "domd": 17.132,
-     "universo": "sobre la población"
+     "universo": "sobre la población",
+     "lam": "censo-salud-privada"
     },
     {
      "key": "pct_salud_tradicional",
@@ -968,7 +1002,8 @@
       51.89
      ],
      "domd": 18.864,
-     "universo": "sobre la población"
+     "universo": "sobre la población",
+     "lam": "censo-medicina-tradicional"
     },
     {
      "key": "pct_automedicacion",
@@ -984,7 +1019,8 @@
       63.92
      ],
      "domd": 23.064,
-     "universo": "sobre la población"
+     "universo": "sobre la población",
+     "lam": "censo-automedicacion"
     },
     {
      "key": "pct_parto_calificado",
@@ -1001,7 +1037,8 @@
       57.364,
       98.6
      ],
-     "universo": "sobre las mujeres en edad fértil (15 a 49 años)"
+     "universo": "sobre las mujeres en edad fértil (15 a 49 años)",
+     "lam": "censo-parto-calificado"
     },
     {
      "key": "pct_hijos_fallecidos",
@@ -1017,7 +1054,8 @@
       29.22
      ],
      "domd": 12.616,
-     "universo": "sobre los hijos nacidos vivos declarados"
+     "universo": "sobre los hijos nacidos vivos declarados",
+     "lam": "censo-hijos-fallecidos"
     },
     {
      "key": "pct_madres_adolescentes",
@@ -1033,7 +1071,8 @@
       31.06
      ],
      "domd": 13.232,
-     "universo": "sobre las mujeres en edad fértil (15 a 49 años)"
+     "universo": "sobre las mujeres en edad fértil (15 a 49 años)",
+     "lam": "censo-madres-adolescentes"
     },
     {
      "key": "pct_remedios_caseros",
@@ -1119,7 +1158,8 @@
       2.568,
       9.732
      ],
-     "universo": "sobre la población"
+     "universo": "sobre la población",
+     "lam": "censo-discapacidad"
     },
     {
      "key": "pct_disc_ver",
@@ -1135,7 +1175,8 @@
       1.468,
       5.3
      ],
-     "universo": "sobre la población"
+     "universo": "sobre la población",
+     "lam": "censo-discapacidad-visual"
     },
     {
      "key": "pct_disc_oir",
@@ -1151,7 +1192,8 @@
       0.5,
       3.6
      ],
-     "universo": "sobre la población"
+     "universo": "sobre la población",
+     "lam": "censo-discapacidad-auditiva"
     },
     {
      "key": "pct_disc_caminar",
@@ -1167,7 +1209,8 @@
       0.8,
       5.2
      ],
-     "universo": "sobre la población"
+     "universo": "sobre la población",
+     "lam": "censo-discapacidad-motriz"
     },
     {
      "key": "pct_disc_cognitiva",
@@ -1183,7 +1226,8 @@
       0.5,
       3.9
      ],
-     "universo": "sobre la población"
+     "universo": "sobre la población",
+     "lam": "censo-discapacidad-cognitiva"
     }
    ]
   },
@@ -1206,7 +1250,8 @@
       85.66
      ],
      "domd": 18.4,
-     "universo": "sobre la población en edad de trabajar (15 años o más)"
+     "universo": "sobre la población en edad de trabajar (15 años o más)",
+     "lam": "censo-participacion-laboral"
     },
     {
      "key": "tasa_ocupacion",
@@ -1223,7 +1268,8 @@
       84.96
      ],
      "domd": 17.812,
-     "universo": "sobre la población en edad de trabajar (15 años o más)"
+     "universo": "sobre la población en edad de trabajar (15 años o más)",
+     "lam": "censo-ocupacion"
     },
     {
      "key": "tasa_desocupacion",
@@ -1239,7 +1285,8 @@
       4.23
      ],
      "domd": 3.216,
-     "universo": "sobre la población en edad de trabajar (15 años o más)"
+     "universo": "sobre la población en edad de trabajar (15 años o más)",
+     "lam": "censo-desocupacion"
     },
     {
      "key": "pct_sector_primario",
@@ -1255,7 +1302,8 @@
       83.76
      ],
      "domd": 14.848,
-     "universo": "sobre la población ocupada"
+     "universo": "sobre la población ocupada",
+     "lam": "censo-sector-primario"
     },
     {
      "key": "pct_sector_servicios",
@@ -1271,7 +1319,8 @@
       65.93
      ],
      "domd": 13.112,
-     "universo": "sobre la población ocupada"
+     "universo": "sobre la población ocupada",
+     "lam": "censo-sector-servicios"
     },
     {
      "key": "pct_cuenta_propia",
@@ -1288,7 +1337,8 @@
       73.63
      ],
      "domd": 13.616,
-     "universo": "sobre la población ocupada"
+     "universo": "sobre la población ocupada",
+     "lam": "censo-cuenta-propia"
     },
     {
      "key": "pct_asalariados",
@@ -1304,7 +1354,8 @@
       48.5
      ],
      "domd": 13.76,
-     "universo": "sobre la población ocupada"
+     "universo": "sobre la población ocupada",
+     "lam": "censo-asalariados"
     },
     {
      "key": "pct_empleadores",
@@ -1320,7 +1371,8 @@
       4.83
      ],
      "domd": 3.044,
-     "universo": "sobre la población ocupada"
+     "universo": "sobre la población ocupada",
+     "lam": "censo-empleadores"
     },
     {
      "key": "pct_trab_familiar",
@@ -1336,7 +1388,8 @@
       21.45
      ],
      "domd": 16.44,
-     "universo": "sobre la población ocupada"
+     "universo": "sobre la población ocupada",
+     "lam": "censo-trabajo-familiar"
     },
     {
      "key": "pct_sector_secundario",
@@ -1352,7 +1405,8 @@
       24.0
      ],
      "domd": 8.248,
-     "universo": "sobre la población ocupada"
+     "universo": "sobre la población ocupada",
+     "lam": "censo-sector-secundario"
     },
     {
      "key": "pct_comercio",
@@ -1368,7 +1422,8 @@
       24.53
      ],
      "domd": 6.5,
-     "universo": "sobre la población ocupada"
+     "universo": "sobre la población ocupada",
+     "lam": "censo-empleo-comercio"
     },
     {
      "key": "pct_admin_publica",
@@ -1384,7 +1439,8 @@
       4.89
      ],
      "domd": 1.732,
-     "universo": "sobre la población ocupada"
+     "universo": "sobre la población ocupada",
+     "lam": "censo-empleo-publico"
     },
     {
      "key": "tasa_participacion_fem",
@@ -1400,7 +1456,8 @@
       81.54
      ],
      "domd": 27.78,
-     "universo": "sobre las mujeres en edad de trabajar (15 años o más)"
+     "universo": "sobre las mujeres en edad de trabajar (15 años o más)",
+     "lam": "censo-participacion-femenina"
     },
     {
      "key": "tasa_ocupacion_fem",
@@ -1417,7 +1474,8 @@
       81.23
      ],
      "domd": 26.912,
-     "universo": "sobre las mujeres en edad de trabajar (15 años o más)"
+     "universo": "sobre las mujeres en edad de trabajar (15 años o más)",
+     "lam": "censo-ocupacion-femenina"
     },
     {
      "key": "brecha_participacion",
@@ -1570,7 +1628,8 @@
       69.93
      ],
      "domd": 35.632,
-     "universo": "sobre la población"
+     "universo": "sobre la población",
+     "lam": "censo-nacidos-otro-municipio"
     },
     {
      "key": "pct_nacido_extranjero",
@@ -1586,7 +1645,8 @@
       5.83
      ],
      "domd": 3.4,
-     "universo": "sobre la población"
+     "universo": "sobre la población",
+     "lam": "censo-nacidos-extranjero"
     },
     {
      "key": "pct_migrante_reciente",
@@ -1602,7 +1662,8 @@
       28.29
      ],
      "domd": 15.948,
-     "universo": "sobre la población"
+     "universo": "sobre la población",
+     "lam": "censo-migrantes-recientes"
     },
     {
      "key": "pct_trabaja_fuera",
@@ -1618,7 +1679,8 @@
       1.884,
       34.112
      ],
-     "universo": "sobre la población ocupada"
+     "universo": "sobre la población ocupada",
+     "lam": "censo-trabaja-fuera"
     },
     {
      "key": "pct_residia_otro_mun",
@@ -1672,7 +1734,8 @@
       23.72
      ],
      "domd": 8.448,
-     "universo": "sobre los hogares"
+     "universo": "sobre los hogares",
+     "lam": "censo-hogares-emigrante"
     },
     {
      "key": "emigrantes_x1000",
@@ -1687,7 +1750,8 @@
       106.5412
      ],
      "domd": 55.1145,
-     "universo": "sobre la población"
+     "universo": "sobre la población",
+     "lam": "censo-emigrantes"
     },
     {
      "key": "pct_emi_argentina",
@@ -1703,7 +1767,8 @@
       89.27
      ],
      "domd": 46.0,
-     "universo": "sobre las personas que emigraron al exterior"
+     "universo": "sobre las personas que emigraron al exterior",
+     "lam": "censo-emigrantes-argentina"
     },
     {
      "key": "pct_emi_espana",
@@ -1719,7 +1784,8 @@
       53.64
      ],
      "domd": 46.224,
-     "universo": "sobre las personas que emigraron al exterior"
+     "universo": "sobre las personas que emigraron al exterior",
+     "lam": "censo-emigrantes-espana"
     },
     {
      "key": "pct_emi_brasil",
@@ -1735,7 +1801,8 @@
       68.78
      ],
      "domd": 30.636,
-     "universo": "sobre las personas que emigraron al exterior"
+     "universo": "sobre las personas que emigraron al exterior",
+     "lam": "censo-emigrantes-brasil"
     },
     {
      "key": "pct_emi_chile",
@@ -1751,7 +1818,8 @@
       82.67
      ],
      "domd": 57.564,
-     "universo": "sobre las personas que emigraron al exterior"
+     "universo": "sobre las personas que emigraron al exterior",
+     "lam": "censo-emigrantes-chile"
     },
     {
      "key": "pct_emi_eeuu",
@@ -1767,7 +1835,8 @@
       13.35
      ],
      "domd": 12.016,
-     "universo": "sobre las personas que emigraron al exterior"
+     "universo": "sobre las personas que emigraron al exterior",
+     "lam": "censo-emigrantes-eeuu"
     },
     {
      "key": "edad_prom_emigracion",
@@ -1783,7 +1852,8 @@
       28.7988
      ],
      "domd": 5.5147,
-     "universo": "sobre las personas que emigraron al exterior"
+     "universo": "sobre las personas que emigraron al exterior",
+     "lam": "censo-edad-emigracion"
     }
    ]
   },
@@ -1805,7 +1875,8 @@
       88.1
      ],
      "domd": 30.948,
-     "universo": "sobre las viviendas particulares ocupadas"
+     "universo": "sobre las viviendas particulares ocupadas",
+     "lam": "censo-agua-caneria"
     },
     {
      "key": "pct_agua_interior",
@@ -1822,7 +1893,8 @@
       75.33
      ],
      "domd": 28.716,
-     "universo": "sobre las viviendas particulares ocupadas"
+     "universo": "sobre las viviendas particulares ocupadas",
+     "lam": "censo-agua-interior"
     },
     {
      "key": "pct_servicio_sanitario",
@@ -1838,7 +1910,8 @@
       95.73
      ],
      "domd": 41.672,
-     "universo": "sobre las viviendas particulares ocupadas"
+     "universo": "sobre las viviendas particulares ocupadas",
+     "lam": "censo-servicio-sanitario"
     },
     {
      "key": "pct_alcantarillado",
@@ -1855,7 +1928,8 @@
       70.82
      ],
      "domd": 32.948,
-     "universo": "sobre las viviendas particulares ocupadas"
+     "universo": "sobre las viviendas particulares ocupadas",
+     "lam": "censo-alcantarillado"
     },
     {
      "key": "pct_electricidad",
@@ -1872,7 +1946,8 @@
       97.93
      ],
      "domd": 40.832,
-     "universo": "sobre las viviendas particulares ocupadas"
+     "universo": "sobre las viviendas particulares ocupadas",
+     "lam": "censo-electricidad"
     },
     {
      "key": "pct_basura_formal",
@@ -1888,7 +1963,8 @@
       89.13
      ],
      "domd": 42.812,
-     "universo": "sobre las viviendas particulares ocupadas"
+     "universo": "sobre las viviendas particulares ocupadas",
+     "lam": "censo-basura-formal"
     },
     {
      "key": "pct_agua_no_mejorada",
@@ -1904,7 +1980,8 @@
       0.884,
       54.916
      ],
-     "universo": "sobre las viviendas particulares ocupadas"
+     "universo": "sobre las viviendas particulares ocupadas",
+     "lam": "censo-agua-no-mejorada"
     },
     {
      "key": "pct_agua_pozo",
@@ -1920,7 +1997,8 @@
       68.8
      ],
      "domd": 28.332,
-     "universo": "sobre las viviendas particulares ocupadas"
+     "universo": "sobre las viviendas particulares ocupadas",
+     "lam": "censo-agua-pozo"
     },
     {
      "key": "pct_pozo_ciego",
@@ -1936,7 +2014,8 @@
       73.43
      ],
      "domd": 31.92,
-     "universo": "sobre las viviendas particulares ocupadas"
+     "universo": "sobre las viviendas particulares ocupadas",
+     "lam": "censo-pozo-ciego"
     },
     {
      "key": "pct_camara_septica",
@@ -1953,7 +2032,8 @@
       30.56
      ],
      "domd": 13.436,
-     "universo": "sobre las viviendas particulares ocupadas"
+     "universo": "sobre las viviendas particulares ocupadas",
+     "lam": "censo-camara-septica"
     },
     {
      "key": "pct_agua_pileta",
@@ -2273,7 +2353,8 @@
       41.05
      ],
      "domd": 27.416,
-     "universo": "sobre las viviendas particulares ocupadas"
+     "universo": "sobre las viviendas particulares ocupadas",
+     "lam": "censo-gas-natural"
     },
     {
      "key": "pct_combustible_solido",
@@ -2289,7 +2370,8 @@
       90.0
      ],
      "domd": 47.248,
-     "universo": "sobre las viviendas particulares ocupadas"
+     "universo": "sobre las viviendas particulares ocupadas",
+     "lam": "censo-cocina-lena"
     },
     {
      "key": "pct_gas_garrafa",
@@ -2306,7 +2388,8 @@
       88.3
      ],
      "domd": 46.46,
-     "universo": "sobre las viviendas particulares ocupadas"
+     "universo": "sobre las viviendas particulares ocupadas",
+     "lam": "censo-gas-garrafa"
     },
     {
      "key": "pct_cocina_exclusiva",
@@ -2322,7 +2405,8 @@
       87.43
      ],
      "domd": 20.348,
-     "universo": "sobre las viviendas particulares ocupadas"
+     "universo": "sobre las viviendas particulares ocupadas",
+     "lam": "censo-cocina-exclusiva"
     },
     {
      "key": "pct_panel_solar",
@@ -2339,7 +2423,8 @@
       22.79
      ],
      "domd": 12.092,
-     "universo": "sobre las viviendas particulares ocupadas"
+     "universo": "sobre las viviendas particulares ocupadas",
+     "lam": "censo-panel-solar"
     },
     {
      "key": "pct_sin_energia",
@@ -2356,7 +2441,8 @@
       68.0
      ],
      "domd": 40.832,
-     "universo": "sobre las viviendas particulares ocupadas"
+     "universo": "sobre las viviendas particulares ocupadas",
+     "lam": "censo-sin-electricidad"
     },
     {
      "key": "pct_elec_red",
@@ -2444,7 +2530,8 @@
       90.46
      ],
      "domd": 35.78,
-     "universo": "sobre las viviendas particulares ocupadas"
+     "universo": "sobre las viviendas particulares ocupadas",
+     "lam": "censo-piso-tierra"
     },
     {
      "key": "pct_pared_adobe",
@@ -2461,7 +2548,8 @@
       94.33
      ],
      "domd": 36.316,
-     "universo": "sobre las viviendas particulares ocupadas"
+     "universo": "sobre las viviendas particulares ocupadas",
+     "lam": "censo-pared-adobe"
     },
     {
      "key": "pct_techo_calamina",
@@ -2477,7 +2565,8 @@
       95.13
      ],
      "domd": 47.724,
-     "universo": "sobre las viviendas particulares ocupadas"
+     "universo": "sobre las viviendas particulares ocupadas",
+     "lam": "censo-techo-calamina"
     },
     {
      "key": "pct_hacinamiento",
@@ -2493,7 +2582,8 @@
       45.33
      ],
      "domd": 19.296,
-     "universo": "sobre las viviendas particulares ocupadas"
+     "universo": "sobre las viviendas particulares ocupadas",
+     "lam": "censo-hacinamiento"
     },
     {
      "key": "pct_pared_ladrillo",
@@ -2509,7 +2599,8 @@
       90.3
      ],
      "domd": 42.092,
-     "universo": "sobre las viviendas particulares ocupadas"
+     "universo": "sobre las viviendas particulares ocupadas",
+     "lam": "censo-pared-ladrillo"
     },
     {
      "key": "pct_revoque",
@@ -2525,7 +2616,8 @@
       91.56
      ],
      "domd": 19.256,
-     "universo": "sobre las viviendas particulares ocupadas"
+     "universo": "sobre las viviendas particulares ocupadas",
+     "lam": "censo-pared-revoque"
     },
     {
      "key": "pct_techo_teja",
@@ -2541,7 +2633,8 @@
       78.53
      ],
      "domd": 21.364,
-     "universo": "sobre las viviendas particulares ocupadas"
+     "universo": "sobre las viviendas particulares ocupadas",
+     "lam": "censo-techo-teja"
     },
     {
      "key": "pct_techo_paja",
@@ -2558,7 +2651,8 @@
       71.39
      ],
      "domd": 41.964,
-     "universo": "sobre las viviendas particulares ocupadas"
+     "universo": "sobre las viviendas particulares ocupadas",
+     "lam": "censo-techo-paja"
     },
     {
      "key": "pct_monoambiente",
@@ -2574,7 +2668,8 @@
       63.86
      ],
      "domd": 18.732,
-     "universo": "sobre las viviendas particulares ocupadas"
+     "universo": "sobre las viviendas particulares ocupadas",
+     "lam": "censo-monoambiente"
     },
     {
      "key": "pct_choza",
@@ -2590,7 +2685,8 @@
       0.2,
       20.308
      ],
-     "universo": "sobre las viviendas particulares ocupadas"
+     "universo": "sobre las viviendas particulares ocupadas",
+     "lam": "censo-chozas"
     },
     {
      "key": "pct_departamento",
@@ -2606,7 +2702,8 @@
       6.39
      ],
      "domd": 2.864,
-     "universo": "sobre las viviendas particulares ocupadas"
+     "universo": "sobre las viviendas particulares ocupadas",
+     "lam": "censo-departamentos"
     },
     {
      "key": "pct_vivienda_desocupada",
@@ -2622,7 +2719,8 @@
       16.738
      ],
      "domd": 12.224,
-     "universo": "sobre todas las viviendas particulares"
+     "universo": "sobre todas las viviendas particulares",
+     "lam": "censo-viviendas-desocupadas"
     },
     {
      "key": "viviendas",
@@ -2793,7 +2891,8 @@
       96.9
      ],
      "domd": 11.732,
-     "universo": "sobre las viviendas particulares ocupadas"
+     "universo": "sobre las viviendas particulares ocupadas",
+     "lam": "censo-vivienda-propia"
     },
     {
      "key": "pct_alquiler",
@@ -2810,7 +2909,8 @@
       23.53
      ],
      "domd": 7.632,
-     "universo": "sobre las viviendas particulares ocupadas"
+     "universo": "sobre las viviendas particulares ocupadas",
+     "lam": "censo-alquiler"
     },
     {
      "key": "pct_viv_anticretico",
@@ -2864,7 +2964,8 @@
       83.73
      ],
      "domd": 75.832,
-     "universo": "sobre las viviendas particulares ocupadas"
+     "universo": "sobre las viviendas particulares ocupadas",
+     "lam": "censo-internet"
     },
     {
      "key": "pct_computadora",
@@ -2881,7 +2982,8 @@
       42.2
      ],
      "domd": 15.864,
-     "universo": "sobre las viviendas particulares ocupadas"
+     "universo": "sobre las viviendas particulares ocupadas",
+     "lam": "censo-computadora"
     },
     {
      "key": "pct_celular",
@@ -2898,7 +3000,8 @@
       63.504,
       93.132
      ],
-     "universo": "sobre las viviendas particulares ocupadas"
+     "universo": "sobre las viviendas particulares ocupadas",
+     "lam": "censo-celular"
     },
     {
      "key": "pct_tv_cable",
@@ -2915,7 +3018,8 @@
       1.384,
       35.012
      ],
-     "universo": "sobre las viviendas particulares ocupadas"
+     "universo": "sobre las viviendas particulares ocupadas",
+     "lam": "censo-tv-cable"
     },
     {
      "key": "pct_internet_fijo",
@@ -2932,7 +3036,8 @@
       0.4,
       58.176
      ],
-     "universo": "sobre las viviendas particulares ocupadas"
+     "universo": "sobre las viviendas particulares ocupadas",
+     "lam": "censo-internet-fijo"
     },
     {
      "key": "pct_internet_movil",
@@ -2949,7 +3054,8 @@
       33.484,
       75.048
      ],
-     "universo": "sobre las viviendas particulares ocupadas"
+     "universo": "sobre las viviendas particulares ocupadas",
+     "lam": "censo-internet-movil"
     },
     {
      "key": "pct_telefono_fijo",
@@ -2966,7 +3072,8 @@
       0.4,
       13.612
      ],
-     "universo": "sobre las viviendas particulares ocupadas"
+     "universo": "sobre las viviendas particulares ocupadas",
+     "lam": "censo-telefono-fijo"
     },
     {
      "key": "pct_carreta",
@@ -3006,7 +3113,8 @@
       2.084,
       76.552
      ],
-     "universo": "sobre las viviendas particulares ocupadas"
+     "universo": "sobre las viviendas particulares ocupadas",
+     "lam": "censo-refrigerador"
     },
     {
      "key": "pct_lavadora",
@@ -3023,7 +3131,8 @@
       0.3,
       43.132
      ],
-     "universo": "sobre las viviendas particulares ocupadas"
+     "universo": "sobre las viviendas particulares ocupadas",
+     "lam": "censo-lavadora"
     },
     {
      "key": "pct_microondas",
@@ -3040,7 +3149,8 @@
       0.284,
       28.176
      ],
-     "universo": "sobre las viviendas particulares ocupadas"
+     "universo": "sobre las viviendas particulares ocupadas",
+     "lam": "censo-microondas"
     },
     {
      "key": "pct_aire_acond",
@@ -3057,7 +3167,8 @@
       0.0,
       18.248
      ],
-     "universo": "sobre las viviendas particulares ocupadas"
+     "universo": "sobre las viviendas particulares ocupadas",
+     "lam": "censo-aire-acondicionado"
     },
     {
      "key": "pct_auto",
@@ -3074,7 +3185,8 @@
       38.53
      ],
      "domd": 19.3,
-     "universo": "sobre las viviendas particulares ocupadas"
+     "universo": "sobre las viviendas particulares ocupadas",
+     "lam": "censo-vehiculo"
     },
     {
      "key": "pct_moto",
@@ -3091,7 +3203,8 @@
       70.0
      ],
      "domd": 25.344,
-     "universo": "sobre las viviendas particulares ocupadas"
+     "universo": "sobre las viviendas particulares ocupadas",
+     "lam": "censo-motocicleta"
     },
     {
      "key": "pct_bicicleta",
@@ -3108,7 +3221,8 @@
       66.93
      ],
      "domd": 15.048,
-     "universo": "sobre las viviendas particulares ocupadas"
+     "universo": "sobre las viviendas particulares ocupadas",
+     "lam": "censo-bicicleta"
     },
     {
      "key": "pct_bote",
@@ -3125,7 +3239,8 @@
       15.7
      ],
      "domd": 5.648,
-     "universo": "sobre las viviendas particulares ocupadas"
+     "universo": "sobre las viviendas particulares ocupadas",
+     "lam": "censo-bote"
     },
     {
      "key": "pct_radio",
@@ -3142,7 +3257,8 @@
       85.92
      ],
      "domd": 26.632,
-     "universo": "sobre las viviendas particulares ocupadas"
+     "universo": "sobre las viviendas particulares ocupadas",
+     "lam": "censo-radio"
     },
     {
      "key": "pct_tv",
@@ -3159,7 +3275,8 @@
       85.13
      ],
      "domd": 23.292,
-     "universo": "sobre las viviendas particulares ocupadas"
+     "universo": "sobre las viviendas particulares ocupadas",
+     "lam": "censo-televisor"
     }
    ]
   },
@@ -3181,7 +3298,8 @@
       15.46
      ],
      "domd": 11.032,
-     "universo": "sobre los hogares"
+     "universo": "sobre los hogares",
+     "lam": "censo-hogares-fallecido"
     },
     {
      "key": "tasa_mortalidad",
@@ -3196,7 +3314,8 @@
       2.284,
       14.148
      ],
-     "universo": "sobre la población"
+     "universo": "sobre la población",
+     "lam": "censo-tasa-mortalidad"
     },
     {
      "key": "edad_prom_fallecimiento",
@@ -3212,7 +3331,8 @@
       68.8221
      ],
      "domd": 18.588,
-     "universo": "sobre las personas fallecidas declaradas en el período"
+     "universo": "sobre las personas fallecidas declaradas en el período",
+     "lam": "censo-edad-fallecimiento"
     },
     {
      "key": "pct_muertes_covid",
@@ -3228,7 +3348,8 @@
       4.868,
       23.676
      ],
-     "universo": "sobre las personas fallecidas declaradas en el período"
+     "universo": "sobre las personas fallecidas declaradas en el período",
+     "lam": "censo-muertes-covid"
     }
    ]
   },
@@ -3250,7 +3371,8 @@
       95.0
      ],
      "domd": 37.8,
-     "universo": "sobre la población"
+     "universo": "sobre la población",
+     "lam": "censo-pobreza-nbi"
     },
     {
      "key": "pct_nbi_no_pobre",
@@ -3266,7 +3388,8 @@
       83.93
      ],
      "domd": 37.8,
-     "universo": "sobre la población"
+     "universo": "sobre la población",
+     "lam": "censo-nbi-no-pobre"
     },
     {
      "key": "pct_nbi_satisfechas",
@@ -3282,7 +3405,8 @@
       42.73
      ],
      "domd": 16.016,
-     "universo": "sobre la población"
+     "universo": "sobre la población",
+     "lam": "censo-nbi-satisfechas"
     },
     {
      "key": "pct_nbi_umbral",
@@ -3299,7 +3423,8 @@
       55.43
      ],
      "domd": 31.38,
-     "universo": "sobre la población"
+     "universo": "sobre la población",
+     "lam": "censo-nbi-umbral"
     },
     {
      "key": "pct_nbi_moderada",
@@ -3316,7 +3441,8 @@
       71.0
      ],
      "domd": 28.932,
-     "universo": "sobre la población"
+     "universo": "sobre la población",
+     "lam": "censo-nbi-moderada"
     },
     {
      "key": "pct_nbi_indigente",
@@ -3333,7 +3459,8 @@
       43.86
      ],
      "domd": 27.696,
-     "universo": "sobre la población"
+     "universo": "sobre la población",
+     "lam": "censo-nbi-indigente"
     },
     {
      "key": "pct_nbi_marginal",
@@ -3350,7 +3477,8 @@
       3.2
      ],
      "domd": 2.9,
-     "universo": "sobre la población"
+     "universo": "sobre la población",
+     "lam": "censo-nbi-marginal"
     }
    ]
   },
@@ -3373,7 +3501,8 @@
       92.78
      ],
      "domd": 37.732,
-     "universo": "sobre la población"
+     "universo": "sobre la población",
+     "lam": "censo-nbi-materiales"
     },
     {
      "key": "pct_nbi_espacios",
@@ -3390,7 +3519,8 @@
       88.83
      ],
      "domd": 12.428,
-     "universo": "sobre la población"
+     "universo": "sobre la población",
+     "lam": "censo-nbi-espacios"
     },
     {
      "key": "pct_nbi_agua_sanea",
@@ -3406,7 +3536,8 @@
       97.36
      ],
      "domd": 46.464,
-     "universo": "sobre la población"
+     "universo": "sobre la población",
+     "lam": "censo-nbi-agua-saneamiento"
     },
     {
      "key": "pct_nbi_energia",
@@ -3423,7 +3554,8 @@
       93.53
      ],
      "domd": 49.396,
-     "universo": "sobre la población"
+     "universo": "sobre la población",
+     "lam": "censo-nbi-energia"
     },
     {
      "key": "pct_nbi_educacion",
@@ -3440,7 +3572,8 @@
       84.26
      ],
      "domd": 23.076,
-     "universo": "sobre la población"
+     "universo": "sobre la población",
+     "lam": "censo-nbi-educacion"
     },
     {
      "key": "pct_nbi_salud",
@@ -3457,7 +3590,8 @@
       55.53
      ],
      "domd": 31.4,
-     "universo": "sobre la población"
+     "universo": "sobre la población",
+     "lam": "censo-nbi-salud"
     }
    ]
   },
