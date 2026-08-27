@@ -39,6 +39,12 @@ CLAUDE.md
 !denominadores.json
 !data_2012.json
 !denominadores_2012.json
+# formato por columna: la mitad de peso y 5× menos que parsear. Conviven con los
+# viejos mientras se verifica, y el HTML cae a los viejos si estos no están.
+!data.col.json
+!data_2012.col.json
+!denominadores.col.json
+!denominadores_2012.col.json
 !municipios.topojson
 !sudamerica.topojson
 

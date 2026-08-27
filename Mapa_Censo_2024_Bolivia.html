@@ -14,7 +14,11 @@
      derecho) y .termo (que descuenta los dos paneles). Fluido: se encoge con la pantalla en vez de
      obligar a esconder la ficha en pantallas medianas -- proyectores y pantallas compartidas
      (1024x768, 1280x720) caen justo ahi. */
-  --panel-w:clamp(15.5rem,23vw,20.5rem);
+  /* ★ EL MENÚ CRECE PARA QUE ENTREN VARIAS TARJETAS POR FILA, pero atado al
+     ancho de la pantalla, no fijo: el mapa tiene que seguir entrando entero
+     entre los dos paneles. Medido a 1600×899 con el panel en 328 px: la zona
+     útil daba 298 px y entraba UNA sola columna. */
+  --panel-w:clamp(15.5rem,25vw,36rem);
   /* ★ LA FICHA ES MÁS ANCHA QUE EL MENÚ (Carlos, 2026-08-26). El menú de la
      izquierda muestra tarjetas de una columna: más ancho no le agrega nada. La
      ficha, en cambio, tiene que meter una dispersión de 343 burbujas, un
@@ -156,9 +160,17 @@ body.dark .tbtog .ic-moon{display:none}body.dark .tbtog .ic-sun{display:block}
 .bs-op.sin12 .bs-l{color:var(--suave)}
 .bs-nada{padding:8px 9px;font-size:.65rem;color:var(--faint)}
 
-.lista{display:flex;flex-direction:column;gap:8px;margin-top:11px}
-.ind{display:grid;grid-template-columns:minmax(0,1fr) 110px;align-items:center;gap:.7rem;text-align:left;
-  cursor:pointer;width:100%;padding:.72rem;border:1px solid var(--linea-2);background:var(--gris-card);color:inherit;
+/* ★ REJILLA QUE SE ACOMODA SOLA. `auto-fill` con un mínimo declarado es lo que
+   hace que el número de columnas lo decida el ancho disponible y no un número
+   escrito a mano: 1 columna en un portátil, 2 desde ~1500 px, 3 desde ~2300.
+   Medido: con baldosas de 168 px, dos columnas necesitan 345 px de zona útil y
+   tres necesitan 522. */
+.lista{display:grid;grid-template-columns:repeat(auto-fill,minmax(142px,1fr));
+  gap:8px;margin-top:11px;align-content:start}
+/* La baldosa apila: mini-mapa arriba a todo el ancho, texto debajo. Al lado no
+   entra — con 168 px de columna, un mini-mapa de 110 dejaría 40 px de texto. */
+.ind{display:flex;flex-direction:column;gap:.45rem;text-align:left;
+  cursor:pointer;width:100%;padding:.62rem;border:1px solid var(--linea-2);background:var(--gris-card);color:inherit;
   transition:background-color .22s ease,border-color .22s ease,box-shadow .22s ease;
   animation:cardIn .36s cubic-bezier(.2,.7,.3,1) both;animation-delay:var(--d,0ms)}
 .ind:hover{background:var(--card-hov)}
@@ -175,7 +187,21 @@ body.dark .tbtog .ic-moon{display:none}body.dark .tbtog .ic-sun{display:block}
 .ind.sin12{opacity:.66}.ind.sin12 .i-nm{color:var(--suave)}
 .i-tag{display:inline-block;font-size:.54rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;
   color:var(--suave);border:1px solid var(--linea);padding:0 5px;margin-bottom:4px}
-.mini{width:110px;height:80px;flex:none;pointer-events:none;opacity:.6;filter:saturate(.32);transition:opacity .28s ease,filter .28s ease}
+/* ⚠️ EL MINI-MAPA VA ACOTADO. A todo el ancho de una baldosa de 221 px medía
+   160 px de alto y la baldosa entera 255: con 28 indicadores eso son siete
+   pantallas de scroll. Acotado a 128 px la baldosa baja a ~200 y el mini-mapa
+   sigue cumpliendo su papel, que es de SEÑAL DE RECONOCIMIENTO —la silueta del
+   patrón— y no de mapa que se lee. */
+.mini{width:100%;max-width:128px;height:auto;aspect-ratio:110/80;order:-1;
+  align-self:center;pointer-events:none;
+  opacity:.6;filter:saturate(.32);transition:opacity .28s ease,filter .28s ease}
+/* el texto se acota para que TODAS las baldosas midan lo mismo: con bloques
+   libres el alto dependía del indicador y la rejilla quedaba dentada */
+.i-nm{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.i-df{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+/* dos renglones, no uno: a una línea el universo más largo se leía «sobre las
+   viviendas…», que ocupa alto sin decir nada */
+.i-uni{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .ind:hover .mini{opacity:.9;filter:saturate(.7)}
 .ind.on .mini{opacity:1;filter:saturate(.88)}
 /* en oscuro la desaturación tira a pardo: se apagan con brillo en vez de con saturación */
@@ -192,7 +218,9 @@ body.dark .ind.on .mini{opacity:1;filter:none}
 .d-sub{font-size:.61rem;color:var(--suave);font-weight:500;margin-top:5px}
 .back{color:var(--teal-dk);cursor:pointer;font-weight:700;text-decoration:none}.back:hover{text-decoration:underline}
 /* ── El reparto de los 343 ────────────────────────────────────────────────── */
-#dist:empty,#lee:empty{display:none}
+#dist:empty,#lee:empty,#cmp:empty{display:none}
+/* aire entre los tres bloques: pegados se leían como uno solo */
+#cmp{margin-bottom:1.15rem}#dist{margin-bottom:.2rem}#lee{margin-bottom:1rem}
 .dt-t{display:flex;justify-content:space-between;align-items:baseline;gap:.5rem;
   font-size:.57rem;font-weight:700;text-transform:uppercase;letter-spacing:.09em;
   color:var(--suave);margin-bottom:.4rem}
@@ -200,12 +228,13 @@ body.dark .ind.on .mini{opacity:1;filter:none}
 /* alto fijo: el histograma es una franja de lectura, no un gráfico que crece */
 /* con la ficha más ancha el histograma puede respirar: a 74 px las colas —que
    es donde está lo interesante— medían 2 px y no se distinguían entre sí */
-.dt{width:100%;height:104px;display:block;margin-bottom:.35rem;overflow:visible}
+.dt{width:100%;height:120px;display:block;margin-bottom:.35rem;overflow:visible}
 /* las zonas de toque son invisibles y de alto completo: apuntarle a una barra
    de 2 px en la cola era imposible */
-.dt-hit{fill:transparent;cursor:pointer}
+/* `touch-action:none` para que el dedo apoyado encienda la barra en vez de que
+   el gesto se lo lleve el scroll de la hoja */
+.dt-hit{fill:transparent;cursor:crosshair;touch-action:none}
 .dt-hit.on{fill:var(--tx);fill-opacity:.07}
-.dt-hit.fijo{fill:var(--sel);fill-opacity:.12}
 /* el pie explica el gesto: una interacción que nadie descubre no existe */
 .dt-pie{font-size:.55rem;color:var(--faint);font-weight:500;line-height:1.35;margin-bottom:.6rem}
 .dt-pais{stroke:var(--tx);stroke-width:.35;stroke-dasharray:1.4 1}
@@ -227,13 +256,16 @@ body.dark .ind.on .mini{opacity:1;filter:none}
   padding:5px 8px;color:var(--tx);background:var(--card-solid);border:1px solid var(--linea);
   border-radius:0;outline:none;cursor:pointer}
 #cmp-b:focus{border-color:var(--sel)}
-.cmp{width:100%;height:auto;display:block;margin-bottom:.35rem;overflow:visible}
-.cmp-p{cursor:pointer;fill-opacity:.74;transition:fill-opacity .12s ease}
-.cmp-p.hov{fill-opacity:1;stroke:var(--tx);stroke-width:.45}
+.cmp{width:100%;height:auto;display:block;margin:.1rem 0 .35rem;overflow:visible}
+/* el contorno es lo que deja distinguir dos burbujas que se pisan; sin él, a
+   343 puntos, la nube se lee como una mancha continua */
+.cmp-p{cursor:pointer;fill-opacity:.82;stroke:var(--card-solid);stroke-width:.28;
+  transition:fill-opacity .12s ease,stroke-width .12s ease}
+.cmp-p.hov{fill-opacity:1;stroke:var(--tx);stroke-width:.5}
 .cmp-ax{font-size:2.6px;fill:var(--faint);font-weight:600;font-family:var(--f)}
 /* el señalado lleva el MISMO ámbar con que el mapa lo resalta: es el mismo
    municipio en dos dibujos, y el color es lo que los ata */
-.cmp-p.cmp-sel{fill:var(--warm);fill-opacity:1;stroke:var(--tx);stroke-width:.45}
+.cmp-p.cmp-sel{fill:var(--warm);fill-opacity:1;stroke:var(--tx);stroke-width:.5}
 .dt-t i{font-style:normal;font-weight:500;text-transform:lowercase;letter-spacing:0;color:var(--faint)}
 /* la lectura: párrafos cortos, tinta de texto y nunca el color de la serie */
 .lee{font-size:.66rem;line-height:1.45;color:var(--suave);margin:0 0 .7rem}
@@ -258,6 +290,8 @@ body.dark .ind.on .mini{opacity:1;filter:none}
 .zc button:last-child{border-bottom:0;font-size:.7rem}.zc button:hover{background:var(--gris-card)}
 
 /* ── Descargar la lámina ─────────────────────────────────────────────────── */
+#regla{position:fixed;visibility:hidden;pointer-events:none;z-index:-1;
+  top:70px;bottom:84px;left:calc(var(--panel-w) + 30px);right:calc(var(--panel-det-w) + 30px)}
 #lamina{position:fixed;z-index:9;left:calc(var(--panel-w) + 26px);top:74px}
 #lamina:empty{display:none}
 .lam-link{display:flex;align-items:center;gap:.55rem;padding:.5rem .72rem;text-decoration:none;
@@ -365,9 +399,12 @@ body.dark .ind.on .mini{opacity:1;filter:none}
   .busca-res{max-height:52vh}
   .cat-drop{max-height:64vh;box-shadow:0 14px 30px rgba(16,26,20,.22)}.cat-op{padding:11px 13px;font-size:.82rem}
   .p-body{padding:8px 0 8px 12px;overflow:hidden;flex:1}.p-sub{display:none}
-  .lista{flex-direction:row;overflow-x:auto;overflow-y:hidden;gap:9px;margin-top:0;height:100%;scroll-snap-type:x proximity;padding-right:12px}
-  .ind{display:grid;grid-template-columns:minmax(0,1fr) 82px;align-items:center;gap:.5rem;min-width:196px;max-width:196px;padding:.55rem;scroll-snap-align:start;height:calc(100% - 3px);overflow:hidden}
-  .mini{width:82px;height:auto;aspect-ratio:110/80;opacity:.95}
+  /* en el teléfono NO es una rejilla: es una tira que se desliza a lo ancho.
+     Hay que reponer `display:flex`, porque la regla de escritorio pasó a grid. */
+  .lista{display:flex;flex-direction:row;overflow-x:auto;overflow-y:hidden;gap:9px;margin-top:0;height:100%;scroll-snap-type:x proximity;padding-right:12px}
+  .ind{display:grid;grid-template-columns:minmax(0,1fr) 62px;align-items:center;gap:.5rem;min-width:196px;max-width:196px;padding:.55rem;scroll-snap-align:start;height:calc(100% - 3px);overflow:hidden}
+  /* en la tira el mini-mapa va al COSTADO otra vez, no arriba */
+  .mini{width:62px;height:auto;aspect-ratio:110/80;opacity:.95;order:0}
   .i-nm{font-size:.73rem;line-height:1.16;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
   .i-df{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-size:.6rem;line-height:1.32;margin-top:.2rem;font-weight:500}
   /* ⚠️ EL UNIVERSO NO VA EN LA TARJETA DEL TELÉFONO — la misma medición que en
@@ -380,6 +417,9 @@ body.dark .ind.on .mini{opacity:1;filter:none}
   .i-uni{display:none}
   /* mapa: SIEMPRE completo; la ficha flota por encima (no se re-renderiza) */
   #mapbox{inset:auto;top:202px;left:0;right:0;bottom:0}
+  /* en el teléfono no hay paneles al costado: el hueco es la banda entera,
+     descontando el asomo de la hoja para que el país no quede debajo */
+  #regla{top:206px;bottom:calc(var(--peek) + 10px);left:6px;right:6px}
   .termo{left:8px;right:8px;transform:none;width:auto;bottom:8px;padding:.45rem .7rem;transition:opacity .2s}
   body.sheet-open .termo{opacity:0;pointer-events:none}
   .tm-t{font-size:.66rem}.tm-t small{font-size:.52rem}.tm-st{display:none}.tm-side{font-size:.58rem}
@@ -488,6 +528,20 @@ body.dark .ind.on .mini{opacity:1;filter:none}
      VIVE SOBRE EL MAPA, no al pie del panel: ahí quedaría a un scroll entero de
      distancia justo cuando el lector está mirando el mapa. Va del lado opuesto
      a la botonera de zoom para no pelearse con ella. -->
+<!-- ★ LA REGLA. Marca el hueco donde el mapa PUEDE dibujarse, y lo declara el
+     CSS —no una medición del DOM—, así que siempre coincide con dónde están los
+     paneles de verdad.
+     ⛔ POR QUÉ EXISTE: `layout()` medía `#panel-det` con
+        `getBoundingClientRect()`, pero ese panel arranca en `display:none` y un
+        elemento oculto devuelve un rectángulo de CEROS. Resultado medido a
+        1600×899: el mapa se ajustaba a un hueco 462 px más ancho del real y
+        **122 px de Bolivia quedaban debajo del panel derecho**. Es el mismo
+        error que ya costó una sesión con `#pick`: NUNCA leer el rect de algo
+        que no se está mostrando.
+     `visibility:hidden` es lo que permite medirla: no se ve, no recibe eventos,
+     pero SÍ ocupa su sitio en el layout. -->
+<div id="regla" aria-hidden="true"></div>
+
 <div id="lamina"></div>
 
 <div class="zc"><button id="z-in">+</button><button id="z-out">−</button><button id="z-rst">⤢</button></div>
@@ -555,10 +609,37 @@ function applyTheme(dark,save){document.body.classList.toggle("dark",dark);TH=da
 (()=>{let p=null;try{p=localStorage.getItem("atlas-tema");}catch(_){}
   applyTheme(p?p==="dark":matchMedia("(prefers-color-scheme:dark)").matches,false);})();
 
+// ★★ LOS DATOS VIAJAN POR COLUMNA, NO POR MUNICIPIO.
+//    `data.json` guardaba un objeto por municipio, así que los 223 nombres de
+//    clave se escribían 343 veces: 76.489 repeticiones para 76 mil números.
+//    Medido: 1.847 KB → 368 KB en disco, 310 KB → 135 KB comprimido. Los dos
+//    archivos de datos juntos bajan de 622 a 310 KB comprimidos, la mitad.
+//    Lo que se NOTA no es el ancho de banda sino el `JSON.parse`: 368 KB contra
+//    1,8 MB es cinco veces menos trabajo antes del primer pintado.
+//    NINGÚN valor cambia —se verificó uno por uno, sin tolerancia— y el resto
+//    del código sigue usando `DATA[sigep].pob_total`: `rehidratar` reconstruye
+//    exactamente la misma forma en dos bucles.
+//    ⚠️ Se pide el compacto y se CAE al viejo si no está: mientras los dos
+//       convivan, un despliegue a medias no deja el sitio en blanco.
+function rehidratar(c){
+  if(!c||!c.claves)return c;                     // ya venía por municipio
+  const out={},n=c.sigep.length,ident=["nombre","dpto","cod_ine"];
+  for(let i=0;i<n;i++){const r={};
+    for(const k of ident)if(c[k])r[k]=c[k][i];
+    out[c.sigep[i]]=r;}
+  for(let j=0;j<c.claves.length;j++){const col=c.v[j],k=c.claves[j];
+    for(let i=0;i<n;i++){const v=col[i];if(v!=null)out[c.sigep[i]][k]=v;}}
+  return out;}
+const pedir=(compacto,viejo,caida)=>fetch(compacto)
+  .then(r=>{if(!r.ok)throw 0;return r.json();})
+  .catch(()=>fetch(viejo).then(r=>r.json()))
+  .catch(()=>caida);
+
 Promise.all([fetch("municipios.topojson").then(r=>r.json()),fetch("sudamerica.topojson").then(r=>r.json()),
-  fetch("catalogo.json").then(r=>r.json()),fetch("data.json").then(r=>r.json()),
+  fetch("catalogo.json").then(r=>r.json()),
+  pedir("data.col.json","data.json",{}).then(rehidratar),
   // denominadores: el universo propio de cada indicador, para agregar bien
-  fetch("denominadores.json").then(r=>r.json()).catch(()=>({orden:[],municipios:{}}))
+  pedir("denominadores.col.json","denominadores.json",{orden:[],municipios:{}})
   ]).then(([topo,wtopo,cat,DATA,DENS])=>{
   const DEN_ORDEN=DENS.orden||[], DEN=DENS.municipios||{};
   const geo=topojson.feature(topo,topo.objects.data),F=geo.features,bolivia=topojson.merge(topo,topo.objects.data.geometries);
@@ -588,8 +669,8 @@ Promise.all([fetch("municipios.topojson").then(r=>r.json()),fetch("sudamerica.to
   const seg=document.getElementById("anio-seg");
   function pedir2012(){
     if(!pedido)pedido=Promise.all([
-        fetch("data_2012.json").then(r=>r.json()),
-        fetch("denominadores_2012.json").then(r=>r.json()).catch(()=>({municipios:{}}))
+        pedir("data_2012.col.json","data_2012.json",{}).then(rehidratar),
+        pedir("denominadores_2012.col.json","denominadores_2012.json",{municipios:{}})
       ]).then(([d,n])=>{D12=d;DEN12=n.municipios||{};hay12=true;
         // los cachés se armaron sin 2012: `pais(ind,"2012")` pudo quedar guardado
         // en null y se convertiría en un "—" permanente. Se vacían los dos.
@@ -731,11 +812,30 @@ Promise.all([fetch("municipios.topojson").then(r=>r.json()),fetch("sudamerica.to
     buildCards();fadeSwap(drawBase);drawOver();};
 
   const projMini=d3.geoMercator().fitExtent([[2,2],[108,78]],geo);
+  // ★★ LA GEOMETRÍA SE PROYECTA UNA VEZ Y SE GUARDA COMO `Path2D`.
+  //    Medido: el topojson tiene 53.094 puntos. `d3.geoPath` los re-proyecta en
+  //    CADA dibujo, así que reconstruir las tarjetas de una categoría de 28
+  //    indicadores costaba **1.486.632 proyecciones** — y eso corre al cambiar de
+  //    categoría, al cambiar de censo y al cambiar de tema. Era la pesadez que se
+  //    sentía al navegar.
+  //    Un `Path2D` guarda el trazo YA proyectado: se arma una sola vez y después
+  //    cada dibujo es sólo rellenar. Los mini-mapas pasan de 1,49 M de
+  //    proyecciones a 53.094, una única vez en toda la sesión.
+  //    ⚠️ Sirve porque la proyección del mini-mapa es FIJA (`fitExtent` a una
+  //      caja de 110×80 que no depende del tamaño de la ventana). La del mapa
+  //      grande sí cambia, así que ésa se rehace en `layout()` y nada más.
+  const pathMini=(()=>{const g=d3.geoPath(projMini);
+    return F.map(f=>new Path2D(g(f)));})();
+  const pathMiniBol=new Path2D(d3.geoPath(projMini)(bolivia));
   const lista=document.getElementById("lista");
   const mudo=ind=>ANIO!=="2024"&&!ind.s12;      // no se puede mirar en este censo
   function buildCards(){lista.innerHTML="";INDS.forEach((ind,i)=>{const sc=scale(ind);
     const el=document.createElement("button");
     el.className="ind"+(ind.key===cur.key?" on":"")+(mudo(ind)?" sin12":"");el.dataset.k=ind.key;
+    // el texto va recortado a tres renglones en la baldosa; entero acá, que es
+    // donde el navegador lo muestra sin que tengamos que inventar un tooltip
+    el.title=ind.label+" — "+(mudo(ind)?(ind.w12||""):ind.desc)
+      +(ind.universo?" ("+ind.universo+")":"");
     el.style.setProperty("--d",Math.min(i,14)*16+"ms");
     el.innerHTML=`<div>${mudo(ind)?'<span class="i-tag">Sólo 2024</span>':""}`
       +`<div class="i-nm">${ind.label}</div>`
@@ -748,9 +848,11 @@ Promise.all([fetch("municipios.topojson").then(r=>r.json()),fetch("sudamerica.to
       //   muestra: ahí esa línea la ocupa el motivo por el que está apagado.
       +`${mudo(ind)||!ind.universo?"":`<div class="i-uni">${ind.universo}</div>`}</div>`;
     const cv=document.createElement("canvas");cv.className="mini";el.appendChild(cv);lista.appendChild(el);
-    const c=fitC(cv,110,80);c.setTransform(dpr,0,0,dpr,0,0);const p=d3.geoPath(projMini,c);
-    F.forEach(f=>{c.beginPath();p(f);c.fillStyle=sc.color(valOf(f.properties.sigep,ind));c.fill();c.lineWidth=.22;c.strokeStyle=TH.miniLine;c.stroke();});
-    c.beginPath();p(bolivia);c.lineWidth=.75;c.strokeStyle=TH.miniBol;c.stroke();
+    const c=fitC(cv,110,80);c.setTransform(dpr,0,0,dpr,0,0);
+    c.lineWidth=.22;c.strokeStyle=TH.miniLine;
+    F.forEach((f,j)=>{const pa=pathMini[j];
+      c.fillStyle=sc.color(valOf(f.properties.sigep,ind));c.fill(pa);c.stroke(pa);});
+    c.lineWidth=.75;c.strokeStyle=TH.miniBol;c.stroke(pathMiniBol);
     el.onclick=()=>{select(ind);escribirURL(true);};});}
   const TOT_IND=GRUPOS.reduce((a,g)=>a+g.indicadores.length,0);
   const TOT_12=GRUPOS.reduce((a,g)=>a+g.indicadores.filter(i=>i.s12).length,0);
@@ -787,7 +889,7 @@ Promise.all([fetch("municipios.topojson").then(r=>r.json()),fetch("sudamerica.to
     buildCards();renderCatDrop();updateHints();fadeSwap(drawBase);drawOver();termo();renderLamina();sel?renderMun(sel.properties.sigep):renderSummary();}
 
   const wrap=document.getElementById("map-wrap");
-  const base=document.getElementById("base"),fade=document.getElementById("fade"),over=document.getElementById("over"),pick=document.getElementById("pick"),catchEl=document.getElementById("catch");
+  const base=document.getElementById("base"),fade=document.getElementById("fade"),over=document.getElementById("over"),pick=document.getElementById("pick"),catchEl=document.getElementById("catch"),regla=document.getElementById("regla");
   let bctx,fctx,octx,pctx,proj,W,H,L,R,T,B,idx=new Map();
   function setT(ctx){ctx.setTransform(dpr*zt.k,0,0,dpr*zt.k,dpr*zt.x,dpr*zt.y);}
   // crossfade: congela el mapa actual en #fade, dibuja el nuevo debajo y desvanece el viejo
@@ -799,16 +901,24 @@ Promise.all([fetch("municipios.topojson").then(r=>r.json()),fetch("sudamerica.to
     fn();
     void fade.offsetWidth;
     fade.style.transition="opacity .45s cubic-bezier(.4,0,.2,1)";fade.style.opacity="0";}
+  // trazos del mapa grande, ya proyectados. Se rehacen SÓLO en `layout()`,
+  // porque es lo único que cambia la proyección; el zoom es una transformación
+  // del contexto y no toca la geometría.
+  let pathMuni=[],pathMundo=[],pathDepto=null;
+  function armarPaths(){const g=d3.geoPath(proj);
+    pathMuni=F.map(f=>new Path2D(g(f)));
+    pathMundo=world.map(x=>new Path2D(g(x)));
+    pathDepto=new Path2D(g(mallaDepto));}
   function drawBase(){const sc=scale(cur);bctx.setTransform(dpr,0,0,dpr,0,0);bctx.clearRect(0,0,W,H);setT(bctx);
-    const g=d3.geoPath(proj,bctx);bctx.fillStyle=TH.world;bctx.strokeStyle=TH.worldLine;bctx.lineWidth=.5/zt.k;
-    world.forEach(w=>{bctx.beginPath();g(w);bctx.fill();bctx.stroke();});
-    F.forEach(f=>{const s=f.properties.sigep,off=focusDept&&DATA[s].dpto!==focusDept;bctx.beginPath();g(f);
-      bctx.globalAlpha=off?1:TH.alpha;bctx.fillStyle=off?TH.off:sc.color(valOf(s,cur));bctx.fill();bctx.globalAlpha=1;
-      bctx.lineWidth=.45/zt.k;bctx.strokeStyle=off?TH.lineOff:TH.lineOn;bctx.stroke();});
+    bctx.fillStyle=TH.world;bctx.strokeStyle=TH.worldLine;bctx.lineWidth=.5/zt.k;
+    pathMundo.forEach(pa=>{bctx.fill(pa);bctx.stroke(pa);});
+    bctx.lineWidth=.45/zt.k;
+    F.forEach((f,j)=>{const s=f.properties.sigep,off=focusDept&&DATA[s].dpto!==focusDept,pa=pathMuni[j];
+      bctx.globalAlpha=off?1:TH.alpha;bctx.fillStyle=off?TH.off:sc.color(valOf(s,cur));bctx.fill(pa);bctx.globalAlpha=1;
+      bctx.strokeStyle=off?TH.lineOff:TH.lineOn;bctx.stroke(pa);});
     // la división departamental va ENCIMA de los rellenos, más gruesa que la
     // municipal (2,4×) — es la jerarquía la que se lee, no el color
-    bctx.beginPath();g(mallaDepto);
-    bctx.lineWidth=1.08/zt.k;bctx.strokeStyle=TH.lineDpto;bctx.lineJoin="round";bctx.stroke();
+    bctx.lineWidth=1.08/zt.k;bctx.strokeStyle=TH.lineDpto;bctx.lineJoin="round";bctx.stroke(pathDepto);
   }
 
   // ⛔ LOS NOMBRES DE MUNICIPIO SE SACARON DEL MAPA (Carlos, 2026-08-26).
@@ -818,8 +928,8 @@ Promise.all([fetch("municipios.topojson").then(r=>r.json()),fetch("sudamerica.to
   //    quedaba rotulado de un lado y mudo del otro, y el ojo leía esa asimetría
   //    como si en el altiplano no hubiera nada. El tooltip nombra CUALQUIERA de
   //    los 343, sin privilegiar a ninguno.
-  function drawPick(){pctx.setTransform(dpr,0,0,dpr,0,0);pctx.clearRect(0,0,W,H);setT(pctx);const g=d3.geoPath(proj,pctx);
-    F.forEach((f,i)=>{const c=i+1;pctx.beginPath();g(f);pctx.fillStyle=`rgb(${(c>>16)&255},${(c>>8)&255},${c&255})`;pctx.fill();});}
+  function drawPick(){pctx.setTransform(dpr,0,0,dpr,0,0);pctx.clearRect(0,0,W,H);setT(pctx);
+    F.forEach((f,i)=>{const c=i+1;pctx.fillStyle=`rgb(${(c>>16)&255},${(c>>8)&255},${c&255})`;pctx.fill(pathMuni[i]);});}
   // ★ EL PINCEL: el histograma y el mapa son el MISMO dato, así que tocar un
   //   tramo del reparto tiene que encender esos municipios en el mapa. Es lo que
   //   convierte al histograma de dibujo en instrumento — se barre la cola larga
@@ -829,20 +939,39 @@ Promise.all([fetch("municipios.topojson").then(r=>r.json()),fetch("sudamerica.to
   //      color propio, ese color competiría con la rampa —que es la que
   //      significa algo— y el mapa diría dos cosas a la vez.
   let pincel=null;          // Set de sigeps, o null
-  function drawOver(){octx.setTransform(dpr,0,0,dpr,0,0);octx.clearRect(0,0,W,H);setT(octx);const g=d3.geoPath(proj,octx);
+  function drawOver(){octx.setTransform(dpr,0,0,dpr,0,0);octx.clearRect(0,0,W,H);setT(octx);
     if(pincel&&pincel.size){
-      // un solo camino con todos los NO elegidos y un solo relleno: 343 rellenos
+      // UN SOLO camino con todos los NO elegidos y un solo relleno: 343 rellenos
       // sueltos se notaban al barrer el histograma
-      octx.beginPath();
-      F.forEach(f=>{if(!pincel.has(f.properties.sigep))g(f);});
-      octx.fillStyle=TH.velo;octx.fill();}
-    if(hov){octx.beginPath();g(hov);octx.lineWidth=1/zt.k;octx.strokeStyle=TH.hov;octx.stroke();}
-    if(sel){octx.beginPath();g(sel);octx.lineWidth=1.4/zt.k;octx.strokeStyle=TH.sel;octx.stroke();}}
-  let pincelFijo=false,_rafPincel=0;
-  function setPincel(s,fijar){
-    if(pincelFijo&&!fijar)return;                 // fijado: el hover no lo pisa
-    pincel=s&&s.size?s:null;
-    if(fijar!==undefined)pincelFijo=!!fijar&&!!pincel;
+      const velo=new Path2D();
+      F.forEach((f,j)=>{if(!pincel.has(f.properties.sigep))velo.addPath(pathMuni[j]);});
+      octx.fillStyle=TH.velo;octx.fill(velo);}
+    const trazo=f=>{const i=_pos.get(f);return i===undefined?null:pathMuni[i];};
+    if(hov){const pa=trazo(hov);
+      if(pa){octx.lineWidth=1/zt.k;octx.strokeStyle=TH.hov;octx.stroke(pa);}}
+    if(sel){const pa=trazo(sel);
+      if(pa){octx.lineWidth=1.4/zt.k;octx.strokeStyle=TH.sel;octx.stroke(pa);}}}
+  // ⚠️ El trazo cacheado se busca por POSICIÓN —`F` y `pathMuni` van en el mismo
+  //    orden—, pero si el rasgo no estuviera en el índice, un `|| 0` de descarte
+  //    resaltaría el municipio 0 en vez de ninguno: dibujaría un borde sobre un
+  //    municipio que nadie señaló y no habría forma de saber por qué.
+  const _pos=new Map();F.forEach((f,i)=>_pos.set(f,i));
+  // ⛔ EL PINCEL NO SE FIJA (Carlos, 2026-08-26). Llegó a poder clavarse con un
+  //    clic, y era un error: la marca sobrevivía al cambio de indicador, así que
+  //    uno elegía otro mapa y seguía viendo encendidos los municipios de una
+  //    decisión anterior que ya no venía al caso. Una marca que hay que acordarse
+  //    de apagar convierte una ayuda en un estorbo.
+  //    Ahora vive SÓLO mientras el puntero está encima. En el teléfono lo
+  //    enciende el toque sostenido sobre la barra y se apaga al soltar.
+  let _rafPincel=0;
+  function setPincel(s){
+    const nuevo=s&&s.size?s:null;
+    if(nuevo===pincel)return;
+    if(nuevo&&pincel&&nuevo.size===pincel.size){
+      // mismo conjunto: no vale la pena repintar 343 polígonos
+      let igual=true;for(const x of nuevo)if(!pincel.has(x)){igual=false;break;}
+      if(igual)return;}
+    pincel=nuevo;
     if(_rafPincel)return;
     _rafPincel=requestAnimationFrame(()=>{_rafPincel=0;drawOver();});}
   // el zoom repinta de cero: cortar cualquier crossfade en curso para no arrastrar una imagen vieja
@@ -850,15 +979,13 @@ Promise.all([fetch("municipios.topojson").then(r=>r.json()),fetch("sudamerica.to
   function cssZoom(){const s=zt.k/zr.k;wrap.style.transformOrigin="0 0";wrap.style.transform="translate("+(zt.x-s*zr.x)+"px,"+(zt.y-s*zr.y)+"px) scale("+s+")";}
   function layout(){sizeSheet();W=wrap.clientWidth;H=wrap.clientHeight;fitC(base,W,H);fitC(fade,W,H);fitC(over,W,H);fitC(pick,W,H,true);
     bctx=base.getContext("2d");fctx=fade.getContext("2d");octx=over.getContext("2d");pctx=pick.getContext("2d",{willReadFrequently:true});
-    const mob=innerWidth<=820;
-    // ⚠️ El extento del mapa se medía con 328 px CABLEADOS a los dos lados. Con
-    //    la ficha más ancha eso dejaba media Bolivia debajo del panel. Se lee el
-    //    ancho REAL de cada panel, que además arregla de paso el caso de las
-    //    pantallas anchas, donde `clamp` los hacía más grandes que 328.
-    const anchoDe=id=>{const e=document.getElementById(id);
-      return e&&!mob?e.getBoundingClientRect().width+30:6;};
-    L=anchoDe("panel-ind");R=W-anchoDe("panel-det");T=mob?6:62+8;B=H-(mob?6:84);proj=d3.geoMercator().fitExtent([[L,T],[R,B]],geo);
-    idx.clear();F.forEach((f,i)=>idx.set(i+1,f));render();}
+    // el hueco sale de la REGLA, que es CSS: una sola fuente de verdad para
+    // dónde terminan los paneles y dónde puede empezar el mapa
+    const rg=regla.getBoundingClientRect(),mb=wrap.getBoundingClientRect();
+    L=Math.max(0,rg.left-mb.left);R=Math.min(W,rg.right-mb.left);
+    T=Math.max(0,rg.top-mb.top);B=Math.min(H,rg.bottom-mb.top);
+    proj=d3.geoMercator().fitExtent([[L,T],[R,B]],geo);
+    armarPaths();idx.clear();F.forEach((f,i)=>idx.set(i+1,f));render();}
 
   const zoom=d3.zoom().scaleExtent([1,12]).on("zoom",e=>{zt=e.transform;cssZoom();}).on("end",()=>render());
   d3.select(catchEl).call(zoom);
@@ -1011,7 +1138,7 @@ Promise.all([fetch("municipios.topojson").then(r=>r.json()),fetch("sudamerica.to
   function distribucion(){
     const el=document.getElementById("dist");if(!el)return;
     const r=reparto();
-    if(!r){el.innerHTML="";setPincel(null,false);return;}
+    if(!r){el.innerHTML="";setPincel(null);return;}
     const {sc,vs,lo,hi,paso,bins,tope}=r;
     // qué municipios cayeron en cada barra: es lo que el pincel enciende y lo
     // que el tooltip nombra. Se arma una sola vez por repintado, no por hover.
@@ -1054,17 +1181,16 @@ Promise.all([fetch("municipios.topojson").then(r=>r.json()),fetch("sudamerica.to
     el.innerHTML=`<div class="dt-t">Cómo se reparten los 343<span>eje del mapa · ${
         fmtM(sc.lo,cur)} a ${fmtM(sc.hi,cur)}</span></div>`
       +`<svg class="dt" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">${s}</svg>`
-      +`<div class="dt-pie" id="dt-pie">Pasá por una barra para verla en el mapa`
-      +` · tocala para dejarla fija</div>`;
+      +`<div class="dt-pie">Pasá por una barra —o mantené el dedo— para ver esos`
+      +` municipios encendidos en el mapa</div>`;
 
-    const pie=document.getElementById("dt-pie");
     const svg=el.querySelector("svg");
     el.querySelectorAll(".dt-hit").forEach(z=>{
       const j=+z.dataset.j,lista=porBin[j];
       const a=lo+j*paso,b=lo+(j+1)*paso;
-      z.addEventListener("mousemove",ev=>{
+      const encender=ev=>{
         if(!lista.length){sinTip();return;}
-        setPincel(new Set(lista.map(x=>x[0])),undefined);
+        setPincel(new Set(lista.map(x=>x[0])));
         svg.querySelectorAll(".dt-hit").forEach(o=>o.classList.toggle("on",o===z));
         // se nombran hasta tres y se dice cuántos quedan: una lista de 40
         // municipios en un tooltip no se lee, y cortarla sin avisar miente
@@ -1073,21 +1199,16 @@ Promise.all([fetch("municipios.topojson").then(r=>r.json()),fetch("sudamerica.to
         tip(ev,`${fmtM(a,cur)} a ${fmtM(b,cur)}`,
             `${lista.length} ${lista.length===1?"municipio":"municipios"} en este tramo`,
             [...nombres.map(nm=>["",nm]),
-             ...(orden.length>3?[["","y "+(orden.length-3)+" más"]]:[])]);});
-      z.addEventListener("mouseleave",()=>{sinTip();
-        if(!pincelFijo){setPincel(null,undefined);
-          svg.querySelectorAll(".dt-hit").forEach(o=>o.classList.remove("on"));}});
-      z.addEventListener("click",()=>{
-        if(!lista.length)return;
-        const yaEra=pincelFijo&&pincel&&pincel.size===lista.length&&pincel.has(lista[0][0]);
-        if(yaEra){setPincel(null,false);z.classList.remove("fijo");
-          pie.textContent="Pasá por una barra para verla en el mapa · tocala para dejarla fija";
-        }else{
-          svg.querySelectorAll(".dt-hit").forEach(o=>o.classList.remove("fijo"));
-          z.classList.add("fijo");
-          setPincel(new Set(lista.map(x=>x[0])),true);
-          pie.textContent=`${lista.length} municipios entre ${fmtM(a,cur)} y ${fmtM(b,cur)}`
-            +" encendidos en el mapa · tocá otra vez para soltar";}});});}
+             ...(orden.length>3?[["","y "+(orden.length-3)+" más"]]:[])]);};
+      const apagar=()=>{sinTip();setPincel(null);
+        svg.querySelectorAll(".dt-hit").forEach(o=>o.classList.remove("on"));};
+      z.addEventListener("mousemove",encender);
+      z.addEventListener("mouseleave",apagar);
+      // en el teléfono no hay «pasar por encima»: se mantiene el dedo apoyado.
+      // `touch-action:none` en la zona evita que el gesto se lo lleve el scroll.
+      z.addEventListener("pointerdown",ev=>{if(ev.pointerType!=="mouse")encender(ev);});
+      z.addEventListener("pointerup",ev=>{if(ev.pointerType!=="mouse")apagar();});
+      z.addEventListener("pointercancel",apagar);});}
 
   const clamp=(v,a,b)=>v==null||!isFinite(v)?null:Math.min(b,Math.max(a,v));
 
@@ -1213,7 +1334,14 @@ Promise.all([fetch("municipios.topojson").then(r=>r.json()),fetch("sudamerica.to
   function radioPob(){
     const ps=SIG.map(s=>DATA[s].pob_total).filter(v=>v>0);
     const lo=Math.log(d3.min(ps)),hi=Math.log(d3.max(ps));
-    return v=>!v||v<=0?1.1:0.9+2.7*((Math.log(v)-lo)/((hi-lo)||1));}
+    // ★ MÁS CHICAS Y CON BORDE (Carlos, 2026-08-26). Con radios de 0,9 a 3,6 la
+    //   nube se veía «excesivamente llena»: a 343 puntos las burbujas se tocaban
+    //   y el conjunto era una mancha. Bajan a 0,55–2,15 —un 40% del área— y se
+    //   les pone contorno, que es lo que separa a dos que se solapan.
+    //   ⚠️ SE CONSERVA LA RELACIÓN: el rango se encoge de forma proporcional, no
+    //     se cambia la regla. Sigue siendo logarítmico y la razón entre el más
+    //     grande y el más chico es la misma de antes (3,9×).
+    return v=>!v||v<=0?0.7:0.55+1.6*((Math.log(v)-lo)/((hi-lo)||1));}
 
   function dispersion(){
     const el=document.getElementById("cmp");if(!el)return;
@@ -1225,7 +1353,7 @@ Promise.all([fetch("municipios.topojson").then(r=>r.json()),fetch("sudamerica.to
       el.innerHTML=`<div class="dt-t">Comparar<span>sin pares suficientes</span></div>`;return;}
     const rad=radioPob();
     const xa=d3.extent(pts,p=>p[1]),ya=d3.extent(pts,p=>p[2]);
-    const W=100,H=78,LX=4,RX=W-3,TY=4,BY=H-10;
+    const W=100,H=88,LX=4,RX=W-3,TY=4,BY=H-11;
     const px=v=>LX+((v-xa[0])/((xa[1]-xa[0])||1))*(RX-LX);
     // el eje de las Y va al revés que el lienzo: arriba es MÁS
     const py=v=>BY-((v-ya[0])/((ya[1]-ya[0])||1))*(BY-TY);
@@ -1237,7 +1365,7 @@ Promise.all([fetch("municipios.topojson").then(r=>r.json()),fetch("sudamerica.to
     for(const [s,a,b] of orden){
       const es=sel&&sel.properties.sigep===s;
       g+=`<circle class="cmp-p${es?" cmp-sel":""}" data-s="${s}"`
-        +` cx="${px(a).toFixed(2)}" cy="${py(b).toFixed(2)}" r="${rad(DATA[s].pob_total).toFixed(2)}"`
+        +` cx="${px(a).toFixed(2)}" cy="${py(b).toFixed(2)}" r="${(rad(DATA[s].pob_total)*(es?1.35:1)).toFixed(2)}"`
         +(es?"":` fill="${scA.color(a)}"`)+`/>`;}
     const rho=spearman(pts.map(p=>p[1]),pts.map(p=>p[2])),f=Math.abs(rho||0);
     const fuerza=f>=.7?"muy de la mano":f>=.5?"bastante de la mano"
@@ -1246,8 +1374,8 @@ Promise.all([fetch("municipios.topojson").then(r=>r.json()),fetch("sudamerica.to
     el.innerHTML=`<div class="dt-t">${cur.label} <i>contra</i> ${indB.label}`
       +`<span>${pts.length} municipios</span></div>`
       +`<svg class="cmp" viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMin meet">${g}`
-      +`<text x="${LX}" y="${H-3.4}" class="cmp-ax">${fmtY(xa[0],cur)}</text>`
-      +`<text x="${RX}" y="${H-3.4}" class="cmp-ax" text-anchor="end">${fmtY(xa[1],cur)} →</text>`
+      +`<text x="${LX}" y="${H-3.6}" class="cmp-ax">${fmtY(xa[0],cur)}</text>`
+      +`<text x="${RX}" y="${H-3.6}" class="cmp-ax" text-anchor="end">${fmtY(xa[1],cur)} →</text>`
       +`</svg>`
       +`<div class="dt-pie">↑ ${indB.label} · → ${cur.label} · el tamaño ordena por`
       +` población, no la mide · tocá una burbuja para señalar ese municipio</div>`
@@ -1262,17 +1390,17 @@ Promise.all([fetch("municipios.topojson").then(r=>r.json()),fetch("sudamerica.to
         c.classList.add("hov");
         // encender ESE municipio en el mapa: la burbuja y el polígono son el
         // mismo objeto, y sin esto había que buscarlo a mano
-        setPincel(new Set([s]),undefined);
+        setPincel(new Set([s]));
         tip(ev,DATA[s].nombre,DATA[s].dpto,
             [[cur.label+" ",fmtM(valOf(s,cur),cur)],
              [indB.label+" ",fmtM(valOf(s,indB),indB)],
              ["población ",fmtI(DATA[s].pob_total,{unit:"hab"})]]);});
       c.addEventListener("mouseleave",()=>{c.classList.remove("hov");sinTip();
-        if(!pincelFijo)setPincel(null,undefined);});
+        setPincel(null);});
       c.addEventListener("click",()=>{
         const ft=F.find(x=>x.properties.sigep===s);
         if(!ft)return;
-        sel=ft;setPincel(null,false);drawOver();renderMun(s);termoVuelve();escribirURL(true);});});}
+        sel=ft;setPincel(null);drawOver();renderMun(s);termoVuelve();escribirURL(true);});});}
 
   // el marcador del termómetro sigue a la SELECCIÓN, así que se recoloca donde
   // se recoloca la ficha. Colgarlo sólo de `termo()` lo dejaba sin poner al
@@ -1412,17 +1540,27 @@ Promise.all([fetch("municipios.topojson").then(r=>r.json()),fetch("sudamerica.to
     if(!isMob()){sheet.style.transform="";document.body.classList.remove("sheet-open");return;}
     sheetState=s;sheet.style.transform="translateY("+detentY(s)+"px)";
     document.body.classList.toggle("sheet-open",s!=="hidden");}
-  function setDetailVisible(v){if(!isMob())return;if(v){if(sheetState==="hidden")setSheet("peek");}else setSheet("hidden");}
+  // ★ EN EL TELÉFONO LA HOJA NUNCA SE VA DEL TODO (Carlos, 2026-08-26).
+  //   Antes sólo aparecía al tocar un municipio, así que quien abría el Atlas en
+  //   el teléfono no tenía forma de saber que existía una ficha: el resumen
+  //   nacional, el reparto de los 343, la lectura y el comparador estaban ahí y
+  //   eran invisibles. Ahora el asomo está SIEMPRE —con el resumen que
+  //   corresponda— y se sube deslizando. `hidden` deja de ser un estado
+  //   alcanzable con el dedo; sólo lo usa el escritorio, donde el panel es fijo.
+  function setDetailVisible(v){if(!isMob())return;
+    if(sheetState==="hidden")setSheet("peek");}
   const curY=()=>{const m=/translateY\(([-\d.]+)px\)/.exec(sheet.style.transform);return m?parseFloat(m[1]):detentY("hidden");};
   let dg=false,dY0=0,dT0=0,dMv=0;
   grip.addEventListener("pointerdown",e=>{if(!isMob())return;dg=true;dY0=e.clientY;dT0=curY();dMv=0;sheet.classList.add("dragging");try{grip.setPointerCapture(e.pointerId);}catch(_){}});
   grip.addEventListener("pointermove",e=>{if(!dg)return;dMv=Math.max(dMv,Math.abs(e.clientY-dY0));const y=Math.max(detentY("full"),Math.min(sheet.clientHeight,dT0+(e.clientY-dY0)));sheet.style.transform="translateY("+y+"px)";});
   function endDrag(){if(!dg)return;dg=false;sheet.classList.remove("dragging");
     if(dMv<6){setSheet(sheetState==="full"?"peek":"full");return;}
-    const y=curY(),cand=[["full",detentY("full")],["peek",detentY("peek")],["hidden",sheet.clientHeight]];
+    // dos detentes, no tres: arrastrar hasta abajo ya no cierra —deja el asomo—,
+    // porque una ficha que se puede cerrar del todo es una ficha que el lector
+    // pierde sin querer y no sabe cómo recuperar
+    const y=curY(),cand=[["full",detentY("full")],["peek",detentY("peek")]];
     let best=cand[0],bd=1e9;cand.forEach(c=>{const d=Math.abs(c[1]-y);if(d<bd){bd=d;best=c;}});
-    // arrastrar hasta abajo cierra la ficha: se repuebla con el resumen vigente y se oculta en el mismo tick
-    if(best[0]==="hidden"){renderSummary();setSheet("hidden");}else setSheet(best[0]);}
+    setSheet(best[0]);}
   grip.addEventListener("pointerup",endDrag);grip.addEventListener("pointercancel",endDrag);
   function renderNational(){setDetailVisible(false);sel=null;drawOver();
     document.getElementById("panel-det").style.display="flex";
@@ -1467,8 +1605,13 @@ Promise.all([fetch("municipios.topojson").then(r=>r.json()),fetch("sudamerica.to
     const der=mudo(cur)?"sólo<br>2024"
       // en modo cambio lo que importa no es el puesto sino de dónde venía
       :ANIO==="cambio"?`2012 <b>${fmtY(v12(sig,cur.key),cur)}</b><br>2024 <b>${fmtY(v24(sig,cur.key),cur)}</b>`
-      :(()=>{const p=pais(cur,ANIO);
-        return `Puesto <b>${puesto(sig,cur)||"—"}</b>/343<br>vs. país <b>${p==null||v==null?"—":sgn(v-p)}</b>`;})();
+      // ⛔ ACÁ TAMBIÉN SE COMPARABA UN CONTEO CONTRA LA SUMA DEL PAÍS. En el
+      //    asomo del teléfono —que es lo ÚNICO que se ve con la ficha abajo—
+      //    «Población total 665.505 hab · vs. país ▼ 10699828,0». Cierto y sin
+      //    contenido: ningún municipio supera la suma de los 343. `chip` ya sabe
+      //    que de un conteo se informa QUÉ PORCIÓN representa, no la diferencia;
+      //    es la misma función que usa la grilla de KPI desde siempre.
+      :`Puesto <b>${puesto(sig,cur)||"—"}</b>/343<br>${chip(v,pais(cur,ANIO),cur,"país")}`;
     document.getElementById("pk").innerHTML=pkHTML(v,der);}
   // peek nacional: sin puesto ni comparación (no se compara consigo mismo), rango de los 343
   function renderPeekNat(){const vv=agg(SIG,cur),psc=scale(cur);
@@ -1649,6 +1792,9 @@ Promise.all([fetch("municipios.topojson").then(r=>r.json()),fetch("sudamerica.to
 
   let rt;window.addEventListener("resize",()=>{clearTimeout(rt);rt=setTimeout(()=>{layout();setSheet(isMob()?sheetState:"hidden");},120);});
   buildCards();renderCatDrop();updateHints();layout();termo();renderLamina();renderNational();
+  // en el teléfono el asomo se levanta ya en el arranque: es lo que anuncia que
+  // hay una ficha debajo. `renderNational` sólo garantiza que no esté oculta.
+  if(isMob())setSheet("peek");
   // ── el estado de la URL se aplica DESPUÉS del primer pintado ──
   // Así el mapa aparece con la vista por defecto y se corrige, en vez de quedar
   // en blanco esperando; y si el hash trae basura, el Atlas ya está en pie.
