@@ -67,7 +67,8 @@
        "pct_basura_entierra",
        -0.424
       ]
-     ]
+     ],
+     "lam": "censo-poblacion-total"
     },
     {
      "key": "pct_0_14",
@@ -736,7 +737,8 @@
        "pct_alojamiento",
        0.422
       ]
-     ]
+     ],
+     "lam": "censo-mujeres"
     },
     {
      "key": "pct_15_64",
@@ -802,7 +804,8 @@
        "pct_analfabetismo_mujeres",
        -0.451
       ]
-     ]
+     ],
+     "lam": "censo-poblacion-en-edad-activa-15-64"
     },
     {
      "key": "pct_menor20",
@@ -869,7 +872,8 @@
        "pct_madres_adolescentes",
        0.612
       ]
-     ]
+     ],
+     "lam": "censo-menores-de-20-anos"
     },
     {
      "key": "pct_60_mas",
@@ -935,7 +939,8 @@
        "pct_pared_adobe",
        0.691
       ]
-     ]
+     ],
+     "lam": "censo-60-anos-y-mas"
     },
     {
      "key": "edad_promedio",
@@ -1001,7 +1006,8 @@
        "pct_disc_caminar",
        0.772
       ]
-     ]
+     ],
+     "lam": "censo-edad-promedio"
     },
     {
      "key": "pob_hombres",
@@ -1066,7 +1072,8 @@
        "pct_alquiler",
        0.419
       ]
-     ]
+     ],
+     "lam": "censo-hombres"
     },
     {
      "key": "pct_0_4",
@@ -1132,7 +1139,8 @@
        "dep_senil",
        -0.617
       ]
-     ]
+     ],
+     "lam": "censo-primera-infancia-0-4"
     },
     {
      "key": "pct_15_29",
@@ -1198,7 +1206,8 @@
        "pct_discapacidad",
        -0.561
       ]
-     ]
+     ],
+     "lam": "censo-jovenes-15-29"
     },
     {
      "key": "pct_80_mas",
@@ -1264,7 +1273,8 @@
        "pct_pared_adobe",
        0.73
       ]
-     ]
+     ],
+     "lam": "censo-cuarta-edad-80"
     },
     {
      "key": "dep_juvenil",
@@ -1329,7 +1339,8 @@
        "razon_dependencia",
        0.599
       ]
-     ]
+     ],
+     "lam": "censo-dependencia-juvenil"
     },
     {
      "key": "dep_senil",
@@ -1394,7 +1405,8 @@
        "pct_pared_adobe",
        0.722
       ]
-     ]
+     ],
+     "lam": "censo-dependencia-senil"
     },
     {
      "key": "indice_envejecimiento",
@@ -1460,7 +1472,8 @@
        "pct_discapacidad",
        0.748
       ]
-     ]
+     ],
+     "lam": "censo-indice-de-envejecimiento"
     },
     {
      "key": "indice_juventud",
@@ -1526,7 +1539,8 @@
        "pct_discapacidad",
        -0.748
       ]
-     ]
+     ],
+     "lam": "censo-indice-de-juventud"
     }
    ]
   },
@@ -2002,7 +2016,8 @@
        "pct_disc_caminar",
        -0.53
       ]
-     ]
+     ],
+     "lam": "censo-autoidentificacion-chiquitano"
     },
     {
      "key": "pct_bilingue",
@@ -2068,7 +2083,8 @@
        "tasa_ocupacion_fem",
        0.665
       ]
-     ]
+     ],
+     "lam": "censo-habla-dos-o-mas-idiomas"
     },
     {
      "key": "pct_registro_menores5",
@@ -2134,7 +2150,8 @@
        "pct_65_mas",
        0.473
       ]
-     ]
+     ],
+     "lam": "censo-nacimientos-inscritos-menores-de-5"
     }
    ]
   },
@@ -3155,7 +3172,8 @@
        "pct_sector_primario",
        -0.612
       ]
-     ]
+     ],
+     "lam": "censo-completo-primaria-19"
     },
     {
      "key": "brecha_alfabetismo",
@@ -3224,7 +3242,8 @@
        "pct_disc_caminar",
        0.717
       ]
-     ]
+     ],
+     "lam": "censo-brecha-de-genero-en-alfabetismo"
     },
     {
      "key": "brecha_edu_superior",
@@ -3293,7 +3312,8 @@
        "pct_idioma_materno_originario",
        -0.571
       ]
-     ]
+     ],
+     "lam": "censo-brecha-de-genero-en-educacion-superior"
     },
     {
      "key": "brecha_anios_estudio",
@@ -3362,7 +3382,8 @@
        "pct_hogar_con_menores",
        0.71
       ]
-     ]
+     ],
+     "lam": "censo-brecha-de-genero-en-anos-de-estudio"
     },
     {
      "key": "pct_rezago_escolar",
@@ -3428,7 +3449,8 @@
        "edad_mediana",
        -0.566
       ]
-     ]
+     ],
+     "lam": "censo-rezago-escolar-8-17"
     }
    ]
   },
@@ -3568,7 +3590,8 @@
        "pct_bicicleta",
        -0.548
       ]
-     ]
+     ],
+     "lam": "censo-paridez-media"
     },
     {
      "key": "edad_1er_hijo",
@@ -4238,7 +4261,8 @@
        "dep_senil",
        0.334
       ]
-     ]
+     ],
+     "lam": "censo-soluciones-caseras"
     },
     {
      "key": "pct_sus",
@@ -4304,7 +4328,8 @@
        "pct_nbi_satisfechas",
        -0.496
       ]
-     ]
+     ],
+     "lam": "censo-afiliados-al-sus"
     },
     {
      "key": "pct_seguro_privado",
@@ -4370,7 +4395,8 @@
        "pct_nbi_pobre",
        -0.519
       ]
-     ]
+     ],
+     "lam": "censo-con-seguro-privado"
     },
     {
      "key": "pct_sin_seguro",
@@ -4436,7 +4462,8 @@
        "pct_nacido_extranjero",
        0.368
       ]
-     ]
+     ],
+     "lam": "censo-sin-afiliacion-a-salud"
     }
    ]
   },
@@ -5794,7 +5821,8 @@
        "pct_cuenta_propia",
        -0.613
       ]
-     ]
+     ],
+     "lam": "censo-brecha-de-genero-en-participacion"
     },
     {
      "key": "pct_ocu_profesionales",
@@ -5860,7 +5888,8 @@
        "pct_alojamiento",
        0.711
       ]
-     ]
+     ],
+     "lam": "censo-profesionales-y-tecnicos"
     },
     {
      "key": "pct_ocu_no_calificado",
@@ -5926,7 +5955,8 @@
        "pct_sanitario_exclusivo",
        0.723
       ]
-     ]
+     ],
+     "lam": "censo-trabajadores-no-calificados"
     },
     {
      "key": "pct_agricultura",
@@ -5992,7 +6022,8 @@
        "pct_lavadora",
        -0.738
       ]
-     ]
+     ],
+     "lam": "censo-ocupados-en-agricultura"
     },
     {
      "key": "pct_manufactura",
@@ -6058,7 +6089,8 @@
        "pct_ocu_profesionales",
        0.473
       ]
-     ]
+     ],
+     "lam": "censo-ocupados-en-manufactura"
     },
     {
      "key": "pct_construccion",
@@ -6124,7 +6156,8 @@
        "tasa_ocupacion",
        -0.442
       ]
-     ]
+     ],
+     "lam": "censo-ocupados-en-construccion"
     },
     {
      "key": "pct_transporte",
@@ -6190,7 +6223,8 @@
        "pct_edu_superior",
        0.618
       ]
-     ]
+     ],
+     "lam": "censo-ocupados-en-transporte"
     },
     {
      "key": "pct_alojamiento",
@@ -6256,7 +6290,8 @@
        "pct_pared_ladrillo",
        0.735
       ]
-     ]
+     ],
+     "lam": "censo-ocupados-en-alojamiento-y-comida"
     }
    ]
   },
@@ -6596,7 +6631,8 @@
        "pct_sin_sanitario",
        0.51
       ]
-     ]
+     ],
+     "lam": "censo-residia-en-otro-municipio"
     },
     {
      "key": "saldo_migratorio",
@@ -6642,7 +6678,8 @@
        "poblacion_flotante",
        -0.3
       ]
-     ]
+     ],
+     "lam": "censo-saldo-migratorio-absoluto"
     }
    ]
   },
@@ -7930,7 +7967,8 @@
        "pct_parto_calificado",
        -0.463
       ]
-     ]
+     ],
+     "lam": "censo-pileta-publica"
     },
     {
      "key": "pct_agua_pozo_bomba",
@@ -7997,7 +8035,8 @@
        "pct_moto",
        0.367
       ]
-     ]
+     ],
+     "lam": "censo-pozo-con-bomba"
     },
     {
      "key": "pct_agua_carro",
@@ -8064,7 +8103,8 @@
        "pct_basura_formal",
        0.341
       ]
-     ]
+     ],
+     "lam": "censo-carro-repartidor-aguatero"
     },
     {
      "key": "pct_agua_lote",
@@ -8103,7 +8143,8 @@
        "pct_urbano",
        -0.302
       ]
-     ]
+     ],
+     "lam": "censo-agua-por-caneria-fuera-pero-en-el-lote"
     },
     {
      "key": "pct_agua_sin_caneria",
@@ -8169,7 +8210,8 @@
        "pct_nbi_satisfechas",
        -0.741
       ]
-     ]
+     ],
+     "lam": "censo-sin-distribucion-por-caneria"
     },
     {
      "key": "pct_agua_rio",
@@ -8236,7 +8278,8 @@
        "pct_nbi_pobre",
        0.588
       ]
-     ]
+     ],
+     "lam": "censo-rio-acequia-o-vertiente-no-protegida"
     },
     {
      "key": "pct_agua_lluvia",
@@ -8303,7 +8346,8 @@
        "pct_nbi_satisfechas",
        -0.496
       ]
-     ]
+     ],
+     "lam": "censo-cosecha-de-agua-de-lluvia"
     },
     {
      "key": "pct_agua_mejorada",
@@ -8369,7 +8413,8 @@
        "pct_nbi_materiales",
        -0.646
       ]
-     ]
+     ],
+     "lam": "censo-acceso-a-fuente-mejorada"
     },
     {
      "key": "pct_basura_carro",
@@ -8436,7 +8481,8 @@
        "pct_nbi_moderada",
        -0.74
       ]
-     ]
+     ],
+     "lam": "censo-entrega-al-carro-basurero"
     },
     {
      "key": "pct_basura_contenedor",
@@ -8502,7 +8548,8 @@
        "pct_basura_carro",
        0.584
       ]
-     ]
+     ],
+     "lam": "censo-deposita-en-contenedor-publico"
     },
     {
      "key": "pct_basura_quema",
@@ -8568,7 +8615,8 @@
        "pct_internet_fijo",
        -0.616
       ]
-     ]
+     ],
+     "lam": "censo-quema-la-basura"
     },
     {
      "key": "pct_basura_entierra",
@@ -8634,7 +8682,8 @@
        "pct_elec_red",
        -0.539
       ]
-     ]
+     ],
+     "lam": "censo-entierra-la-basura"
     },
     {
      "key": "pct_basura_informal",
@@ -8701,7 +8750,8 @@
        "pct_disc_cognitiva",
        0.521
       ]
-     ]
+     ],
+     "lam": "censo-basura-a-terreno-baldio-calle-o-rio"
     },
     {
      "key": "pct_sanitario_exclusivo",
@@ -8767,7 +8817,8 @@
        "pct_idioma_materno_originario",
        -0.684
       ]
-     ]
+     ],
+     "lam": "censo-bano-de-uso-exclusivo-del-hogar"
     },
     {
      "key": "pct_sanitario_compartido",
@@ -8833,7 +8884,8 @@
        "pct_asalariados",
        0.582
       ]
-     ]
+     ],
+     "lam": "censo-bano-compartido"
     },
     {
      "key": "pct_sin_sanitario",
@@ -8899,7 +8951,8 @@
        "pct_nbi_pobre",
        0.714
       ]
-     ]
+     ],
+     "lam": "censo-sin-bano-ni-letrina"
     },
     {
      "key": "pct_desague_superficie",
@@ -8965,7 +9018,8 @@
        "pct_idioma_materno_castellano",
        -0.317
       ]
-     ]
+     ],
+     "lam": "censo-desague-a-la-superficie"
     },
     {
      "key": "pct_saneamiento_mejorado",
@@ -9032,7 +9086,8 @@
        "pct_refrigerador",
        0.778
       ]
-     ]
+     ],
+     "lam": "censo-saneamiento-mejorado"
     }
    ]
   },
@@ -9510,7 +9565,8 @@
        "pct_nbi_materiales",
        -0.722
       ]
-     ]
+     ],
+     "lam": "censo-energia-de-la-red-publica"
     },
     {
      "key": "pct_motor_propio",
@@ -9577,7 +9633,8 @@
        "pct_hogar_compuesto",
        0.554
       ]
-     ]
+     ],
+     "lam": "censo-motor-propio-o-generador"
     },
     {
      "key": "pct_combustible_limpio",
@@ -9643,7 +9700,8 @@
        "pct_agricultura",
        -0.771
       ]
-     ]
+     ],
+     "lam": "censo-combustible-limpio-para-cocinar"
     },
     {
      "key": "pct_no_cocina",
@@ -9710,7 +9768,8 @@
        "pct_nbi_umbral",
        0.34
       ]
-     ]
+     ],
+     "lam": "censo-no-cocina-en-la-vivienda"
     }
    ]
   },
@@ -10588,7 +10647,8 @@
        "pct_salud_privada",
        0.388
       ]
-     ]
+     ],
+     "lam": "censo-viviendas"
     },
     {
      "key": "pct_pared_madera",
@@ -10654,7 +10714,8 @@
        "pct_choza",
        0.592
       ]
-     ]
+     ],
+     "lam": "censo-paredes-de-madera"
     },
     {
      "key": "pct_pared_precaria",
@@ -10721,7 +10782,8 @@
        "pct_65_mas",
        -0.527
       ]
-     ]
+     ],
+     "lam": "censo-paredes-precarias-cana-palma-tronco"
     },
     {
      "key": "pct_techo_losa",
@@ -10788,7 +10850,8 @@
        "pct_auto",
        0.56
       ]
-     ]
+     ],
+     "lam": "censo-techo-de-losa-de-hormigon"
     },
     {
      "key": "pct_piso_cemento",
@@ -10854,7 +10917,8 @@
        "pct_combustible_solido",
        -0.5
       ]
-     ]
+     ],
+     "lam": "censo-piso-de-cemento"
     },
     {
      "key": "pct_piso_ceramica",
@@ -10921,7 +10985,8 @@
        "pct_nbi_pobre",
        -0.734
       ]
-     ]
+     ],
+     "lam": "censo-piso-de-ceramica-o-porcelanato"
     },
     {
      "key": "pers_x_vivienda",
@@ -10988,7 +11053,8 @@
        "tasa_ocupacion",
        -0.59
       ]
-     ]
+     ],
+     "lam": "censo-personas-por-vivienda"
     },
     {
      "key": "pers_x_dormitorio",
@@ -11055,7 +11121,8 @@
        "pct_panel_solar",
        0.497
       ]
-     ]
+     ],
+     "lam": "censo-personas-por-dormitorio"
     },
     {
      "key": "pers_x_habitacion",
@@ -11121,7 +11188,8 @@
        "pct_disc_caminar",
        -0.613
       ]
-     ]
+     ],
+     "lam": "censo-personas-por-habitacion"
     }
    ]
   },
@@ -11328,7 +11396,8 @@
        "pct_ocu_no_calificado",
        0.639
       ]
-     ]
+     ],
+     "lam": "censo-vivienda-en-anticretico"
     },
     {
      "key": "pct_viv_prestada",
@@ -11394,7 +11463,8 @@
        "tasa_ocupacion_fem",
        -0.687
       ]
-     ]
+     ],
+     "lam": "censo-vivienda-prestada-o-cedida"
     }
    ]
   },
@@ -11942,7 +12012,8 @@
        "pct_hogar_con_menores",
        -0.463
       ]
-     ]
+     ],
+     "lam": "censo-hogares-con-carreta-o-carreton"
     }
    ]
   },
@@ -13865,7 +13936,8 @@
        "pct_madres_adolescentes",
        0.451
       ]
-     ]
+     ],
+     "lam": "censo-autocontencion-laboral"
     },
     {
      "key": "dependencia_capital",
@@ -13931,7 +14003,8 @@
        "pct_bicicleta",
        0.37
       ]
-     ]
+     ],
+     "lam": "censo-ocupados-que-trabajan-en-la-capital"
     },
     {
      "key": "poblacion_flotante",
@@ -13996,7 +14069,8 @@
        "dep_senil",
        -0.368
       ]
-     ]
+     ],
+     "lam": "censo-poblacion-flotante-diurna"
     }
    ]
   },
@@ -14068,7 +14142,8 @@
        "tasa_ocupacion_fem",
        -0.585
       ]
-     ]
+     ],
+     "lam": "censo-hogares-nucleares"
     },
     {
      "key": "pct_hogar_monoparental",
@@ -14134,7 +14209,8 @@
        "pct_ocu_no_calificado",
        -0.473
       ]
-     ]
+     ],
+     "lam": "censo-hogares-monoparentales"
     },
     {
      "key": "pct_hogar_compuesto",
@@ -14200,7 +14276,8 @@
        "pct_60_mas",
        -0.659
       ]
-     ]
+     ],
+     "lam": "censo-hogares-compuestos"
     },
     {
      "key": "pct_jefatura_femenina",
@@ -14266,7 +14343,8 @@
        "pct_0_14",
        -0.461
       ]
-     ]
+     ],
+     "lam": "censo-jefatura-femenina"
     },
     {
      "key": "pct_hogar_con_menores",
@@ -14333,7 +14411,8 @@
        "brecha_anios_estudio",
        0.71
       ]
-     ]
+     ],
+     "lam": "censo-hogares-con-menores-de-15"
     },
     {
      "key": "pct_hogar_con_am",
@@ -14399,7 +14478,8 @@
        "pct_discapacidad",
        0.731
       ]
-     ]
+     ],
+     "lam": "censo-hogares-con-adulto-mayor"
     },
     {
      "key": "pct_am_solo",
@@ -14465,7 +14545,8 @@
        "pct_disc_caminar",
        0.768
       ]
-     ]
+     ],
+     "lam": "censo-adultos-mayores-viviendo-solos"
     }
    ]
   }
