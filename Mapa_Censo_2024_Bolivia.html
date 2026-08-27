@@ -19,7 +19,7 @@
   --red:#c71e1d;--red-dk:#9b2226;--orange:#df5d25;--amber:#ee9b00;
   --mint:#94d2bd;--teal:#0a9396;--teal-dk:#005f73;--ink:#001219;--topbar:#013a46;
   --fondo:#f2efe8;--glass:#fffefbdb;--gris-card:#f1ede3;--linea:#ddd6c9;--linea-2:#eae4d7;
-  --tx:#16232c;--suave:#5f6f79;--faint:#93a3ac;--sel:#005f73;--warm:#ee9b00;--peek:138px;
+  --tx:#16232c;--suave:#5f6f79;--faint:#93a3ac;--sel:#005f73;--warm:#ee9b00;--peek:152px;
   --sh:0 1px 0 #12203508,0 10px 30px #12203512;
   --card-solid:#fff;--card-hov:#f7f9fa;--kpi-on:#f6fbfc;--foot-bg:#ffffff88;
   --topline:#012932;--sheet-fade:#fffefbf2;
@@ -133,6 +133,10 @@ body.dark .tbtog .ic-moon{display:none}body.dark .tbtog .ic-sun{display:block}
 .ind.on{background:var(--card-solid);border-color:var(--sel);box-shadow:inset 3px 0 0 var(--sel)}
 .i-nm{font-size:.83rem;font-weight:600;line-height:1.22;letter-spacing:-.005em}
 .i-df{font-size:.69rem;color:var(--suave);line-height:1.32;margin-top:.3rem;font-weight:500}
+/* el universo: sobre qué se divide. Es una nota al pie de la definición, así que
+   va más chica, en cursiva y más apagada — si compitiera en peso con la
+   definición serían dos frases peleando por ser la que explica el indicador. */
+.i-uni{font-size:.62rem;color:var(--suave);opacity:.72;line-height:1.3;margin-top:.22rem;font-style:italic}
 /* indicador que el censo de 2012 no puede dar: se apaga y se explica en la propia
    tarjeta. No se oculta ni se bloquea — que un indicador exista y no tenga serie
    es información, y esconderlo haría creer que el menú cambia de tamaño solo. */
@@ -221,6 +225,14 @@ body.dark .ind.on .mini{opacity:1;filter:none}
   .mini{width:82px;height:auto;aspect-ratio:110/80;opacity:.95}
   .i-nm{font-size:.73rem;line-height:1.16;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
   .i-df{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-size:.6rem;line-height:1.32;margin-top:.2rem;font-weight:500}
+  /* ⚠️ EL UNIVERSO NO VA EN LA TARJETA DEL TELÉFONO — la misma medición que en
+     el tablero metropolitano: acotado a un renglón se lee «sobre las…», porque
+     en los ~106 px de texto que deja una tarjeta de 196 px no entra ninguno de
+     los universos (el más corto es «sobre los hogares»). Ocuparía alto para no
+     decir nada, y encima descuadraría la franja, que se dimensiona contra el
+     alto máximo de tarjeta. Va donde sí se lee: en el bloque del indicador en
+     pantalla, que en móvil es lo primero que asoma de la ficha. */
+  .i-uni{display:none}
   /* mapa: SIEMPRE completo; la ficha flota por encima (no se re-renderiza) */
   #mapbox{inset:auto;top:202px;left:0;right:0;bottom:0}
   .termo{left:8px;right:8px;transform:none;width:auto;bottom:8px;padding:.45rem .7rem;transition:opacity .2s}
@@ -246,6 +258,12 @@ body.dark .ind.on .mini{opacity:1;filter:none}
   .pk .pk-chip{width:13px;height:13px;border-radius: 0;flex:none;box-shadow:0 0 0 1px rgba(128,140,148,.35)}
   .pk .pk-lab{font-size:.55rem;color:var(--faint);text-transform:uppercase;letter-spacing:.04em;line-height:1.2;flex:1;min-width:0}
   .pk .pk-lab b{display:block;color:var(--tx);font-size:.74rem;font-weight:600;text-transform:none;letter-spacing:0;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  /* sobre qué se divide la cifra que está justo al lado. Un renglón, recortado
+     con puntos suspensivos: acá el universo SÍ entra —la ficha usa el ancho de
+     la pantalla, no los 196 px de una tarjeta— y sin él el número de al lado se
+     lee sobre el universo equivocado. */
+  .pk .pk-uni{display:block;color:var(--faint);font-size:.55rem;font-style:italic;font-weight:500;
+    text-transform:none;letter-spacing:0;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .pk .pk-val{font-size:1.16rem;font-weight:700;color:var(--tx);white-space:nowrap}
   .pk .pk-val small{font-size:.58rem;font-weight:600;color:var(--suave);margin-left:.15rem}
   .pk .pk-rk{font-size:.54rem;color:var(--suave);text-align:right;line-height:1.3;flex:none}.pk .pk-rk b{color:var(--tx);font-weight:700}
@@ -509,7 +527,14 @@ Promise.all([fetch("municipios.topojson").then(r=>r.json()),fetch("sudamerica.to
     el.style.setProperty("--d",Math.min(i,14)*16+"ms");
     el.innerHTML=`<div>${mudo(ind)?'<span class="i-tag">Sólo 2024</span>':""}`
       +`<div class="i-nm">${ind.label}</div>`
-      +`<div class="i-df">${mudo(ind)?(ind.w12||"Sin cifra comparable para 2012."):ind.desc}</div></div>`;
+      +`<div class="i-df">${mudo(ind)?(ind.w12||"Sin cifra comparable para 2012."):ind.desc}</div>`
+      // ★ EL UNIVERSO, QUE YA VIAJABA EN EL CATÁLOGO Y NADIE LEÍA. Sin él la
+      //   tarjeta dice qué se cuenta pero no sobre qué se divide, y son dos
+      //   lecturas distintas: «34,5 % está en Chile» es de los EMIGRANTES, no
+      //   de la población. Va debajo y apagado —es una nota al pie de la
+      //   definición, no una segunda definición—. En el modo sin serie no se
+      //   muestra: ahí esa línea la ocupa el motivo por el que está apagado.
+      +`${mudo(ind)||!ind.universo?"":`<div class="i-uni">${ind.universo}</div>`}</div>`;
     const cv=document.createElement("canvas");cv.className="mini";el.appendChild(cv);lista.appendChild(el);
     const c=fitC(cv,110,80);c.setTransform(dpr,0,0,dpr,0,0);const p=d3.geoPath(projMini,c);
     F.forEach(f=>{c.beginPath();p(f);c.fillStyle=sc.color(valOf(f.properties.sigep,ind));c.fill();c.lineWidth=.22;c.strokeStyle=TH.miniLine;c.stroke();});
@@ -816,7 +841,10 @@ Promise.all([fetch("municipios.topojson").then(r=>r.json()),fetch("sudamerica.to
     renderPeek(sig);wireKpi();resetScroll();}
   // bloque "peek": lo único de la ficha que depende del indicador en pantalla
   const pkHTML=(v,der)=>`<span class="pk-chip" style="background:${scale(cur).color(v)}"></span>`
-    +`<span class="pk-lab">${ANIO==="cambio"?"Cambio en pantalla":"Indicador en pantalla"}<b>${cur.label}</b></span>`
+    // el universo va acá porque el asomo es lo ÚNICO que se ve en móvil con la
+    // ficha abajo, y la tarjeta del teléfono no puede mostrarlo (ver el CSS)
+    +`<span class="pk-lab">${ANIO==="cambio"?"Cambio en pantalla":"Indicador en pantalla"}<b>${cur.label}</b>`
+    +`${cur.universo?`<em class="pk-uni">${cur.universo}</em>`:""}</span>`
     +`<span class="pk-val">${mudo(cur)?"s/d":fmtM(v,cur)}${mudo(cur)?"":`<small>${uMode(cur)}</small>`}</span>`
     +`<span class="pk-rk">${der}</span>`;
   function renderPeek(sig){const r=DATA[sig];if(!r)return;const v=valOf(sig,cur);
