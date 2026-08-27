@@ -74,7 +74,7 @@
      "label": "Población 0–14 años",
      "unit": "%",
      "dir": 0,
-     "desc": "Población en edad escolar o menor a ella.",
+     "desc": "Niñas, niños y adolescentes de hasta catorce años.",
      "agg": "peso",
      "den": "den_pct_0_14",
      "s12": true,
@@ -141,7 +141,7 @@
      "label": "Adultos mayores (65+)",
      "unit": "%",
      "dir": 0,
-     "desc": "Personas adultas mayores.",
+     "desc": "Personas de sesenta y cinco años o más.",
      "desc_ine": "Tipo de establecimiento especializado para el alojamiento (temporal o permanente) de personas adultas mayores. En dicho establecimiento se brinda atención, cuidado o acompañamiento institucionalizado.",
      "agg": "peso",
      "den": "den_pct_0_14",
@@ -344,7 +344,7 @@
      "label": "Índice de masculinidad",
      "unit": "h/100m",
      "dir": 0,
-     "desc": "Cuántos hombres hay por cada cien mujeres. Por encima de cien indica una población masculinizada, algo típico de zonas de trabajo agrícola o industrial.",
+     "desc": "Cuántos hombres hay por cada cien mujeres en toda la población. Por encima de cien indica predominio masculino, algo típico de zonas de trabajo agrícola o minero.",
      "desc_ine": "Correspondencia entre el número de hombres y el número de mujeres en una población dada, expresada normalmente como el número de hombres por cada 100 mujeres.",
      "agg": "razon",
      "s12": true,
@@ -743,7 +743,7 @@
      "label": "Población en edad activa (15-64)",
      "unit": "%",
      "dir": 0,
-     "desc": "Población en edades típicamente activas; es el grupo que sostiene económicamente a los otros dos.",
+     "desc": "Población de quince a sesenta y cuatro años, la franja en edades típicamente activas; es el grupo que sostiene económicamente a los otros dos.",
      "agg": "peso",
      "den": "den_pct_0_14",
      "s12": true,
@@ -1401,7 +1401,7 @@
      "label": "Índice de envejecimiento",
      "unit": "índice",
      "dir": 0,
-     "desc": "Cuántas personas mayores hay por cada cien niñas y niños; cruzar cien significa que ya hay más viejos que chicos.",
+     "desc": "Cuántas personas de sesenta y cinco años o más hay por cada cien menores de quince. Cruzar cien significa que ya hay más viejos que chicos.",
      "desc_ine": "Es el número de personas de 65 o más años de edad por cada 100 menores de 15 años.\nSegún la Ley 369 las personas adultas mayores son aquellas de 60 o más años de edad.",
      "agg": "razon",
      "s12": true,
@@ -1467,7 +1467,7 @@
      "label": "Índice de juventud",
      "unit": "índice",
      "dir": 0,
-     "desc": "Qué peso tienen las personas jóvenes dentro de la población total.",
+     "desc": "Cuántos menores de quince años hay por cada cien personas de sesenta y cinco o más. Es el espejo del índice de envejecimiento: por encima de cien hay más chicos que viejos, y en Bolivia llega a pasar de mil.",
      "desc_ine": "Es el número de personas menores de 15 años de edad por cada 100 adultos de 65 o más años.",
      "agg": "razon",
      "s12": true,
@@ -2353,10 +2353,10 @@
     },
     {
      "key": "prom_anios_estudio",
-     "label": "Años de estudio promedio (25+)",
+     "label": "Años de estudio promedio (19+)",
      "unit": "años",
      "dir": 1,
-     "desc": "Cuántos años de escuela acumula, en promedio, una persona adulta.",
+     "desc": "Cuántos años de escuela acumula, en promedio, una persona de diecinueve años o más.",
      "desc_ine": "Número promedio de años de estudio completados por la población de 19 o más años de edad, excluyendo los años de repetición de curso.",
      "agg": "peso",
      "den": "den_pct_sin_educacion",
@@ -2421,10 +2421,10 @@
     },
     {
      "key": "pct_sin_educacion",
-     "label": "Sin nivel educativo (15+)",
+     "label": "Sin nivel educativo (19+)",
      "unit": "%",
      "dir": -1,
-     "desc": "Personas adultas que no completaron ningún nivel educativo.",
+     "desc": "Personas de diecinueve años o más que no completaron ningún nivel educativo.",
      "agg": "peso",
      "den": "den_pct_sin_educacion",
      "s12": true,
@@ -2488,10 +2488,10 @@
     },
     {
      "key": "pct_edu_primaria",
-     "label": "Solo primaria (15+)",
+     "label": "Solo primaria (19+)",
      "unit": "%",
      "dir": -1,
-     "desc": "Personas adultas cuyo máximo nivel alcanzado es la primaria.",
+     "desc": "Personas de diecinueve años o más cuyo máximo nivel alcanzado es la primaria.",
      "agg": "peso",
      "den": "den_pct_sin_educacion",
      "s12": true,
@@ -2555,10 +2555,10 @@
     },
     {
      "key": "pct_edu_secundaria",
-     "label": "Secundaria (15+)",
+     "label": "Secundaria (19+)",
      "unit": "%",
      "dir": 0,
-     "desc": "Personas adultas cuyo máximo nivel alcanzado es la secundaria.",
+     "desc": "Personas de diecinueve años o más cuyo máximo nivel alcanzado es la secundaria.",
      "agg": "peso",
      "den": "den_pct_sin_educacion",
      "s12": true,
@@ -2622,10 +2622,10 @@
     },
     {
      "key": "pct_edu_superior",
-     "label": "Educación superior (25+)",
+     "label": "Educación superior (19+)",
      "unit": "%",
      "dir": 1,
-     "desc": "Personas adultas con estudios técnicos o universitarios. Es el indicador que más separa a unos municipios de otros.",
+     "desc": "Personas de diecinueve años o más con estudios técnicos o universitarios. Es el indicador que más separa a unos municipios de otros.",
      "agg": "peso",
      "den": "den_pct_sin_educacion",
      "s12": true,
@@ -2757,10 +2757,10 @@
     },
     {
      "key": "pct_secundaria_mas",
-     "label": "Secundaria o más (18+)",
+     "label": "Secundaria o más (19+)",
      "unit": "%",
      "dir": 1,
-     "desc": "Personas adultas que terminaron al menos la secundaria.",
+     "desc": "Personas de diecinueve años o más que terminaron al menos la secundaria.",
      "agg": "peso",
      "den": "den_pct_sin_educacion",
      "s12": true,
@@ -2827,7 +2827,7 @@
      "label": "Estudia en sistema público",
      "unit": "%",
      "dir": 0,
-     "desc": "Estudiantes que asisten a un establecimiento público o de convenio, y no a uno privado.",
+     "desc": "De quienes asisten a un establecimiento educativo, cuántos van a uno público o de convenio y no a uno privado.",
      "agg": "peso",
      "den": "den_pct_educacion_publica",
      "s12": true,
@@ -2836,7 +2836,7 @@
       99.2
      ],
      "domd": 34.96,
-     "universo": "sobre la población de 6 a 17 años",
+     "universo": "sobre quienes asisten a un establecimiento educativo, de 4 a 17 años",
      "lam": "censo-educacion-publica",
      "rel": [
       [
@@ -3096,7 +3096,7 @@
      "label": "Completó primaria (19+)",
      "unit": "%",
      "dir": 1,
-     "desc": "Personas adultas que completaron los seis años de primaria.",
+     "desc": "Personas de diecinueve años o más que completaron los seis años de primaria.",
      "agg": "peso",
      "den": "den_pct_sin_educacion",
      "s12": true,
@@ -3366,10 +3366,10 @@
     },
     {
      "key": "pct_rezago_escolar",
-     "label": "Rezago escolar (12-17)",
+     "label": "Rezago escolar (8-17)",
      "unit": "%",
      "dir": -1,
-     "desc": "Adolescentes que van a un curso por debajo del que les corresponde por edad; mide el atraso acumulado, no el abandono.",
+     "desc": "De ocho a diecisiete años, quienes van dos o más cursos por debajo del que les corresponde por edad; mide el atraso acumulado, no el abandono.",
      "agg": "peso",
      "den": "den_pct_rezago_escolar",
      "s12": true,
@@ -3378,7 +3378,7 @@
       21.03
      ],
      "domd": 10.98,
-     "universo": "sobre la población de 6 a 17 años",
+     "universo": "sobre la población de 8 a 17 años que asiste a la escuela",
      "rel": [
       [
        "pct_asistencia_escolar",
@@ -3508,7 +3508,7 @@
      "label": "Paridez media",
      "unit": "hijos",
      "dir": 0,
-     "desc": "Cuántos hijos ha tenido en toda su vida, en promedio, una mujer de doce años o más.",
+     "desc": "Cuántos hijos ha tenido, en promedio, una mujer de quince a cuarenta y nueve años.",
      "desc_ine": "Promedio de hijas(os) nacidos vivos que tienen las mujeres al final de su vida reproductiva.",
      "agg": "peso",
      "den": "den_paridez_media",
@@ -3518,7 +3518,7 @@
       3.8863
      ],
      "domd": 1.3216,
-     "universo": "sobre las mujeres de 12 años o más",
+     "universo": "sobre las mujeres de 15 a 49 años que declararon hijos",
      "rel": [
       [
        "pct_madres_adolescentes",
@@ -3977,7 +3977,7 @@
      "label": "Partos con personal calificado",
      "unit": "%",
      "dir": 1,
-     "desc": "Partos atendidos por personal de salud calificado, y no por partera o familiar.",
+     "desc": "De las mujeres que tuvieron un parto en los últimos cinco años, cuántas fueron atendidas por personal de salud y no por partera o familiar.",
      "desc_ine": "Se refiere a partos atendidos por personal de salud calificado: médico, enfermera y auxiliar de enfermería con formación profesional.",
      "agg": "peso",
      "den": "den_pct_parto_calificado",
@@ -3987,7 +3987,7 @@
       57.364,
       98.6
      ],
-     "universo": "sobre las mujeres en edad fértil (15 a 49 años)",
+     "universo": "sobre las mujeres con un parto en los últimos cinco años",
      "lam": "censo-parto-calificado",
      "rel": [
       [
@@ -4121,7 +4121,7 @@
       31.06
      ],
      "domd": 13.232,
-     "universo": "sobre las mujeres en edad fértil (15 a 49 años)",
+     "universo": "sobre las mujeres de 15 a 19 años",
      "lam": "censo-madres-adolescentes",
      "rel": [
       [
@@ -4926,7 +4926,7 @@
      "label": "Tasa de desocupación",
      "unit": "%",
      "dir": -1,
-     "desc": "De quienes están en el mercado laboral, cuántos buscan trabajo y no lo encuentran.",
+     "desc": "De quienes están en el mercado laboral —trabajando o buscando—, cuántos buscan trabajo y no lo encuentran.",
      "agg": "peso",
      "den": "den_tasa_desocupacion",
      "s12": true,
@@ -4935,7 +4935,7 @@
       4.23
      ],
      "domd": 3.216,
-     "universo": "sobre la población en edad de trabajar (15 años o más)",
+     "universo": "sobre la población económicamente activa",
      "lam": "censo-desocupacion",
      "rel": [
       [
@@ -10995,7 +10995,7 @@
      "label": "Personas por dormitorio",
      "unit": "pers",
      "dir": -1,
-     "desc": "Cuántas personas duermen, en promedio, en cada dormitorio.",
+     "desc": "Cuántas personas hay, en promedio, por cada dormitorio.",
      "desc_ine": "Promedio de personas por cuarto dormitorio en viviendas particulares.",
      "agg": "peso",
      "den": "den_pers_x_dormitorio",
@@ -11005,7 +11005,7 @@
       3.1586
      ],
      "domd": 0.9573,
-     "universo": "sobre las viviendas particulares ocupadas",
+     "universo": "sobre los dormitorios de las viviendas particulares ocupadas",
      "rel": [
       [
        "pers_x_habitacion",
@@ -11062,7 +11062,7 @@
      "label": "Personas por habitación",
      "unit": "pers",
      "dir": -1,
-     "desc": "Cuántas personas hay por cada cuarto, contando todos los ambientes salvo baño y cocina.",
+     "desc": "Cuántas personas hay, en promedio, por cada habitación —los cuartos sin contar baño ni cocina—. Es la medida de hacinamiento.",
      "agg": "peso",
      "den": "den_pers_x_habitacion",
      "s12": true,
@@ -11071,7 +11071,7 @@
       2.3539
      ],
      "domd": 0.5282,
-     "universo": "sobre los hogares",
+     "universo": "sobre las habitaciones de las viviendas particulares ocupadas",
      "rel": [
       [
        "pers_x_dormitorio",
