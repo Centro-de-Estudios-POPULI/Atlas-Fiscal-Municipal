@@ -400,6 +400,29 @@ body.dark .ind.on .mini{opacity:1;filter:none}
 // categorías e indicadores se cargan desde catalogo.json
 // PALETA: extremos POPULI — verde oscuro -> ... -> rojo (divergente, centro = mediana)
 const DIV=d3.interpolateRgbBasis(["#00323d","#005f73","#0a9396","#94d2bd","#e9d8a6","#eda13e","#df5d25","#c71e1d","#8f1f22"]);
+// ★★ SECUENCIAL PARA LOS INDICADORES SIN DIRECCIÓN (decisión de Carlos, 2026-08-26).
+//    107 de los 215 declaran `dir:0` —ser más grande, más joven o más urbano no es
+//    bueno ni malo— y se pintaban con la MISMA rampa de juicio que los 58 donde más
+//    sí es peor, porque `RAMP` sólo distinguía `dir===1`. El resultado se veía en la
+//    pantalla de entrada: «Población total» pintaba a Santa Cruz de la Sierra y El
+//    Alto de rojo alarma. Ser grande no es una alarma.
+//    Ahora un indicador sin dirección va en un solo tono, claro → oscuro: más
+//    intenso = más, sin bueno ni malo. La divergente queda para los 108 donde el
+//    color significa algo.
+//
+//    ES LA `SEQUENTIAL_COOL` DE LA MARCA (populi-marca/paleta.py) CORTADA ANTES DEL
+//    NAVY, y las dos desviaciones están MEDIDAS, no elegidas a ojo:
+//      · sin `#001219` al final — ese navy da 1,01:1 contra la línea municipal, o
+//        sea que en los municipios más oscuros el borde DESAPARECE, y en un mapa de
+//        343 polígonos el borde es lo único que separa a un vecino de otro.
+//        Cortada en petróleo el borde conserva 4,59:1 en claro y 2,31:1 en oscuro.
+//      · sin arena al principio — el `#e9d8a6` compuesto sobre el telón de los
+//        países vecinos (`#e8e2d6`) queda a ΔE 3,5: un municipio del extremo bajo
+//        sería indistinguible de territorio extranjero. La menta da ΔE 8,7, por
+//        encima del umbral de 8 del validador.
+//    Luminosidad monótona y pasos parejos (mayor/menor 1,39×, el mejor de las
+//    cuatro candidatas medidas). Rango de la rampa entera: ΔE 26,6 en claro.
+const SEQ=d3.interpolateRgbBasis(["#94d2bd","#0a9396","#005f73"]);
 const fmt=(v,u)=>{if(v==null||isNaN(v))return"s/d";
   if(u==="hab")return d3.format(",")(Math.round(v)).replace(/,/g,".");
   if(u==="%")return(+v).toFixed(1).replace(".",",")+"%";
@@ -415,12 +438,20 @@ const fitC=(cv,w,h,rf)=>{cv.width=w*dpr;cv.height=h*dpr;return cv.getContext("2d
 // ── TEMA ── el CSS va por variables; el canvas no, así que sus colores viven acá
 const THEME={
   light:{world:"#e8e2d6",worldLine:"#d8d1c1",off:"#ece6da",lineOn:"rgba(11,17,24,.72)",lineOff:"rgba(11,17,24,.16)",
-    nd:"#dfe5ea",alpha:.7,miniLine:"rgba(15,22,30,.28)",miniBol:"rgba(12,20,28,.72)",hov:"rgba(0,18,25,.7)",sel:"#e0912a"},
+    nd:"#dfe5ea",alpha:.7,miniLine:"rgba(15,22,30,.28)",miniBol:"rgba(12,20,28,.72)",hov:"rgba(0,18,25,.7)",sel:"#e0912a",
+    // el límite departamental es la MISMA tinta que el municipal, más gruesa: si
+    // además cambiara de color competiría con la rampa por significar algo
+    lineDpto:"rgba(6,12,18,.92)",eti:"#101d26",etiHalo:"rgba(255,254,251,.86)"},
   // OJO: en oscuro la división municipal va OSCURA igual que en claro — una línea clara se difumina
   // contra los tonos claros de la rampa (arena, mint) y se pierde el corte limpio entre municipios.
   // Solo lo que se apoya sobre fondo oscuro (contorno país del minimapa, depto fuera de foco) va claro.
   dark:{world:"#132029",worldLine:"#1e2f39",off:"#182831",lineOn:"rgba(8,14,20,.78)",lineOff:"rgba(214,232,240,.13)",
-    nd:"#243440",alpha:.84,miniLine:"rgba(8,14,20,.6)",miniBol:"rgba(232,244,250,.58)",hov:"rgba(255,255,255,.9)",sel:"#f2ad3f"}};
+    nd:"#243440",alpha:.84,miniLine:"rgba(8,14,20,.6)",miniBol:"rgba(232,244,250,.58)",hov:"rgba(255,255,255,.9)",sel:"#f2ad3f",
+    // misma regla que la línea municipal: OSCURA también en el tema oscuro, porque
+    // se apoya sobre los tonos claros de la rampa, no sobre el fondo de la página.
+    // La etiqueta es al revés — se apoya sobre el relleno del municipio, que en la
+    // mitad oscura de la rampa es petróleo: texto claro con halo oscuro.
+    lineDpto:"rgba(4,9,14,.95)",eti:"#eef6f9",etiHalo:"rgba(6,14,20,.82)"}};
 let TH=THEME.light;
 const reduceMo=()=>matchMedia("(prefers-reduced-motion:reduce)").matches;
 function applyTheme(dark,save){document.body.classList.toggle("dark",dark);TH=dark?THEME.dark:THEME.light;
@@ -437,6 +468,15 @@ Promise.all([fetch("municipios.topojson").then(r=>r.json()),fetch("sudamerica.to
   ]).then(([topo,wtopo,cat,DATA,DENS])=>{
   const DEN_ORDEN=DENS.orden||[], DEN=DENS.municipios||{};
   const geo=topojson.feature(topo,topo.objects.data),F=geo.features,bolivia=topojson.merge(topo,topo.objects.data.geometries);
+  // ★ LÍMITES DEPARTAMENTALES. Los 343 municipios se dibujaban todos con la misma
+  //   línea de 0,45 px, así que en la vista nacional no había forma de ver dónde
+  //   termina Cochabamba y empieza Potosí: el país era una sola mancha de 343
+  //   piezas. La malla se arma de los datos —el borde entre dos municipios de
+  //   DISTINTO departamento— y no de un archivo aparte que podría desalinearse.
+  //   `topojson.mesh` con filtro devuelve sólo esos arcos, sin duplicarlos.
+  const mallaDepto=topojson.mesh(topo,topo.objects.data,(a,b)=>
+    a!==b&&DATA[a.properties.sigep]&&DATA[b.properties.sigep]
+    &&DATA[a.properties.sigep].dpto!==DATA[b.properties.sigep].dpto);
   const world=topojson.feature(wtopo,wtopo.objects.countries).features.filter(w=>{const c=d3.geoCentroid(w);return c[0]>-95&&c[0]<-28&&c[1]>-58&&c[1]<18;});
   const GRUPOS=cat.grupos,cache={};let curCat=GRUPOS[0],INDS=curCat.indicadores;
   // los ámbitos son listas de códigos SIGEP, no de filas: la misma lista sirve
@@ -486,7 +526,13 @@ Promise.all([fetch("municipios.topojson").then(r=>r.json()),fetch("sudamerica.to
   //     dir  0 (sin lado)     → espectro completo, pero con el pivote en un centro
   //                             real el tono ya no dice bueno/malo sino POR DEBAJO /
   //                             POR ENCIMA del país. Mismo criterio que el atlas fiscal.
-  const RAMP=ind=>ind.dir===1?(t=>DIV(1-t)):DIV;
+  // ⚠️ EN MODO CAMBIO LA RAMPA ES DIVERGENTE AUNQUE EL INDICADOR SEA NEUTRO. Que
+  //    ser más urbano no sea bueno ni malo no quita que CRECER y DECRECER sean dos
+  //    cosas opuestas: ahí el signo existe y el color tiene que mostrarlo. `dir`
+  //    sólo decide de qué lado cae cada signo.
+  const esSec=(ind,modo)=>ind.dir===0&&(modo||ANIO)!=="cambio";
+  const RAMP=(ind,modo)=>esSec(ind,modo)?SEQ
+    :ind.dir===1?(t=>DIV(1-t)):DIV;
 
   // ── EN QUÉ UNIDAD SE MIDE UN CAMBIO ──
   // Un porcentaje cambia en PUNTOS PORCENTUALES y un conteo en PORCENTAJE. Quién
@@ -568,9 +614,22 @@ Promise.all([fetch("municipios.topojson").then(r=>r.json()),fetch("sudamerica.to
     //    guarda el real aparte (`pivReal`) para que la leyenda diga la verdad y
     //    nombre el recorte en vez de rebautizar un borde con el nombre de una
     //    estadística. Pasa en 17 de los 215.
+    // ⚠️ EL ANCLAJE DE TRES PUNTOS VALE TAMBIÉN PARA LA SECUENCIAL, y saltárselo
+    //    arruina el mapa. Primer intento: `scaleSequential` lineal de lo a hi. En
+    //    «Población total» —mediana 12.296, tope de escala 218.819— la mediana cae
+    //    al 5% de la rampa, así que los 343 municipios salieron casi todos del
+    //    mismo mint y el mapa dejó de decir nada. La divergente no tenía ese
+    //    problema porque reparte medio degradado a cada lado del pivote.
+    //    ⇒ Se conserva EXACTAMENTE el mismo dominio de tres puntos (lo, país 2024
+    //      o mediana, hi) y se cambia SÓLO el interpolador. Así un tono sigue
+    //      significando el mismo valor en los dos censos —que es la decisión de
+    //      «una sola escala para 2012 y 2024»— y lo único que se va es el juicio.
+    //    Por eso no hay rama aparte acá abajo: `RAMP` ya devuelve la rampa que
+    //    corresponde y el resto de la maquinaria (el recorte del pivote al 8%,
+    //    `pivReal` para que la leyenda no rebautice un borde) sirve igual.
     const pivReal=piv,pad=(hi-lo)*.08;
     if(pad>0)piv=Math.min(Math.max(piv,lo+pad),hi-pad);
-    const dv=d3.scaleDiverging(RAMP(ind)).domain([lo,piv,hi]).clamp(true);
+    const dv=d3.scaleDiverging(RAMP(ind,modo)).domain([lo,piv,hi]).clamp(true);
     return cache[ck]={lo,hi,med:d3.quantile(vals,.5),piv,pivReal,pivTipo,dv,
       color:v=>v==null||isNaN(v)?TH.nd:dv(v),
       min:vals[0],max:vals[vals.length-1],avg:d3.mean(vals)};}
@@ -667,7 +726,73 @@ Promise.all([fetch("municipios.topojson").then(r=>r.json()),fetch("sudamerica.to
     world.forEach(w=>{bctx.beginPath();g(w);bctx.fill();bctx.stroke();});
     F.forEach(f=>{const s=f.properties.sigep,off=focusDept&&DATA[s].dpto!==focusDept;bctx.beginPath();g(f);
       bctx.globalAlpha=off?1:TH.alpha;bctx.fillStyle=off?TH.off:sc.color(valOf(s,cur));bctx.fill();bctx.globalAlpha=1;
-      bctx.lineWidth=.45/zt.k;bctx.strokeStyle=off?TH.lineOff:TH.lineOn;bctx.stroke();});}
+      bctx.lineWidth=.45/zt.k;bctx.strokeStyle=off?TH.lineOff:TH.lineOn;bctx.stroke();});
+    // la división departamental va ENCIMA de los rellenos, más gruesa que la
+    // municipal (2,4×) — es la jerarquía la que se lee, no el color
+    bctx.beginPath();g(mallaDepto);
+    bctx.lineWidth=1.08/zt.k;bctx.strokeStyle=TH.lineDpto;bctx.lineJoin="round";bctx.stroke();
+    etiquetas();}
+
+  // ── LOS NOMBRES APARECEN AL ACERCAR ───────────────────────────────────────
+  // El mapa no tenía una sola etiqueta: saber qué municipio se está mirando
+  // dependía del hover, y en el teléfono no hay hover. Desde cierto zoom cada
+  // municipio con sitio suficiente escribe su nombre.
+  //
+  // ⚠️ SE DIBUJAN CON LA TRANSFORMACIÓN ANULADA. Si fueran dentro del `setT`,
+  //    el texto se escalaría con el zoom y a 12× sería ilegible por gigante. Se
+  //    proyecta el centroide a mano (`proj` y después el zoom) y se escribe a
+  //    tamaño fijo de pantalla.
+  // ⚠️ Y SÓLO SI EL NOMBRE ENTRA en el ancho que ocupa el municipio en pantalla:
+  //    con 343 polígonos, escribirlos todos deja una maraña donde no se lee
+  //    ninguno. El que no entra no se escribe; para eso está el tooltip.
+  // ⚠️ El centroide y el tamaño de cada municipio dependen de `proj`, que se
+  //    RECALCULA en cada `layout()` (cambia de tamaño la ventana, cambia la
+  //    proyección). Un `d3.geoPath(proj)` creado una sola vez fuera se quedaría
+  //    con la proyección de ese instante —al definirse acá arriba, con `proj`
+  //    todavía `undefined`—. Se recalculan desde `layout()` y se guardan: son 343
+  //    centroides y 343 cajas, y hacerlos en cada repintado se paga en cada rueda
+  //    del zoom.
+  let sitios=[];
+  function medirSitios(){
+    const rp=d3.geoPath(proj);
+    sitios=F.map(f=>{const b=rp.bounds(f),c=rp.centroid(f);
+      return{f,c,w:b[1][0]-b[0][0],h:b[1][1]-b[0][1],
+             nombre:(DATA[f.properties.sigep]||{}).nombre||"",
+             dpto:(DATA[f.properties.sigep]||{}).dpto};})
+      // ★ DE MAYOR A MENOR, y el orden ES la regla de desempate: cuando dos
+      //   nombres se pisan gana el que se dibujó primero, así que recorrer por
+      //   tamaño hace que el municipio grande conserve su nombre y lo ceda el
+      //   chico, que además es el que peor se leería.
+      .sort((a,b)=>(b.w*b.h)-(a.w*a.h));}
+  function etiquetas(){
+    if(!sitios.length)return;
+    bctx.setTransform(dpr,0,0,dpr,0,0);
+    bctx.font='600 11px "Inter",system-ui,sans-serif';
+    bctx.textAlign="center";bctx.textBaseline="middle";
+    bctx.lineJoin="round";bctx.miterLimit=2;
+    // cajas ya ocupadas. Sin esto «Uyuni» se montaba sobre su vecino y quedaban
+    // ilegibles las dos. Comparar contra las ya puestas es barato —nunca pasan
+    // de unas decenas, porque el filtro de tamaño descarta casi todas—.
+    const puestas=[];
+    for(const s of sitios){
+      if(focusDept&&s.dpto!==focusDept)continue;
+      const anchoPx=s.w*zt.k,altoPx=s.h*zt.k;
+      if(anchoPx<34||altoPx<16)continue;
+      if(!isFinite(s.c[0]))continue;
+      const x=zt.x+s.c[0]*zt.k,y=zt.y+s.c[1]*zt.k;
+      if(x<L-40||x>R+40||y<T-20||y>B+20)continue;
+      let t=s.nombre;
+      if(bctx.measureText(t).width>anchoPx-6){
+        // un nombre recortado a la mitad es peor que ninguno: se escribe entero
+        // o no se escribe. La excepción son los muy largos, que se acortan.
+        if(t.length<14||bctx.measureText(t.slice(0,12)+"…").width>anchoPx-6)continue;
+        t=t.slice(0,12)+"…";}
+      const mw=bctx.measureText(t).width/2+3,mh=7;
+      if(puestas.some(p=>Math.abs(p.x-x)<p.mw+mw&&Math.abs(p.y-y)<p.mh+mh))continue;
+      puestas.push({x,y,mw,mh});
+      bctx.strokeStyle=TH.etiHalo;bctx.lineWidth=3;bctx.strokeText(t,x,y);
+      bctx.fillStyle=TH.eti;bctx.fillText(t,x,y);}
+    setT(bctx);}
   function drawPick(){pctx.setTransform(dpr,0,0,dpr,0,0);pctx.clearRect(0,0,W,H);setT(pctx);const g=d3.geoPath(proj,pctx);
     F.forEach((f,i)=>{const c=i+1;pctx.beginPath();g(f);pctx.fillStyle=`rgb(${(c>>16)&255},${(c>>8)&255},${c&255})`;pctx.fill();});}
   function drawOver(){octx.setTransform(dpr,0,0,dpr,0,0);octx.clearRect(0,0,W,H);setT(octx);const g=d3.geoPath(proj,octx);
@@ -679,7 +804,7 @@ Promise.all([fetch("municipios.topojson").then(r=>r.json()),fetch("sudamerica.to
   function layout(){sizeSheet();W=wrap.clientWidth;H=wrap.clientHeight;fitC(base,W,H);fitC(fade,W,H);fitC(over,W,H);fitC(pick,W,H,true);
     bctx=base.getContext("2d");fctx=fade.getContext("2d");octx=over.getContext("2d");pctx=pick.getContext("2d",{willReadFrequently:true});
     const mob=innerWidth<=820;L=mob?6:12+328+18;R=W-(mob?6:12+328+18);T=mob?6:62+8;B=H-(mob?6:84);proj=d3.geoMercator().fitExtent([[L,T],[R,B]],geo);
-    idx.clear();F.forEach((f,i)=>idx.set(i+1,f));render();}
+    idx.clear();F.forEach((f,i)=>idx.set(i+1,f));medirSitios();render();}
 
   const zoom=d3.zoom().scaleExtent([1,12]).on("zoom",e=>{zt=e.transform;cssZoom();}).on("end",()=>render());
   d3.select(catchEl).call(zoom);
@@ -752,9 +877,13 @@ Promise.all([fetch("municipios.topojson").then(r=>r.json()),fetch("sudamerica.to
     bar.style.background=`linear-gradient(to right,${d3.range(0,1.001,.04).map(t=>RAMP(cur)(t)).join(",")})`;
     document.getElementById("tm-lo").innerHTML=`<span class="cap">≤ </span>${f(sc.lo)}`;
     document.getElementById("tm-hi").innerHTML=`<span class="cap">≥ </span>${f(sc.hi)}`;
+    // El marcador del centro está en el 50% de la barra porque el dominio de tres
+    // puntos manda el pivote justo al medio de la rampa. Vale igual para la
+    // secuencial: ahí marca dónde cae el país, o sea de qué tono para arriba un
+    // municipio está por encima del promedio nacional.
     const m=document.createElement("div");m.className="tm-mk";m.style.left="50%";bar.appendChild(m);
-    // El marcador del centro está en el 50% de la barra porque scaleDiverging manda el
-    // pivote justo al medio de la rampa. Se nombra: si no, el lector supone "mediana".
+    // Se nombra el pivote: si no, el lector supone "mediana" y en 17 de los 215 el
+    // número recortado no es la mediana ni el país.
     const pr=sc.pivReal==null?"":`${sc.pivTipo} <b>${f(sc.pivReal)}</b>`
       +(Math.abs(sc.pivReal-sc.piv)>1e-9?` <span style="opacity:.75">(escala centrada en ${f(sc.piv)})</span>`:"");
     document.getElementById("tm-st").innerHTML=`n <b>343</b> · mín <b>${f(sc.min)}</b> · ${pr} · máx <b>${f(sc.max)}</b>`;}
