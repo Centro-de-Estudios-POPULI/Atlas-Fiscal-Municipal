@@ -629,6 +629,15 @@ Promise.all([fetch("municipios.topojson").then(r=>r.json()),fetch("sudamerica.to
   const mallaDepto=topojson.mesh(topo,topo.objects.data,(a,b)=>
     a!==b&&DATA[a.properties.sigep]&&DATA[b.properties.sigep]
     &&DATA[a.properties.sigep].dpto!==DATA[b.properties.sigep].dpto);
+  // ⚠️ LA MALLA SOLA DEJA LOS DEPARTAMENTOS ABIERTOS (Carlos, 2026-08-27).
+  //    `topojson.mesh` con filtro `a!==b` devuelve únicamente los bordes
+  //    INTERIORES —los que separan a dos municipios de distinto departamento— y
+  //    descarta el exterior, que por definición no separa a nadie. Resultado:
+  //    Pando, Beni, Tarija y Santa Cruz quedaban dibujados sólo del lado que da
+  //    a otro departamento y abiertos contra la frontera, así que ninguno se
+  //    cerraba como figura. Se dibuja también el contorno del país, con el mismo
+  //    trazo: el borde de un departamento es borde tanto si del otro lado hay
+  //    otro departamento como si hay otro país.
   const world=topojson.feature(wtopo,wtopo.objects.countries).features.filter(w=>{const c=d3.geoCentroid(w);return c[0]>-95&&c[0]<-28&&c[1]>-58&&c[1]<18;});
   const GRUPOS=cat.grupos,cache={};let curCat=GRUPOS[0],INDS=curCat.indicadores;
   // los ámbitos son listas de códigos SIGEP, no de filas: la misma lista sirve
@@ -881,11 +890,12 @@ Promise.all([fetch("municipios.topojson").then(r=>r.json()),fetch("sudamerica.to
   // trazos del mapa grande, ya proyectados. Se rehacen SÓLO en `layout()`,
   // porque es lo único que cambia la proyección; el zoom es una transformación
   // del contexto y no toca la geometría.
-  let pathMuni=[],pathMundo=[],pathDepto=null;
+  let pathMuni=[],pathMundo=[],pathDepto=null,pathPais=null;
   function armarPaths(){const g=d3.geoPath(proj);
     pathMuni=F.map(f=>new Path2D(g(f)));
     pathMundo=world.map(x=>new Path2D(g(x)));
-    pathDepto=new Path2D(g(mallaDepto));}
+    pathDepto=new Path2D(g(mallaDepto));
+    pathPais=new Path2D(g(bolivia));}
   function drawBase(){const sc=scale(cur);bctx.setTransform(dpr,0,0,dpr,0,0);bctx.clearRect(0,0,W,H);setT(bctx);
     bctx.fillStyle=TH.world;bctx.strokeStyle=TH.worldLine;bctx.lineWidth=.5/zt.k;
     pathMundo.forEach(pa=>{bctx.fill(pa);bctx.stroke(pa);});
@@ -895,7 +905,8 @@ Promise.all([fetch("municipios.topojson").then(r=>r.json()),fetch("sudamerica.to
       bctx.strokeStyle=off?TH.lineOff:TH.lineOn;bctx.stroke(pa);});
     // la división departamental va ENCIMA de los rellenos, más gruesa que la
     // municipal (2,4×) — es la jerarquía la que se lee, no el color
-    bctx.lineWidth=1.08/zt.k;bctx.strokeStyle=TH.lineDpto;bctx.lineJoin="round";bctx.stroke(pathDepto);
+    bctx.lineWidth=1.08/zt.k;bctx.strokeStyle=TH.lineDpto;bctx.lineJoin="round";
+    bctx.stroke(pathDepto);bctx.stroke(pathPais);
   }
 
   // ⛔ LOS NOMBRES DE MUNICIPIO SE SACARON DEL MAPA (Carlos, 2026-08-26).
