@@ -14,11 +14,7 @@
      derecho) y .termo (que descuenta los dos paneles). Fluido: se encoge con la pantalla en vez de
      obligar a esconder la ficha en pantallas medianas -- proyectores y pantallas compartidas
      (1024x768, 1280x720) caen justo ahi. */
-  /* ★ EL MENÚ CRECE PARA QUE ENTREN VARIAS TARJETAS POR FILA, pero atado al
-     ancho de la pantalla, no fijo: el mapa tiene que seguir entrando entero
-     entre los dos paneles. Medido a 1600×899 con el panel en 328 px: la zona
-     útil daba 298 px y entraba UNA sola columna. */
-  --panel-w:clamp(15.5rem,25vw,36rem);
+  --panel-w:clamp(15.5rem,23vw,20.5rem);
   /* ★ LA FICHA ES MÁS ANCHA QUE EL MENÚ (Carlos, 2026-08-26). El menú de la
      izquierda muestra tarjetas de una columna: más ancho no le agrega nada. La
      ficha, en cambio, tiene que meter una dispersión de 343 burbujas, un
@@ -160,17 +156,9 @@ body.dark .tbtog .ic-moon{display:none}body.dark .tbtog .ic-sun{display:block}
 .bs-op.sin12 .bs-l{color:var(--suave)}
 .bs-nada{padding:8px 9px;font-size:.65rem;color:var(--faint)}
 
-/* ★ REJILLA QUE SE ACOMODA SOLA. `auto-fill` con un mínimo declarado es lo que
-   hace que el número de columnas lo decida el ancho disponible y no un número
-   escrito a mano: 1 columna en un portátil, 2 desde ~1500 px, 3 desde ~2300.
-   Medido: con baldosas de 168 px, dos columnas necesitan 345 px de zona útil y
-   tres necesitan 522. */
-.lista{display:grid;grid-template-columns:repeat(auto-fill,minmax(142px,1fr));
-  gap:8px;margin-top:11px;align-content:start}
-/* La baldosa apila: mini-mapa arriba a todo el ancho, texto debajo. Al lado no
-   entra — con 168 px de columna, un mini-mapa de 110 dejaría 40 px de texto. */
-.ind{display:flex;flex-direction:column;gap:.45rem;text-align:left;
-  cursor:pointer;width:100%;padding:.62rem;border:1px solid var(--linea-2);background:var(--gris-card);color:inherit;
+.lista{display:flex;flex-direction:column;gap:8px;margin-top:11px}
+.ind{display:grid;grid-template-columns:minmax(0,1fr) 110px;align-items:center;gap:.7rem;text-align:left;
+  cursor:pointer;width:100%;padding:.72rem;border:1px solid var(--linea-2);background:var(--gris-card);color:inherit;
   transition:background-color .22s ease,border-color .22s ease,box-shadow .22s ease;
   animation:cardIn .36s cubic-bezier(.2,.7,.3,1) both;animation-delay:var(--d,0ms)}
 .ind:hover{background:var(--card-hov)}
@@ -187,21 +175,7 @@ body.dark .tbtog .ic-moon{display:none}body.dark .tbtog .ic-sun{display:block}
 .ind.sin12{opacity:.66}.ind.sin12 .i-nm{color:var(--suave)}
 .i-tag{display:inline-block;font-size:.54rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;
   color:var(--suave);border:1px solid var(--linea);padding:0 5px;margin-bottom:4px}
-/* ⚠️ EL MINI-MAPA VA ACOTADO. A todo el ancho de una baldosa de 221 px medía
-   160 px de alto y la baldosa entera 255: con 28 indicadores eso son siete
-   pantallas de scroll. Acotado a 128 px la baldosa baja a ~200 y el mini-mapa
-   sigue cumpliendo su papel, que es de SEÑAL DE RECONOCIMIENTO —la silueta del
-   patrón— y no de mapa que se lee. */
-.mini{width:100%;max-width:128px;height:auto;aspect-ratio:110/80;order:-1;
-  align-self:center;pointer-events:none;
-  opacity:.6;filter:saturate(.32);transition:opacity .28s ease,filter .28s ease}
-/* el texto se acota para que TODAS las baldosas midan lo mismo: con bloques
-   libres el alto dependía del indicador y la rejilla quedaba dentada */
-.i-nm{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.i-df{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
-/* dos renglones, no uno: a una línea el universo más largo se leía «sobre las
-   viviendas…», que ocupa alto sin decir nada */
-.i-uni{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.mini{width:110px;height:80px;flex:none;pointer-events:none;opacity:.6;filter:saturate(.32);transition:opacity .28s ease,filter .28s ease}
 .ind:hover .mini{opacity:.9;filter:saturate(.7)}
 .ind.on .mini{opacity:1;filter:saturate(.88)}
 /* en oscuro la desaturación tira a pardo: se apagan con brillo en vez de con saturación */
@@ -272,7 +246,12 @@ body.dark .ind.on .mini{opacity:1;filter:none}
 .lee p{margin:0 0 .38rem}.lee p:last-child{margin-bottom:0}
 .lee b{color:var(--tx);font-weight:650}
 .lee-adv{color:var(--faint);font-style:italic}
-.kgrid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--linea-2);border:1px solid var(--linea-2)}
+/* ★ TRES COLUMNAS EN LA FICHA (Carlos, 2026-08-27). Medido con la ficha en su
+   ancho real: a 1366 el KPI queda en 125×93 px y a 1920 en 133×93, con CERO
+   rótulos recortados de sus dos renglones y sin desborde de la grilla. Con dos
+   columnas una categoría de 28 indicadores pedía catorce filas de scroll; con
+   tres son diez, y el ojo compara mejor de a tres. */
+.kgrid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:var(--linea-2);border:1px solid var(--linea-2)}
 .kpi{background:var(--card-solid);padding:.5rem .6rem;cursor:pointer;border-top:2px solid var(--teal);
   transition:background-color .22s ease,border-color .22s ease;
   animation:kpiIn .34s cubic-bezier(.2,.7,.3,1) both;animation-delay:var(--d,0ms)}
@@ -399,12 +378,9 @@ body.dark .ind.on .mini{opacity:1;filter:none}
   .busca-res{max-height:52vh}
   .cat-drop{max-height:64vh;box-shadow:0 14px 30px rgba(16,26,20,.22)}.cat-op{padding:11px 13px;font-size:.82rem}
   .p-body{padding:8px 0 8px 12px;overflow:hidden;flex:1}.p-sub{display:none}
-  /* en el teléfono NO es una rejilla: es una tira que se desliza a lo ancho.
-     Hay que reponer `display:flex`, porque la regla de escritorio pasó a grid. */
   .lista{display:flex;flex-direction:row;overflow-x:auto;overflow-y:hidden;gap:9px;margin-top:0;height:100%;scroll-snap-type:x proximity;padding-right:12px}
-  .ind{display:grid;grid-template-columns:minmax(0,1fr) 62px;align-items:center;gap:.5rem;min-width:196px;max-width:196px;padding:.55rem;scroll-snap-align:start;height:calc(100% - 3px);overflow:hidden}
-  /* en la tira el mini-mapa va al COSTADO otra vez, no arriba */
-  .mini{width:62px;height:auto;aspect-ratio:110/80;opacity:.95;order:0}
+  .ind{display:grid;grid-template-columns:minmax(0,1fr) 82px;align-items:center;gap:.5rem;min-width:196px;max-width:196px;padding:.55rem;scroll-snap-align:start;height:calc(100% - 3px);overflow:hidden}
+  .mini{width:82px;height:auto;aspect-ratio:110/80;opacity:.95}
   .i-nm{font-size:.73rem;line-height:1.16;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
   .i-df{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-size:.6rem;line-height:1.32;margin-top:.2rem;font-weight:500}
   /* ⚠️ EL UNIVERSO NO VA EN LA TARJETA DEL TELÉFONO — la misma medición que en
@@ -455,6 +431,7 @@ body.dark .ind.on .mini{opacity:1;filter:none}
   .pk .pk-val{font-size:1.16rem;font-weight:700;color:var(--tx);white-space:nowrap}
   .pk .pk-val small{font-size:.58rem;font-weight:600;color:var(--suave);margin-left:.15rem}
   .pk .pk-rk{font-size:.54rem;color:var(--suave);text-align:right;line-height:1.3;flex:none}.pk .pk-rk b{color:var(--tx);font-weight:700}
+  .kgrid{grid-template-columns:1fr 1fr}
   #panel-det .p-body{flex:1;padding:4px 12px calc(30px + env(safe-area-inset-bottom));overflow-y:auto;overflow-x:hidden;
     -webkit-overflow-scrolling:touch;overscroll-behavior:contain}
   .k-v{font-size:.9rem}.k-l{font-size:.55rem}.k-c span{font-size:.53rem}
@@ -832,8 +809,8 @@ Promise.all([fetch("municipios.topojson").then(r=>r.json()),fetch("sudamerica.to
   function buildCards(){lista.innerHTML="";INDS.forEach((ind,i)=>{const sc=scale(ind);
     const el=document.createElement("button");
     el.className="ind"+(ind.key===cur.key?" on":"")+(mudo(ind)?" sin12":"");el.dataset.k=ind.key;
-    // el texto va recortado a tres renglones en la baldosa; entero acá, que es
-    // donde el navegador lo muestra sin que tengamos que inventar un tooltip
+    // en el teléfono el texto de la tarjeta va recortado a dos renglones; entero
+    // acá, que es donde el navegador lo muestra sin inventar un tooltip
     el.title=ind.label+" — "+(mudo(ind)?(ind.w12||""):ind.desc)
       +(ind.universo?" ("+ind.universo+")":"");
     el.style.setProperty("--d",Math.min(i,14)*16+"ms");
@@ -1306,16 +1283,42 @@ Promise.all([fetch("municipios.topojson").then(r=>r.json()),fetch("sudamerica.to
     return dx&&dy?num/Math.sqrt(dx*dy):null;}
   const fmtNum=v=>v==null||isNaN(v)?"—":(v<0?"−":"")+Math.abs(v).toFixed(2).replace(".",",");
 
+  // ★★ EL DESPLEGABLE OFRECE LOS CRUCES QUE SE SOSTIENEN, NO LOS 215.
+  //    Ofrecer todos contra todos son 23.005 pares y la enorme mayoría no dice
+  //    nada o dice una obviedad. `relaciones_atlas.py` los midió todos y dejó
+  //    declarado en el catálogo, por indicador, una lista corta ordenada por
+  //    fuerza (campo `rel`, hasta 12).
+  //    ⚠️ EL FILTRO NO ES «SIGNIFICATIVO»: con n=343, |ρ|>0,106 ya es p<0,05, o
+  //      sea el 72% de los pares. Lo que se descarta es lo TRIVIAL —complementos
+  //      aritméticos, indicadores anidados uno en otro, porciones que compiten
+  //      por el mismo 100%, y la misma variable dicha dos veces— y cada familia
+  //      se detecta MIDIENDO sobre el dato, no con una lista a mano.
+  //    ⚠️ Y NO ESCONDE NADA: la última opción abre los 215. Filtrar es un atajo,
+  //      no una reja.
+  let verTodos=false;
+  const TODOS=()=>GRUPOS.flatMap(g=>g.indicadores);
   function montarComparar(){
     const s=document.getElementById("cmp-b");if(!s)return;
-    // se ofrecen TODOS los indicadores, no sólo los de la categoría en pantalla:
-    // las relaciones que valen la pena suelen cruzar categorías (agua con NBI)
-    s.innerHTML=`<option value="">Comparar con…</option>`+GRUPOS.map(g=>
-      `<optgroup label="${g.label}">`+g.indicadores.filter(i=>i.key!==cur.key)
-        .map(i=>`<option value="${i.key}"${indB&&indB.key===i.key?" selected":""}>${i.label}</option>`).join("")
-      +`</optgroup>`).join("");
+    const porClave=k=>TODOS().find(i=>i.key===k);
+    const rel=(cur.rel||[]).map(([k,r])=>[porClave(k),r]).filter(x=>x[0]);
+    let html=`<option value="">Comparar con…</option>`;
+    if(rel.length&&!verTodos){
+      // el ρ va A LA VISTA en cada opción: el lector ve cuál es el cruce más
+      // fuerte ANTES de elegirlo, y de paso que 0,84 y 0,31 no son lo mismo
+      html+=`<optgroup label="Los cruces que más se sostienen">`
+        +rel.map(([i,r])=>`<option value="${i.key}"${indB&&indB.key===i.key?" selected":""}>`
+          +`${i.label}  ·  ρ ${r>0?"+":"−"}${Math.abs(r).toFixed(2).replace(".",",")}</option>`).join("")
+        +`</optgroup><optgroup label="—"><option value="__todos">Ver los 215 indicadores…</option></optgroup>`;
+    }else{
+      html+=GRUPOS.map(g=>`<optgroup label="${g.label}">`
+        +g.indicadores.filter(i=>i.key!==cur.key)
+          .map(i=>`<option value="${i.key}"${indB&&indB.key===i.key?" selected":""}>${i.label}</option>`).join("")
+        +`</optgroup>`).join("");
+    }
+    s.innerHTML=html;
     s.onchange=()=>{
-      indB=s.value?GRUPOS.flatMap(g=>g.indicadores).find(i=>i.key===s.value)||null:null;
+      if(s.value==="__todos"){verTodos=true;montarComparar();s.focus();return;}
+      indB=s.value?porClave(s.value)||null:null;
       dispersion();};}
 
   // ── EL TAMAÑO DE LA BURBUJA ES LA POBLACIÓN ──────────────────────────────
@@ -1334,14 +1337,21 @@ Promise.all([fetch("municipios.topojson").then(r=>r.json()),fetch("sudamerica.to
   function radioPob(){
     const ps=SIG.map(s=>DATA[s].pob_total).filter(v=>v>0);
     const lo=Math.log(d3.min(ps)),hi=Math.log(d3.max(ps));
-    // ★ MÁS CHICAS Y CON BORDE (Carlos, 2026-08-26). Con radios de 0,9 a 3,6 la
-    //   nube se veía «excesivamente llena»: a 343 puntos las burbujas se tocaban
-    //   y el conjunto era una mancha. Bajan a 0,55–2,15 —un 40% del área— y se
-    //   les pone contorno, que es lo que separa a dos que se solapan.
-    //   ⚠️ SE CONSERVA LA RELACIÓN: el rango se encoge de forma proporcional, no
-    //     se cambia la regla. Sigue siendo logarítmico y la razón entre el más
-    //     grande y el más chico es la misma de antes (3,9×).
-    return v=>!v||v<=0?0.7:0.55+1.6*((Math.log(v)-lo)/((hi-lo)||1));}
+    // ★ EL TAMAÑO TENÍA QUE NOTARSE MÁS (Carlos, 2026-08-27). Con 0,55–2,15 el
+    //   municipio más chico daba un punto de 4,4 px de diámetro: con 343 encima
+    //   se leía «grande» igual que los del medio. El problema no era la regla
+    //   sino el PISO.
+    //   Medido, con el panel en 402 px:
+    //        antes 0,55–2,15   mín 4,4 px · mediana 8,9 · máx 17,3 · mediana/mín 2,0×
+    //        ahora 0,32–2,25   mín 2,6 px · mediana 8,0 · máx 18,1 · mediana/mín 3,1×
+    //   El tope apenas se mueve —17,3 a 18,1— así que no hay burbuja exagerada;
+    //   lo que cambia es que el extremo bajo por fin se lee como extremo bajo.
+    //   Se probó además curvar la escala (potencia 1,25 sobre el logaritmo) y se
+    //   descartó: apretaba el medio, que es donde vive el 90% de los municipios.
+    //   ⚠️ SIGUE SIENDO LOGARÍTMICA, con lo que eso implica: el tamaño ORDENA,
+    //     no mide. Un punto del doble de radio no tiene el doble de gente, y por
+    //     eso el pie del gráfico lo dice con todas las letras.
+    return v=>!v||v<=0?0.42:0.32+1.93*((Math.log(v)-lo)/((hi-lo)||1));}
 
   function dispersion(){
     const el=document.getElementById("cmp");if(!el)return;
@@ -1407,13 +1417,22 @@ Promise.all([fetch("municipios.topojson").then(r=>r.json()),fetch("sudamerica.to
   // abrir un enlace con municipio: `aplicarEstado` fija `sel` DESPUÉS del primer
   // pintado del termómetro, y nadie volvía a avisarle.
   const repintarFicha=()=>{montarComparar();dispersion();distribucion();lectura();termoVuelve();};
+  // Cambiar de indicador cambia la lista de cruces que tiene sentido ofrecer: se
+  // vuelve a la corta, porque la larga se abrió para el indicador anterior.
+  // ⚠️ Y si la pareja que estaba elegida NO figura entre los cruces del nuevo
+  //    indicador, se suelta. Si no, el selector mostraría «Comparar con…» —vacío,
+  //    porque esa opción ya no existe en la lista— mientras el gráfico de abajo
+  //    sigue dibujando la pareja vieja: dos cosas distintas en la misma pantalla.
+  function olvidarComparar(){
+    verTodos=false;
+    if(indB&&!(cur.rel||[]).some(([k])=>k===indB.key))indB=null;}
 
   // cambiar de indicador NO reconstruye la ficha (evita el parpadeo y conserva el scroll):
   // solo mueve el resalte, repinta el mapa con crossfade y actualiza el bloque peek
   function select(ind){cur=ind;
     document.querySelectorAll(".ind").forEach(c=>c.classList.toggle("on",c.dataset.k===ind.key));
     document.querySelectorAll("#kgrid .kpi").forEach(el=>el.classList.toggle("on",el.dataset.k===ind.key));
-    fadeSwap(drawBase);drawOver();termo();renderLamina();repintarFicha();
+    fadeSwap(drawBase);drawOver();termo();renderLamina();olvidarComparar();repintarFicha();
     if(sel)renderPeek(sel.properties.sigep);else if(focusDept)renderPeekDept(focusDept);else renderPeekNat();}
 
   // ── el enlace a la lámina de la Galería ──
