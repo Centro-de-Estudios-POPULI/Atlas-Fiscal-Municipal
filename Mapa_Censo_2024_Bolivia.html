@@ -180,6 +180,36 @@ body.dark .ind.on .mini{opacity:1;filter:none}
 .d-mun{font-family:var(--fd);font-size:1.28rem;font-weight:600;letter-spacing:-.01em;line-height:1.02}
 .d-sub{font-size:.61rem;color:var(--suave);font-weight:500;margin-top:5px}
 .back{color:var(--teal-dk);cursor:pointer;font-weight:700;text-decoration:none}.back:hover{text-decoration:underline}
+/* ── El reparto de los 343 ────────────────────────────────────────────────── */
+#dist:empty,#lee:empty{display:none}
+.dt-t{display:flex;justify-content:space-between;align-items:baseline;gap:.5rem;
+  font-size:.57rem;font-weight:700;text-transform:uppercase;letter-spacing:.09em;
+  color:var(--suave);margin-bottom:.4rem}
+.dt-t span{font-size:.58rem;font-weight:500;text-transform:none;letter-spacing:0;color:var(--faint)}
+/* alto fijo: el histograma es una franja de lectura, no un gráfico que crece */
+.dt{width:100%;height:74px;display:block;margin-bottom:.5rem;overflow:visible}
+.dt-pais{stroke:var(--tx);stroke-width:.35;stroke-dasharray:1.4 1}
+.dt-dpto{stroke:var(--suave);stroke-width:.3;stroke-dasharray:.8 1}
+.dt-ax{font-size:2.1px;fill:var(--faint);font-weight:600;font-family:var(--f)}
+.dt-sell{stroke:var(--warm);stroke-width:.5}
+.dt-sel{fill:var(--warm)}
+/* ── Comparar dos indicadores ─────────────────────────────────────────────── */
+#cmp:empty{display:none}
+#cmp-b{width:100%;margin-top:9px;font-family:var(--f);font-size:.66rem;font-weight:500;
+  padding:5px 8px;color:var(--tx);background:var(--card-solid);border:1px solid var(--linea);
+  border-radius:0;outline:none;cursor:pointer}
+#cmp-b:focus{border-color:var(--sel)}
+.cmp{width:100%;height:auto;display:block;margin-bottom:.45rem;overflow:visible}
+.cmp-ax{font-size:2.6px;fill:var(--faint);font-weight:600;font-family:var(--f)}
+/* el señalado lleva el MISMO ámbar con que el mapa lo resalta: es el mismo
+   municipio en dos dibujos, y el color es lo que los ata */
+.cmp-sel{fill:var(--warm);stroke:var(--tx);stroke-width:.4}
+.dt-t i{font-style:normal;font-weight:500;text-transform:lowercase;letter-spacing:0;color:var(--faint)}
+/* la lectura: párrafos cortos, tinta de texto y nunca el color de la serie */
+.lee{font-size:.66rem;line-height:1.45;color:var(--suave);margin:0 0 .7rem}
+.lee p{margin:0 0 .38rem}.lee p:last-child{margin-bottom:0}
+.lee b{color:var(--tx);font-weight:650}
+.lee-adv{color:var(--faint);font-style:italic}
 .kgrid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--linea-2);border:1px solid var(--linea-2)}
 .kpi{background:var(--card-solid);padding:.5rem .6rem;cursor:pointer;border-top:2px solid var(--teal);
   transition:background-color .22s ease,border-color .22s ease;
@@ -374,8 +404,19 @@ body.dark .ind.on .mini{opacity:1;filter:none}
     <span class="grip-bar"></span>
     <div class="det-head"><div class="d-mun" id="d-mun"></div><div class="d-sub" id="d-sub"></div></div>
     <div class="pk" id="pk"></div>
+    <!-- ★ COMPARAR DOS INDICADORES. El Atlas contestaba «cómo está X» y nunca
+         «¿X y Z van juntos?». El mapa sigue mostrando el principal; la
+         dispersión de los 343 va acá abajo. -->
+    <select id="cmp-b" aria-label="Comparar con otro indicador"></select>
   </div>
-  <div class="p-body"><div class="kgrid" id="kgrid"></div></div>
+  <!-- ★ DÓNDE CAE ESTE MUNICIPIO ENTRE LOS 343. La grilla de KPI contesta
+       «cuánto tiene» y nunca contestaba «cuánto es eso». El puesto 87/343 no
+       dice si el 87 está pegado al 1 o al 343: eso lo dice la forma del reparto.
+       ⚠️ NO es la mancuerna del tablero metropolitano. Allá son NUEVE
+          municipios y una fila por cada uno se lee; acá son 343 y 343 filas no
+          son un gráfico, son una lista. A esta escala la forma honesta es el
+          histograma, con el municipio señalado marcado encima. -->
+  <div class="p-body"><div id="cmp"></div><div id="dist"></div><div id="lee"></div><div class="kgrid" id="kgrid"></div></div>
 </div>
 
 <!-- ★ EL ATLAS Y LA GALERÍA SE HABLAN. Cada mapa censal del Banco de Gráficos
@@ -888,12 +929,202 @@ Promise.all([fetch("municipios.topojson").then(r=>r.json()),fetch("sudamerica.to
       +(Math.abs(sc.pivReal-sc.piv)>1e-9?` <span style="opacity:.75">(escala centrada en ${f(sc.piv)})</span>`:"");
     document.getElementById("tm-st").innerHTML=`n <b>343</b> · mín <b>${f(sc.min)}</b> · ${pr} · máx <b>${f(sc.max)}</b>`;}
 
+  // ════════════════════════════════════════════════════════════════════════
+  //  EL REPARTO DE LOS 343, Y LO QUE EL DIBUJO NO PUEDE DECIR
+  // ════════════════════════════════════════════════════════════════════════
+  // Las dos piezas salen del MISMO dato que acaba de pintarse en el mapa —los
+  // mismos valores, el mismo dominio, la misma rampa—, así que no pueden
+  // desincronizarse de lo que el lector está mirando.
+  const N_BIN=30;
+  function reparto(){
+    const sc=scale(cur);
+    if(sc.vacio)return null;
+    const vs=[];for(const s of SIG){const v=valOf(s,cur);if(v!=null&&!isNaN(v))vs.push([s,v]);}
+    if(vs.length<8)return null;
+    // el histograma usa el MISMO dominio recortado que el mapa: si usara el
+    // rango crudo, un municipio extremo estiraría el eje y el 95% de las barras
+    // se apelotonaría en un rincón mientras el mapa muestra otra cosa
+    const lo=sc.lo,hi=sc.hi,paso=(hi-lo)/N_BIN||1;
+    const bins=new Array(N_BIN).fill(0);
+    for(const [,v] of vs){
+      const j=Math.max(0,Math.min(N_BIN-1,Math.floor((v-lo)/paso)));bins[j]++;}
+    return{sc,vs,lo,hi,paso,bins,tope:Math.max(...bins)};}
+
+  function distribucion(){
+    const el=document.getElementById("dist");if(!el)return;
+    const r=reparto();
+    if(!r){el.innerHTML="";return;}
+    const {sc,lo,hi,paso,bins,tope}=r;
+    const W=100,H=30,BASE=H-6;
+    const x=v=>((v-lo)/(hi-lo))*W;
+    let s="";
+    bins.forEach((n,j)=>{
+      const h=n?Math.max(.9,(n/tope)*(BASE-2)):0;
+      // cada barra lleva el color que le tocaría a su tramo EN EL MAPA: así el
+      // histograma es también la leyenda, y se ve de una qué tono es frecuente
+      s+=`<rect x="${(j*W/N_BIN).toFixed(2)}" y="${(BASE-h).toFixed(2)}" width="${(W/N_BIN-.22).toFixed(2)}"`
+       +` height="${h.toFixed(2)}" fill="${sc.color(lo+(j+.5)*paso)}"/>`;});
+    // referencias: el país siempre; el departamento sólo si hay uno en foco
+    const marca=(v,cls,txt)=>v==null||!isFinite(v)?"":
+      `<line x1="${x(v).toFixed(2)}" y1="1" x2="${x(v).toFixed(2)}" y2="${BASE}" class="${cls}"/>`
+      +`<text x="${Math.min(W-1,Math.max(1,x(v))).toFixed(2)}" y="${H-1}" class="dt-ax"`
+      +` text-anchor="${x(v)>W*.7?"end":x(v)<W*.3?"start":"middle"}">${txt}</text>`;
+    const vPais=pais(cur,ANIO);
+    s+=marca(clamp(vPais,lo,hi),"dt-pais","país "+fmtM(vPais,cur));
+    if(focusDept){const vd=agg(byDpto[focusDept],cur);
+      s+=marca(clamp(vd,lo,hi),"dt-dpto",focusDept);}
+    // el municipio señalado va ARRIBA de todo y en ámbar, el mismo color con
+    // que el mapa lo resalta: es el mismo objeto en dos dibujos
+    if(sel){const v=valOf(sel.properties.sigep,cur);
+      if(v!=null&&isFinite(v)){const px=x(Math.min(hi,Math.max(lo,v)));
+        s+=`<polygon class="dt-sel" points="${px-1.6},0 ${px+1.6},0 ${px},2.6"/>`
+          +`<line x1="${px}" y1="0" x2="${px}" y2="${BASE}" class="dt-sell"/>`;}}
+    // ⚠️ SE DECLARA QUE EL EJE ES EL DEL MAPA, no el rango crudo. El dominio va
+    //    recortado (p2–p98), así que los extremos entran clampeados en la primera
+    //    y en la última barra — y la lectura de abajo sí nombra el máximo real.
+    //    Sin esta línea, «encabeza con 93,6%» debajo de un eje que termina en
+    //    70,8% parece una contradicción en vez de dos cosas distintas.
+    el.innerHTML=`<div class="dt-t">Cómo se reparten los 343<span>eje del mapa · ${
+        fmtM(sc.lo,cur)} a ${fmtM(sc.hi,cur)}</span></div>`
+      +`<svg class="dt" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">${s}</svg>`;}
+
+  const clamp=(v,a,b)=>v==null||!isFinite(v)?null:Math.min(b,Math.max(a,v));
+
+  // ── LA LECTURA ────────────────────────────────────────────────────────────
+  // «No trates de usar todo el espacio, puedes añadir abajo texto para que
+  // rellene» (Carlos, para el tablero metropolitano). Lo que sobra se llena con
+  // lo que el dibujo NO puede decir: quién encabeza, quién cierra, cuánto hay
+  // entre las puntas y cuántos quedan por encima del país.
+  function lectura(){
+    const el=document.getElementById("lee");if(!el)return;
+    const r=reparto();
+    if(!r||mudo(cur)){el.innerHTML="";return;}
+    const {vs}=r,u=uMode(cur);
+    const orden=vs.slice().sort((a,b)=>d3.descending(a[1],b[1]));
+    const alto=orden[0],bajo=orden[orden.length-1];
+    const nom=s=>DATA[s].nombre;
+    const li=[];
+    // ⚠️ La DIFERENCIA entre dos porcentajes se mide en PUNTOS. Decir «3,2%
+    //    entre las dos puntas» sugiere una razón —que uno es 3,2% del otro—
+    //    cuando lo que hay es una distancia de 3,2 puntos.
+    const ug=(ANIO!=="cambio"&&cur.unit==="%"&&!esConteo(cur))?"pp":u;
+    li.push(`<b>${nom(alto[0])}</b> encabeza con ${fmtM(alto[1],cur)} y <b>${nom(bajo[0])}</b>`
+      +` cierra con ${fmtM(bajo[1],cur)}: ${fmt(Math.abs(alto[1]-bajo[1]),"").trim()}`
+      +`${ug==="%"?"%":" "+ug} entre las dos puntas.`);
+    const p=pais(cur,ANIO);
+    if(p!=null&&isFinite(p)){
+      const arriba=vs.filter(x=>x[1]>p).length;
+      li.push(`<b>${arriba}</b> de ${vs.length} ${arriba===1?"queda":"quedan"} por encima`
+        +` del país (${fmtM(p,cur)}).`);}
+    if(ANIO==="cambio"){
+      const suben=vs.filter(x=>x[1]>0).length,bajan=vs.filter(x=>x[1]<0).length;
+      li.push(suben===vs.length?"Los 343 suben entre los dos censos."
+        :bajan===vs.length?"Los 343 bajan entre los dos censos."
+        :`<b>${suben}</b> ${suben===1?"sube":"suben"} y <b>${bajan}</b> ${bajan===1?"baja":"bajan"}`
+         +` entre los dos censos.`);
+      li.push(`<span class="lee-adv">El censo da dos puntos y no dice nada de lo que pasó`
+        +` en el medio: esto es el cambio entre 2012 y 2024, no una trayectoria.</span>`);}
+    // si hay un municipio señalado, la última frase habla de él
+    if(sel){const s=sel.properties.sigep,v=valOf(s,cur);
+      if(v!=null&&isFinite(v)){
+        const pu=puesto(s,cur),mitad=pu<=Math.round(vs.length/2);
+        li.push(`<b>${DATA[s].nombre}</b> está en el puesto <b>${pu}</b> de ${vs.length}`
+          +`${p!=null&&isFinite(p)?`, ${v>p?"por encima":v<p?"por debajo":"justo en"} del país`:""}`
+          +` — en la ${mitad?"mitad de arriba":"mitad de abajo"} del reparto.`);}}
+    el.innerHTML=`<div class="lee">${li.map(t=>`<p>${t}</p>`).join("")}</div>`;}
+
+  // ── COMPARAR DOS INDICADORES ──────────────────────────────────────────────
+  // ★ POR QUÉ UNA DISPERSIÓN Y NO UN MAPA BIVARIADO. El bivariado sería lo
+  //   vistoso y obliga al lector a decodificar cada tono contra una leyenda de
+  //   3×3 para leer una relación que un gráfico contesta de un golpe. Además el
+  //   mapa ya está ocupado mostrando el indicador principal, y repintarlo de
+  //   otra cosa rompería su vínculo con la leyenda, las tarjetas y el histograma.
+  // ★ SE INFORMA SPEARMAN, NO PEARSON. Varios indicadores tienen a Santa Cruz de
+  //   la Sierra, El Alto o La Paz como valores extremos por puro tamaño, y una
+  //   correlación lineal la mueven esos pocos puntos. Spearman compara ÓRDENES,
+  //   así que contesta la pregunta que de verdad se hace: «¿los que están arriba
+  //   en uno están arriba en el otro?».
+  // ★ Y NO DICE «CAUSA». El texto describe cómo se acompañan, nada más.
+  let indB=null;
+  function rangos(v){
+    // rangos con empates PROMEDIADOS, que es lo que pide Spearman: repartir el
+    // 3.º y el 4.º al azar entre dos municipios con el mismo valor sería
+    // inventar un orden que el dato no tiene
+    const idx=v.map((x,i)=>[x,i]).sort((a,b)=>a[0]-b[0]),r=new Array(v.length);
+    let i=0;
+    while(i<idx.length){let j=i;
+      while(j+1<idx.length&&idx[j+1][0]===idx[i][0])j++;
+      const med=(i+j)/2+1;
+      for(let k=i;k<=j;k++)r[idx[k][1]]=med;
+      i=j+1;}
+    return r;}
+  function spearman(xs,ys){
+    if(xs.length<8)return null;
+    const rx=rangos(xs),ry=rangos(ys),n=xs.length;
+    const mx=d3.mean(rx),my=d3.mean(ry);
+    let num=0,dx=0,dy=0;
+    for(let i=0;i<n;i++){const a=rx[i]-mx,b=ry[i]-my;num+=a*b;dx+=a*a;dy+=b*b;}
+    return dx&&dy?num/Math.sqrt(dx*dy):null;}
+  const fmtNum=v=>v==null||isNaN(v)?"—":(v<0?"−":"")+Math.abs(v).toFixed(2).replace(".",",");
+
+  function montarComparar(){
+    const s=document.getElementById("cmp-b");if(!s)return;
+    // se ofrecen TODOS los indicadores, no sólo los de la categoría en pantalla:
+    // las relaciones que valen la pena suelen cruzar categorías (agua con NBI)
+    s.innerHTML=`<option value="">Comparar con…</option>`+GRUPOS.map(g=>
+      `<optgroup label="${g.label}">`+g.indicadores.filter(i=>i.key!==cur.key)
+        .map(i=>`<option value="${i.key}"${indB&&indB.key===i.key?" selected":""}>${i.label}</option>`).join("")
+      +`</optgroup>`).join("");
+    s.onchange=()=>{
+      indB=s.value?GRUPOS.flatMap(g=>g.indicadores).find(i=>i.key===s.value)||null:null;
+      dispersion();};}
+
+  function dispersion(){
+    const el=document.getElementById("cmp");if(!el)return;
+    if(!indB||indB.key===cur.key||mudo(cur)||mudo(indB)){el.innerHTML="";return;}
+    const scA=scale(cur),pts=[];
+    for(const s of SIG){const a=valOf(s,cur),b=valOf(s,indB);
+      if(a==null||b==null||isNaN(a)||isNaN(b))continue;pts.push([s,a,b]);}
+    if(pts.length<8){
+      el.innerHTML=`<div class="dt-t">Comparar<span>sin pares suficientes</span></div>`;return;}
+    const xa=d3.extent(pts,p=>p[1]),ya=d3.extent(pts,p=>p[2]);
+    const W=100,H=72,LX=3,RX=W-2,TY=3,BY=H-9;
+    const px=v=>LX+((v-xa[0])/((xa[1]-xa[0])||1))*(RX-LX);
+    // el eje de las Y va al revés que el lienzo: arriba es MÁS
+    const py=v=>BY-((v-ya[0])/((ya[1]-ya[0])||1))*(BY-TY);
+    let g="";
+    for(const [s,a,b] of pts){
+      if(sel&&sel.properties.sigep===s)continue;   // el señalado va al final, encima
+      g+=`<circle cx="${px(a).toFixed(2)}" cy="${py(b).toFixed(2)}" r="1.15"`
+        +` fill="${scA.color(a)}" fill-opacity=".72"/>`;}
+    if(sel){const s=sel.properties.sigep,a=valOf(s,cur),b=valOf(s,indB);
+      if(a!=null&&b!=null&&!isNaN(a)&&!isNaN(b))
+        g+=`<circle cx="${px(a).toFixed(2)}" cy="${py(b).toFixed(2)}" r="2.1" class="cmp-sel"/>`;}
+    const rho=spearman(pts.map(p=>p[1]),pts.map(p=>p[2])),f=Math.abs(rho||0);
+    const fuerza=f>=.7?"muy de la mano":f>=.5?"bastante de la mano"
+      :f>=.3?"algo de la mano":"casi sin relación";
+    const sentido=rho>0?"suben juntos":"cuando uno sube, el otro baja";
+    el.innerHTML=`<div class="dt-t">${cur.label} <i>contra</i> ${indB.label}`
+      +`<span>${pts.length} municipios</span></div>`
+      +`<svg class="cmp" viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMin meet">${g}`
+      +`<text x="${LX}" y="${H-3}" class="cmp-ax">${fmtY(xa[0],cur)}</text>`
+      +`<text x="${RX}" y="${H-3}" class="cmp-ax" text-anchor="end">${fmtY(xa[1],cur)} →</text>`
+      +`</svg>`
+      +`<div class="lee"><p>Cada punto es un municipio: al costado, <b>${cur.label}</b>;`
+      +` a lo alto, <b>${indB.label}</b>.</p>`
+      +`<p>Van <b>${fuerza}</b>${rho==null?"":" — "+sentido}.`
+      +` <span class="lee-adv">ρ de Spearman ${fmtNum(rho)}, calculado sobre el ORDEN de los`
+      +` ${pts.length} municipios y no sobre los valores, para que no lo muevan unas pocas`
+      +` ciudades grandes. Dice cómo se acompañan, no que uno cause al otro.</span></p></div>`;}
+
+  const repintarFicha=()=>{montarComparar();dispersion();distribucion();lectura();};
+
   // cambiar de indicador NO reconstruye la ficha (evita el parpadeo y conserva el scroll):
   // solo mueve el resalte, repinta el mapa con crossfade y actualiza el bloque peek
   function select(ind){cur=ind;
     document.querySelectorAll(".ind").forEach(c=>c.classList.toggle("on",c.dataset.k===ind.key));
     document.querySelectorAll("#kgrid .kpi").forEach(el=>el.classList.toggle("on",el.dataset.k===ind.key));
-    fadeSwap(drawBase);drawOver();termo();renderLamina();
+    fadeSwap(drawBase);drawOver();termo();renderLamina();repintarFicha();
     if(sel)renderPeek(sel.properties.sigep);else if(focusDept)renderPeekDept(focusDept);else renderPeekNat();}
 
   // ── el enlace a la lámina de la Galería ──
@@ -1040,7 +1271,7 @@ Promise.all([fetch("municipios.topojson").then(r=>r.json()),fetch("sudamerica.to
       // en modo cambio el mín y el máx son el municipio que más cayó y el que
       // más subió, que es la lectura que corresponde
       return kpiHTML(ind,i,agg(SIG,ind),`mín <b>${fmtM(sc.min,ind)}</b>`,`máx <b>${fmtM(sc.max,ind)}</b>`);}).join("");
-    renderPeekNat();wireKpi();resetScroll();}
+    renderPeekNat();wireKpi();repintarFicha();resetScroll();}
   // resumen del DEPARTAMENTO como un todo: sale al elegirlo en el top bar mientras no haya municipio señalado.
   // Agregación igual que el nacional (fn agg): conteos = suma, tasas = promedio ponderado por población.
   function renderDept(dp){const rows=byDpto[dp];if(!rows)return;sel=null;drawOver();setDetailVisible(true);
@@ -1052,7 +1283,7 @@ Promise.all([fetch("municipios.topojson").then(r=>r.json()),fetch("sudamerica.to
       const r=deptRank(dp,ind);
       return kpiHTML(ind,i,vv,chip(vv,nv,ind,"país"),
                      r?`puesto <b>${r}/${DEPTOS.length}</b>`:"puesto <b>—</b>");}).join("");
-    renderPeekDept(dp);wireKpi();resetScroll();}
+    renderPeekDept(dp);wireKpi();repintarFicha();resetScroll();}
   function renderMun(sig){const r=DATA[sig];if(!r)return;setDetailVisible(true);
     document.getElementById("panel-det").style.display="flex";
     document.getElementById("d-mun").textContent=r.nombre;
@@ -1062,7 +1293,7 @@ Promise.all([fetch("municipios.topojson").then(r=>r.json()),fetch("sudamerica.to
     document.getElementById("kgrid").innerHTML=INDS.map((ind,i)=>{
       const vv=valOf(sig,ind),dv=agg(byDpto[r.dpto],ind),nv=agg(SIG,ind);
       return kpiHTML(ind,i,vv,chip(vv,dv,ind,"depto"),chip(vv,nv,ind,"país",2));}).join("");
-    renderPeek(sig);wireKpi();resetScroll();}
+    renderPeek(sig);wireKpi();repintarFicha();resetScroll();}
   // bloque "peek": lo único de la ficha que depende del indicador en pantalla
   const pkHTML=(v,der)=>`<span class="pk-chip" style="background:${scale(cur).color(v)}"></span>`
     // el universo va acá porque el asomo es lo ÚNICO que se ve en móvil con la
