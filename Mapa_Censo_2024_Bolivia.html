@@ -778,10 +778,20 @@ Promise.all([fetch("municipios.topojson").then(r=>r.json()),fetch("sudamerica.to
     //    guarda el real aparte (`pivReal`) para que la leyenda diga la verdad y
     //    nombre el recorte en vez de rebautizar un borde con el nombre de una
     //    estadística. Pasa en 17 de los 215.
+    // ★ PIVOTE DECLARADO (2026-09-17). Hay indicadores con un umbral que significa
+    //   algo por sí mismo: en la TGF, el nivel de reemplazo (2,1 hijos por mujer).
+    //   Centrar la rampa en el país escondía justamente eso. Si el catálogo declara
+    //   `piv`, la escala se centra ahí en 2012 y en 2024 (el cambio sigue en 0), y el
+    //   país pasa a ser una SEGUNDA referencia (`ref2`) que la leyenda y el
+    //   histograma siguen mostrando.
+    let ref2=null,ref2Tipo=null;
+    if(modo!=="cambio"&&ind.piv!=null&&isFinite(ind.piv)){
+      if(pivTipo!=="mediana"){ref2=piv;ref2Tipo=pivTipo;}
+      piv=+ind.piv;pivTipo=ind.pivl||"referencia";}
     const pivReal=piv,pad=(hi-lo)*.08;
     if(pad>0)piv=Math.min(Math.max(piv,lo+pad),hi-pad);
     const dv=d3.scaleDiverging(RAMP(ind)).domain([lo,piv,hi]).clamp(true);
-    return cache[ck]={lo,hi,med:d3.quantile(vals,.5),piv,pivReal,pivTipo,dv,
+    return cache[ck]={lo,hi,med:d3.quantile(vals,.5),piv,pivReal,pivTipo,ref2,ref2Tipo,dv,
       color:v=>v==null||isNaN(v)?TH.nd:dv(v),
       min:vals[0],max:vals[vals.length-1],avg:d3.mean(vals)};}
   let cur=INDS[0],sel=null,hov=null,zt=d3.zoomIdentity,focusDept=null,zr=d3.zoomIdentity;
@@ -1102,8 +1112,9 @@ Promise.all([fetch("municipios.topojson").then(r=>r.json()),fetch("sudamerica.to
     const m=document.createElement("div");m.className="tm-mk";m.style.left="50%";bar.appendChild(m);
     // Se nombra el pivote: si no, el lector supone "mediana" y en 17 de los 215 el
     // número recortado no es la mediana ni el país.
-    const pr=sc.pivReal==null?"":`${sc.pivTipo} <b>${f(sc.pivReal)}</b>`
-      +(Math.abs(sc.pivReal-sc.piv)>1e-9?` <span style="opacity:.75">(escala centrada en ${f(sc.piv)})</span>`:"");
+    const pr=(sc.pivReal==null?"":`${sc.pivTipo} <b>${f(sc.pivReal)}</b>`
+      +(Math.abs(sc.pivReal-sc.piv)>1e-9?` <span style="opacity:.75">(escala centrada en ${f(sc.piv)})</span>`:""))
+      +(sc.ref2!=null?` · ${sc.ref2Tipo} <b>${f(sc.ref2)}</b>`:"");
     document.getElementById("tm-st").innerHTML=`n <b>343</b> · mín <b>${f(sc.min)}</b> · ${pr} · máx <b>${f(sc.max)}</b>`;
     // el marcador cuelga de la escala, así que se recoloca con ella
     termoVuelve();}
@@ -1160,6 +1171,11 @@ Promise.all([fetch("municipios.topojson").then(r=>r.json()),fetch("sudamerica.to
     //    MEDIANA) y guarda el nombre correcto en `pivTipo`. Usar lo declarado, no
     //    volver a deducirlo: es el error que este código ya cometió cuatro veces.
     s+=marca(clamp(sc.pivReal,lo,hi),"dt-pais",sc.pivTipo+" "+fmtM(sc.pivReal,cur));
+    // la segunda referencia (el país) lleva rótulo sólo si no le pisa el texto al
+    // pivote: a menos del 22 % del ancho, queda la marca y la leyenda ya la nombra
+    if(sc.ref2!=null&&Math.abs(sc.ref2-sc.pivReal)>(hi-lo)*.04){
+      const lejos=Math.abs(x(clamp(sc.ref2,lo,hi))-x(clamp(sc.pivReal,lo,hi)))>W*.22;
+      s+=marca(clamp(sc.ref2,lo,hi),"dt-dpto",lejos?sc.ref2Tipo+" "+fmtM(sc.ref2,cur):"");}
     if(focusDept){const vd=agg(byDpto[focusDept],cur);
       s+=marca(clamp(vd,lo,hi),"dt-dpto",focusDept);}
     if(sel){const v=valOf(sel.properties.sigep,cur);
@@ -1243,7 +1259,8 @@ Promise.all([fetch("municipios.topojson").then(r=>r.json()),fetch("sudamerica.to
     //    «de » + «el país» daba «por encima de el país».
     const ref=r.sc.pivReal;
     const deRef=r.sc.pivTipo==="mediana"?"de la mediana"
-      :r.sc.pivTipo.startsWith("país")?"del país":"de "+r.sc.pivTipo;
+      :r.sc.pivTipo.startsWith("país")?"del país"
+      :r.sc.pivTipo==="reemplazo"?"del nivel de reemplazo":"de "+r.sc.pivTipo;
     if(ref!=null&&isFinite(ref)){
       const arriba=vs.filter(x=>x[1]>ref).length;
       li.push(`<b>${arriba}</b> de ${vs.length} ${arriba===1?"queda":"quedan"} por encima`
