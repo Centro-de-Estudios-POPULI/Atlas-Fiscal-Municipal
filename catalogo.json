@@ -3598,7 +3598,7 @@
      "label": "Tasa global de fecundidad",
      "unit": "hijos",
      "dir": 0,
-     "desc": "Hijos por mujer que tendría a lo largo de su vida con las tasas de fecundidad por edad del año previo al censo.",
+     "desc": "Hijos por mujer.",
      "s12": true,
      "dom": [
       1.3232,
@@ -3660,7 +3660,7 @@
      ],
      "piv": 2.1,
      "pivl": "reemplazo",
-     "nota": "No es la paridez media, que cuenta los hijos ya nacidos: la TGF resume las tasas por edad de un solo año en los hijos que tendría una mujer si se mantuvieran toda su vida. Cálculo directo del censo, calibrado a la población municipal del INE y suavizado hacia el departamento donde hay pocos nacimientos."
+     "nota": "La tasa global de fecundidad (TGF) es el número de hijos que tendría una mujer al final de su vida reproductiva (15 a 49 años) si a cada edad experimentara las tasas de fecundidad observadas el año previo al censo. No es la paridez media, que cuenta los hijos ya nacidos."
     },
     {
      "key": "edad_1er_hijo",
