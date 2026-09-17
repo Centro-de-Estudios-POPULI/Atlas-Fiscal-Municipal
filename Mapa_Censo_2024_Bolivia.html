@@ -172,6 +172,7 @@ body.dark .tbtog .ic-moon{display:none}body.dark .tbtog .ic-sun{display:block}
    va más chica, en cursiva y más apagada — si compitiera en peso con la
    definición serían dos frases peleando por ser la que explica el indicador. */
 .i-uni{font-size:.62rem;color:var(--suave);opacity:.72;line-height:1.3;margin-top:.22rem;font-style:italic}
+.i-nota{font-size:.6rem;color:var(--suave);opacity:.72;line-height:1.3;margin-top:.3rem}
 /* indicador que el censo de 2012 no puede dar: se apaga y se explica en la propia
    tarjeta. No se oculta ni se bloquea — que un indicador exista y no tenga serie
    es información, y esconderlo haría creer que el menú cambia de tamaño solo. */
@@ -396,7 +397,7 @@ body.dark .ind.on .mini{opacity:1;filter:none}
      decir nada, y encima descuadraría la franja, que se dimensiona contra el
      alto máximo de tarjeta. Va donde sí se lee: en el bloque del indicador en
      pantalla, que en móvil es lo primero que asoma de la ficha. */
-  .i-uni{display:none}
+  .i-uni,.i-nota{display:none}
   /* mapa: SIEMPRE completo; la ficha flota por encima (no se re-renderiza) */
   #mapbox{inset:auto;top:202px;left:0;right:0;bottom:0}
   /* en el teléfono no hay paneles al costado: el hueco es la banda entera,
@@ -837,7 +838,7 @@ Promise.all([fetch("municipios.topojson").then(r=>r.json()),fetch("sudamerica.to
     // en el teléfono el texto de la tarjeta va recortado a dos renglones; entero
     // acá, que es donde el navegador lo muestra sin inventar un tooltip
     el.title=ind.label+" — "+(mudo(ind)?(ind.w12||""):ind.desc)
-      +(ind.universo?" ("+ind.universo+")":"");
+      +(ind.universo?" ("+ind.universo+")":"")+(ind.nota?" · "+ind.nota:"");
     el.style.setProperty("--d",Math.min(i,14)*16+"ms");
     el.innerHTML=`<div>${mudo(ind)?'<span class="i-tag">Sólo 2024</span>':""}`
       +`<div class="i-nm">${ind.label}</div>`
@@ -848,7 +849,11 @@ Promise.all([fetch("municipios.topojson").then(r=>r.json()),fetch("sudamerica.to
       //   de la población. Va debajo y apagado —es una nota al pie de la
       //   definición, no una segunda definición—. En el modo sin serie no se
       //   muestra: ahí esa línea la ocupa el motivo por el que está apagado.
-      +`${mudo(ind)||!ind.universo?"":`<div class="i-uni">${ind.universo}</div>`}</div>`;
+      +`${mudo(ind)||!ind.universo?"":`<div class="i-uni">${ind.universo}</div>`}`
+      // ★ NOTA METODOLÓGICA (2026-09-17): sólo la declaran los indicadores que se
+      //   leen mal sin ella (la TGF no es la paridez media). La definición se
+      //   queda en una frase y lo que hay que aclarar va acá, más chico.
+      +`${mudo(ind)||!ind.nota?"":`<div class="i-nota">${ind.nota}</div>`}</div>`;
     const cv=document.createElement("canvas");cv.className="mini";el.appendChild(cv);lista.appendChild(el);
     const c=fitC(cv,110,80);c.setTransform(dpr,0,0,dpr,0,0);
     c.lineWidth=.22;c.strokeStyle=TH.miniLine;
@@ -1789,7 +1794,7 @@ Promise.all([fetch("municipios.topojson").then(r=>r.json()),fetch("sudamerica.to
     if(n.length<2)return[];
     const term=n.split(/\s+/),res=[];
     GRUPOS.forEach(g=>g.indicadores.forEach(i=>{
-      const heno=_norm(i.label+" "+(i.desc||"")+" "+(i.universo||"")+" "+g.label);
+      const heno=_norm(i.label+" "+(i.desc||"")+" "+(i.nota||"")+" "+(i.universo||"")+" "+g.label);
       if(!term.every(t=>heno.includes(t)))return;
       // el que calza en el TÍTULO va antes que el que calza sólo en la
       // definición: si escribiste «agua» querés los indicadores de agua, no

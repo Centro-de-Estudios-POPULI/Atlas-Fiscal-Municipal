@@ -3598,7 +3598,7 @@
      "label": "Tasa global de fecundidad",
      "unit": "hijos",
      "dir": 0,
-     "desc": "Hijos por mujer que resultan de las tasas de fecundidad por edad del año previo al censo, en mujeres de 15 a 49; método directo del censo (el del INE para 2024), con el denominador calibrado a la población municipal del INE y suavizado hacia el departamento donde hay pocos nacimientos.",
+     "desc": "Hijos por mujer que tendría a lo largo de su vida con las tasas de fecundidad por edad del año previo al censo.",
      "s12": true,
      "dom": [
       1.3232,
@@ -3659,7 +3659,8 @@
       ]
      ],
      "piv": 2.1,
-     "pivl": "reemplazo"
+     "pivl": "reemplazo",
+     "nota": "No es la paridez media, que cuenta los hijos ya nacidos: la TGF resume las tasas por edad de un solo año en los hijos que tendría una mujer si se mantuvieran toda su vida. Cálculo directo del censo, calibrado a la población municipal del INE y suavizado hacia el departamento donde hay pocos nacimientos."
     },
     {
      "key": "edad_1er_hijo",
