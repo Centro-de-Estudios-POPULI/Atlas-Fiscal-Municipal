@@ -256,7 +256,7 @@
      "unit": "Bs/hab",
      "dir": 1,
      "div": false,
-     "desc": "Ingreso total (A+B+C) dividido entre la población estimada del año. Representa los recursos fiscales disponibles por habitante.",
+     "desc": "Ingreso total (A+B+C) dividido entre la población del año (proyección del INE, mitad de año). Representa los recursos fiscales disponibles por habitante.",
      "titulo_lamina": "Ingreso total por habitante",
      "lam": "fiscal-it-pc"
     },
@@ -266,7 +266,7 @@
      "unit": "Bs/hab",
      "dir": 1,
      "div": false,
-     "desc": "Gasto municipal en salud por habitante. Indicador de esfuerzo fiscal e inversión en atención de salud.",
+     "desc": "Gasto municipal en salud por habitante (población proyectada por el INE). Indicador de esfuerzo fiscal e inversión en atención de salud.",
      "titulo_lamina": "Gasto en salud por habitante",
      "lam": "fiscal-sl-pc"
     },
@@ -276,7 +276,7 @@
      "unit": "Bs/hab",
      "dir": 1,
      "div": false,
-     "desc": "Gasto municipal en educación por habitante. Indicador de inversión educativa por ciudadano.",
+     "desc": "Gasto municipal en educación por habitante (población proyectada por el INE). Indicador de inversión educativa por ciudadano.",
      "titulo_lamina": "Gasto en educación por habitante",
      "lam": "fiscal-ed-pc"
     },
@@ -286,7 +286,7 @@
      "unit": "Bs/hab",
      "dir": 1,
      "div": false,
-     "desc": "Inversión pública total (Gasto de Capital, partida E) por habitante. Mide el esfuerzo inversor por persona.",
+     "desc": "Inversión pública total (Gasto de Capital, partida E) por habitante (población proyectada por el INE). Mide el esfuerzo inversor por persona.",
      "titulo_lamina": "Inversión pública por habitante",
      "lam": "fiscal-inv-pc"
     },
@@ -296,7 +296,7 @@
      "unit": "Bs/hab",
      "dir": 1,
      "div": false,
-     "desc": "Ingreso Corriente (Subtotal A) por habitante. Mide los recursos fiscales recurrentes y sostenibles disponibles por persona, excluyendo capital y deuda.",
+     "desc": "Ingreso Corriente (Subtotal A) por habitante (población proyectada por el INE). Mide los recursos fiscales recurrentes y sostenibles disponibles por persona, excluyendo capital y deuda.",
      "titulo_lamina": "Ingreso corriente por habitante",
      "lam": "fiscal-ic-pc"
     }
@@ -348,5 +348,11 @@
     }
    ]
   }
- ]
+ ],
+ "poblacion": {
+  "fuente": "INE, Estimaciones y proyecciones de población por municipio/TIOC, Revisión 2025 (base Censo 2024, con ajuste por omisión) y Revisión 2020 (base Censo 2012)",
+  "serie": "Población a mitad de año: 2024–2025 de la Revisión 2025; 2016–2023 interpolación exponencial entre las bases conciliadas de 2012 y 2024 de cada municipio (homologación temporal del INE)",
+  "uso": "Denominador de los cinco indicadores en Bs/hab y ponderador del promedio nacional",
+  "desde": "2026-09-17"
+ }
 }

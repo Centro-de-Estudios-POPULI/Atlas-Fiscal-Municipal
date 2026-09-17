@@ -872,7 +872,7 @@ const sinTGN=y=>g('ing_propios',y); // Ingresos propios municipales
 const ingTotal=y=>g('ing_corrientes',y)+g('recursos_cap',y)+g('fuentes_fin',y);
 const _rDelta=y=>g('servicio_deuda',y)+g('inv_financiera',y)-g('resultado_fin',y)-g('fuentes_fin',y);
 const deltaCxP=y=>Math.max(0,_rDelta(y));
-const POB={2016:13362,2017:13611,2018:13864,2019:14122,2020:14385,2021:14652,2022:14925,2023:15202,2024:15485,2025:15612};
+const POB={2016:13009,2017:13345,2018:13690,2019:14044,2020:14406,2021:14778,2022:15160,2023:15551,2024:15809,2025:15925};
 const lbs=()=>selY==='all'?[...YY]:[parseInt(selY)];
 
 // ── chart defaults ──
